@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 abstract class ColorsApp {
 
+  static Color get azulFacebook{
+    return const Color(0xFF3b5996);
+  }
   static Color get blueGrey100 {
     return const Color(0xFFCFD8DC);
   }
@@ -45,6 +48,10 @@ abstract class ColorsApp {
   static Color get red700 {
     return const Color(0xFFD32F2F);
   } 
+
+  static Color get rojoGoogle {
+    return const Color(0xFFD32F2F);
+  }
   static Color get white {
     return const Color(0xFFFFFFFF);
   }

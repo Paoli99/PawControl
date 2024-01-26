@@ -51,6 +51,6 @@ abstract class TextsFont {
 
   static TextStyle get suggestion {
     return GoogleFonts.roboto(
-        textStyle: TextStyle(color: ColorsApp.grey300, fontSize: 14.0));
+        textStyle: TextStyle(color: ColorsApp.white70, fontSize: 14.0));
   }
 }

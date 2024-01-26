@@ -5,6 +5,7 @@ import 'package:pawcontrol/constants/asset_images.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
+import 'package:pawcontrol/widgets/socialMediaBtn.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -36,7 +37,7 @@ class LoginPage extends StatelessWidget {
                 style: TextsFont.tituloLogo),
 
               Container(
-                margin: EdgeInsets.only(top: 40),
+                margin: EdgeInsets.only(top: 20),
                 width: 340, // set the width of the container
                 height: 250, // set the height of the container
                 decoration: BoxDecoration(
@@ -52,19 +53,42 @@ class LoginPage extends StatelessWidget {
 
                     
                      SizedBox(
-                      height: 20.0,
+                      height: 15.0,
                     ),
                     
-                    PrimaryButton(title: 'Login'),
-
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                      
+                    PrimaryButton(title: 'Login', onPressed: (){},),
                     
                   ],
+                  
                 ),
-              )
+              ),
+              //Inicio de sesion alternativo 
+              SizedBox(height: 5.0),
+              Center(
+                child: Text('Inicia sesión con Facebook o Google',
+                    style: TextsFont.suggestion),
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SocialMediaBtn(
+                    textoRedes: 'Facebook',
+                    tipoRedes: TipoRedes.Facebook,
+                    onPressed: () {
+                      // Acción cuando se presiona el botón de Facebook
+                    },
+                  ),
+                  SizedBox(width: 10), // Espacio entre los botones
+                  SocialMediaBtn(
+                    textoRedes: 'Google',
+                    tipoRedes: TipoRedes.Google,
+                    onPressed: () {
+                      // Acción cuando se presiona el botón de Google
+                    },
+                  ),
+                ],
+              ),
             ],),
         )
       

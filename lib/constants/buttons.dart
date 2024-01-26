@@ -7,4 +7,6 @@ abstract class ButtonStyles {
     return 30.0;
   }
 
+  static double get buttonHeightSM => 40.0;
+
 }
