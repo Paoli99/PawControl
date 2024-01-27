@@ -11,6 +11,14 @@ abstract class TextsFont {
           fontWeight: FontWeight.bold));
   }
 
+  static TextStyle get titulos {
+    return GoogleFonts.montserrat(
+        textStyle: TextStyle(
+          color: ColorsApp.black, 
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold));
+  }
+
   //botones 
 
   static TextStyle get loginButton {
