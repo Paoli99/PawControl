@@ -67,12 +67,23 @@ abstract class ColorsApp {
   static Color get red700 {
     return const Color(0xFFD32F2F);
   } 
+  static Color get redAccent400 {
+    return const Color(0xFFFF1744);
+  } 
 
+  static Color get redLogoLeft {
+    return const Color(0xFFFF405C);
+  } 
+
+  static Color get redLogoRight {
+    return const Color(0xDDDD0004F);
+  } 
+  
   static Color get rojoGoogle {
     return const Color(0xFFD32F2F);
   }
   static Color get white {
-    return const Color(0xFFFFFFFF);
+    return Color.fromARGB(255, 255, 255, 255);
   }
 
   static Color get white70 {

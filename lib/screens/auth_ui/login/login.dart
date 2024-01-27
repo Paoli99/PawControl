@@ -6,6 +6,8 @@ import 'package:pawcontrol/constants/asset_images.dart';
 import 'package:pawcontrol/constants/base.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
+import 'package:pawcontrol/constants/routes.dart';
+import 'package:pawcontrol/screens/auth_ui/sign_up/signup.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/socialMediaBtn.dart';
 
@@ -55,7 +57,7 @@ class LoginPage extends StatelessWidget {
 
                     
                      SizedBox(
-                      height: 15.0,
+                      height: 5.0,
                     ),
                     
                     PrimaryButton(title: 'Iniciar Sesión', onPressed: (){},),
@@ -119,7 +121,12 @@ class LoginPage extends StatelessWidget {
                               text: '¡Registrate ahora!',
                               style: TextsFont.link,
                               recognizer: TapGestureRecognizer()
-                                ..onTap = (){}
+                              ..onTap= () {
+                                  Routes.instance.push(
+                                    widget: SignUp(),
+                                    context: context,
+                                  );
+                                },
                             )
                           ]
                         ),),
