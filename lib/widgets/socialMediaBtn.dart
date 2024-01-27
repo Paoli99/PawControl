@@ -58,7 +58,7 @@ class SocialMediaBtn extends StatelessWidget {
         child: Icon(
           icon,
           color: iconoColor,
-          size: 24.0, // Ajusta el tamaño del icono según tus necesidades
+          size: 30.0, // Ajusta el tamaño del icono según tus necesidades
         ),
       ),
     );

@@ -4,9 +4,9 @@ import 'package:pawcontrol/constants/colors.dart';
 
 abstract class TextsFont {
   static TextStyle get tituloLogo {
-    return GoogleFonts.montserrat(
+    return GoogleFonts.openSans(
         textStyle: TextStyle(
-          color: ColorsApp.white, 
+          color: ColorsApp.black, 
           fontSize: 42.0,
           fontWeight: FontWeight.bold));
   }
@@ -14,29 +14,29 @@ abstract class TextsFont {
   //botones 
 
   static TextStyle get loginButton {
-    return GoogleFonts.montserrat(
+    return GoogleFonts.openSans(
         textStyle: TextStyle(
-          color: ColorsApp.white, 
+          color: ColorsApp.black54, 
           fontSize: 20.0,
           fontWeight: FontWeight.bold));
   }
 
   static TextStyle get cuerpo {
-    return GoogleFonts.montserrat(
+    return GoogleFonts.openSans(
         textStyle: TextStyle(
-          color: ColorsApp.grey300, 
+          color: ColorsApp.black, 
           fontSize: 16.0));
   }
 
   static TextStyle get buttonTextLight  {
-    return GoogleFonts.montserrat(
+    return GoogleFonts.openSans(
         textStyle: TextStyle(
           color: ColorsApp.grey800, 
           fontSize: 16.0));
   }
 
   static TextStyle get link {
-    return GoogleFonts.roboto(
+    return GoogleFonts.openSans(
         textStyle: TextStyle(
             color: ColorsApp.lightBlue900,
             fontSize: 15.0,
@@ -44,13 +44,13 @@ abstract class TextsFont {
   }
 
   static TextStyle get error {
-    return GoogleFonts.roboto(
+    return GoogleFonts.openSans(
         textStyle: TextStyle(color: ColorsApp.red700, fontSize: 14.0));
   }
 
 
   static TextStyle get suggestion {
-    return GoogleFonts.roboto(
-        textStyle: TextStyle(color: ColorsApp.white70, fontSize: 14.0));
+    return GoogleFonts.openSans(
+        textStyle: TextStyle(color: ColorsApp.black, fontSize: 14.0));
   }
 }

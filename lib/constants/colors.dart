@@ -7,6 +7,23 @@ abstract class ColorsApp {
   static Color get azulFacebook{
     return const Color(0xFF3b5996);
   }
+
+  static Color get black{
+    return const Color(0xFF000000);
+  }
+
+  static Color get black45{
+    return const Color(0x73000000);
+  }
+
+  static Color get black54{
+    return const Color(0x8A000000);
+  }
+
+  static Color get black87{
+    return const Color(0xDD000000);
+  }
+
   static Color get blueGrey100 {
     return const Color(0xFFCFD8DC);
   }
@@ -36,7 +53,9 @@ abstract class ColorsApp {
   static Color get purple100 {
     return const Color(0xFFF3E5F5);
   }
-
+  static Color get grey100 {
+    return const Color(0xFFF5F5F5);
+  } 
   static Color get grey300 {
     return const Color(0xFFE0E0E0);
   } 

@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/asset_images.dart';
+import 'package:pawcontrol/constants/base.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
@@ -39,7 +41,7 @@ class LoginPage extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 20),
                 width: 340, // set the width of the container
-                height: 250, // set the height of the container
+                height: 200, // set the height of the container
                 decoration: BoxDecoration(
                 color: ColorsApp.white70,
                 borderRadius: BorderRadius.circular(10), // set border radius to make it circular
@@ -56,8 +58,21 @@ class LoginPage extends StatelessWidget {
                       height: 15.0,
                     ),
                     
-                    PrimaryButton(title: 'Login', onPressed: (){},),
-                    
+                    PrimaryButton(title: 'Iniciar Sesión', onPressed: (){},),
+                    SizedBox(
+                      height: 5.00,
+                    ),
+                    Padding(padding: EstilosBase.listPadding,
+                            child: RichText(textAlign: TextAlign.center,
+                            text: TextSpan(
+                              text: '¿Olvidaste tu contraseña?',
+                              style: TextsFont.cuerpo,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = (){}
+                            ),
+
+                            ),
+                            )
                   ],
                   
                 ),
@@ -69,6 +84,7 @@ class LoginPage extends StatelessWidget {
                     style: TextsFont.suggestion),
               ),
 
+              SizedBox(height: 5.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -89,6 +105,25 @@ class LoginPage extends StatelessWidget {
                   ),
                 ],
               ),
+
+              SizedBox(height: 5.0),
+
+              Padding(padding: EstilosBase.listPadding,
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text: '¿Nuevo por aquí? ',
+                          style: TextsFont.cuerpo,
+                          children: [
+                            TextSpan(
+                              text: '¡Registrate ahora!',
+                              style: TextsFont.link,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = (){}
+                            )
+                          ]
+                        ),),
+                        )
             ],),
         )
       

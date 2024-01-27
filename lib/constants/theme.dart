@@ -3,12 +3,12 @@ import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 
 ThemeData themeData=ThemeData(
-  scaffoldBackgroundColor: ColorsApp.deepPurple100,
+  scaffoldBackgroundColor: ColorsApp.grey300,
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      backgroundColor: ColorsApp.deepPurple400,
+      backgroundColor: ColorsApp.grey100,
       textStyle: TextsFont.buttonTextLight,
-      disabledBackgroundColor: ColorsApp.grey300
+      disabledBackgroundColor: ColorsApp.grey100
     ),
     
     )
