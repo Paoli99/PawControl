@@ -5,6 +5,7 @@ import 'package:pawcontrol/constants/colors.dart';
 class TextInputFields extends StatelessWidget {
   final String? hintText;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final bool obscureText;
   final TextEditingController? controller;
 
@@ -12,6 +13,7 @@ class TextInputFields extends StatelessWidget {
     Key? key,
     this.hintText,
     this.prefixIcon,
+    this.suffixIcon,
     this.obscureText = false,
     this.controller,
   }) : super(key: key);
@@ -21,7 +23,6 @@ class TextInputFields extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22.0),
       child: Container(
-        height: ButtonStyles.buttonHeightLogin,
         decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(30.0),
@@ -40,20 +41,20 @@ class TextInputFields extends StatelessWidget {
             fillColor: ColorsApp.grey300,
             hintText: hintText,
             prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon, // Agrega el suffixIcon aquí
             contentPadding: EdgeInsets.symmetric(vertical: 12.0),
             enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.transparent, // Establece un borde transparente
+              borderSide: BorderSide(
+                color: Colors.transparent,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
             ),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.transparent, // Establece un borde transparente
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.transparent,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
             ),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-
           ),
         ),
       ),
