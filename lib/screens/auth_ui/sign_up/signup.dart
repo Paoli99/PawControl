@@ -1,20 +1,204 @@
-import 'package:flutter/material.dart';
-import 'package:pawcontrol/widgets/top_titles.dart';
+// ignore_for_file: prefer_const_constructors
 
-class SignUp extends StatelessWidget {
-  const SignUp({Key? key}) : super(key: key);
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:pawcontrol/constants/asset_images.dart';
+import 'package:pawcontrol/constants/base.dart';
+import 'package:pawcontrol/constants/colors.dart';
+import 'package:pawcontrol/constants/fonts.dart';
+import 'package:pawcontrol/constants/routes.dart';
+import 'package:pawcontrol/constants/textInputFields.dart';
+import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
+import 'package:pawcontrol/widgets/socialMediaBtn.dart';
+
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body:Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children:  const [
-            TopTitles(title: "¡Crea una cuenta!")   
-          ],
+  _SignUpState createState() => _SignUpState();
+}
+  class _SignUpState extends State<SignUp>{
+
+    bool _isPasswordVisible = true; 
+
+    @override
+    Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+                            
+            Container(
+              width: double.infinity, // Establece el ancho del contenedor al ancho total de la pantalla
+              height: 100,
+              decoration: BoxDecoration(
+                color: ColorsApp.white70,
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(width: 10),
+                  Image.asset(
+                    AssetsImages.instance.logo,
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.fill,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    "PAW CONTROL",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+              Container(
+                //margin: EdgeInsets.only(top: 20),
+                width: 480, // set the width of the container
+                height: 550, // set the height of the container
+
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    
+                    TextInputFields(
+                      hintText: 'Ingrese su nombre',
+                      prefixIcon: Icon(
+                        Icons.person_2_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+
+                     SizedBox(
+                      height: 10.0,
+                    ),
+
+                    TextInputFields(
+                      hintText: 'Ingrese su apellido',
+                      prefixIcon: Icon(
+                        Icons.person_2_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                                        
+                     SizedBox(
+                      height: 10.0,
+                    ),
+
+                    TextInputFields(
+                      hintText: 'Ingrese su numero de telefono',
+                      prefixIcon: Icon(
+                        Icons.phone_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                                        
+                     SizedBox(
+                      height: 10.0,
+                    ),
+                    TextInputFields(
+                      hintText: 'Ingrese su correo',
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                                        
+                     SizedBox(
+                      height: 10.0,
+                    ),
+
+
+                    TextInputFields(
+                      hintText: 'Ingrese su contraseña',
+                      obscureText: _isPasswordVisible,
+                      prefixIcon: Icon(
+                        Icons.lock_outlined,
+                        color: Colors.grey,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                    
+                    SizedBox(
+                      height: 10.0,
+                    ),
+
+                    TextInputFields(
+                      hintText: 'Confirme su contraseña',
+                      obscureText: _isPasswordVisible,
+                      prefixIcon: Icon(
+                        Icons.lock_outlined,
+                        color: Colors.grey,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                    SizedBox(
+                      height: 10.00,
+                    ),
+                    PrimaryButton(title: 'Registrame', onPressed: (){},),
+                    SizedBox(
+                      height: 5.00,
+                    ),
+                    
+                  ],
+                  
+                ),
+              ),
+              
+
+              
+            ],),
         ),
+        ),
+      
       ),
     );
   }
-}
+  }

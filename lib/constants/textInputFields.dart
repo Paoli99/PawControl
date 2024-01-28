@@ -8,6 +8,8 @@ class TextInputFields extends StatelessWidget {
   final Widget? suffixIcon;
   final bool obscureText;
   final TextEditingController? controller;
+  final Color? borderColor;
+  final Color? backgroundColor; // Agrega el parámetro backgroundColor
 
   const TextInputFields({
     Key? key,
@@ -16,15 +18,21 @@ class TextInputFields extends StatelessWidget {
     this.suffixIcon,
     this.obscureText = false,
     this.controller,
+    this.borderColor,
+    this.backgroundColor, // Agrega el parámetro backgroundColor
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Color enabledBorderColor = borderColor ?? Colors.transparent;
+    Color focusedBorderColor = borderColor ?? Colors.transparent;
+    Color filledColor = backgroundColor ?? ColorsApp.grey300; // Establece el color de fondo dinámico
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.transparent,
+          color: filledColor,
           borderRadius: BorderRadius.circular(30.0),
           boxShadow: [
             BoxShadow(
@@ -32,28 +40,25 @@ class TextInputFields extends StatelessWidget {
               blurRadius: 25,
             ),
           ],
+          border: borderColor != null ? Border.all(color: borderColor!, width: 1.0) : null,
         ),
         child: TextField(
           controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             filled: true,
-            fillColor: ColorsApp.grey300,
+            fillColor: filledColor,
             hintText: hintText,
             prefixIcon: prefixIcon,
-            suffixIcon: suffixIcon, // Agrega el suffixIcon aquí
+            suffixIcon: suffixIcon,
             contentPadding: EdgeInsets.symmetric(vertical: 12.0),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.transparent,
-              ),
-              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide(color: enabledBorderColor),
+              borderRadius: BorderRadius.circular(30.0),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.transparent,
-              ),
-              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide(color: focusedBorderColor),
+              borderRadius: BorderRadius.circular(30.0),
             ),
           ),
         ),
