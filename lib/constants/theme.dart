@@ -4,6 +4,13 @@ import 'package:pawcontrol/constants/fonts.dart';
 
 ThemeData themeData=ThemeData(
   scaffoldBackgroundColor: ColorsApp.grey300,
+  inputDecorationTheme:  InputDecorationTheme(
+    border: outlineInputBorder,
+    errorBorder: outlineInputBorder,
+    enabledBorder: outlineInputBorder,
+    focusedBorder: outlineInputBorder,
+    disabledBorder: outlineInputBorder,
+  ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: ColorsApp.grey100,
@@ -12,4 +19,11 @@ ThemeData themeData=ThemeData(
     ),
     
     )
+);
+
+OutlineInputBorder outlineInputBorder = OutlineInputBorder(
+  borderSide: BorderSide(
+    color:  Colors.black87,
+  ),
+  borderRadius: BorderRadius.circular(10.0),
 );

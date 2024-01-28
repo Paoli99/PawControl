@@ -39,12 +39,12 @@ abstract class TextosCampos {
   static BoxDecoration get cupertino {
     return BoxDecoration(
         border: Border.all(
-          color: ColorsApp.deepPurple100,
+          color: ColorsApp.black87,
           width: EstilosBase.borderWidth,
         ),
         borderRadius: BorderRadius.circular(EstilosBase.borderRadius));
   }
-
+  
   static TextAlign textAlign() {
     return TextAlign.center;
   }

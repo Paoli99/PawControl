@@ -7,6 +7,8 @@ import 'package:pawcontrol/constants/base.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
+import 'package:pawcontrol/constants/textInputFields.dart';
+import 'package:pawcontrol/constants/theme.dart';
 import 'package:pawcontrol/screens/auth_ui/sign_up/signup.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/socialMediaBtn.dart';
@@ -43,7 +45,7 @@ class LoginPage extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 20),
                 width: 340, // set the width of the container
-                height: 200, // set the height of the container
+                height: 230, // set the height of the container
                 decoration: BoxDecoration(
                 color: ColorsApp.white70,
                 borderRadius: BorderRadius.circular(10), // set border radius to make it circular
@@ -55,11 +57,31 @@ class LoginPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
 
-                    
+                    TextInputFields(
+                      hintText: 'Ingrese su correo',
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                        color: Colors.grey,
+                      ),
+                    ),
+                                        
                      SizedBox(
-                      height: 5.0,
+                      height: 10.0,
+                    ),
+
+                    TextInputFields(
+                      hintText: 'Ingrese su contraseña',
+                      obscureText: true,
+                      prefixIcon: Icon(
+                        Icons.lock_outlined,
+                        color: Colors.grey,
+                      ),
                     ),
                     
+                    SizedBox(
+                      height: 10.0,
+                    ),
+
                     PrimaryButton(title: 'Iniciar Sesión', onPressed: (){},),
                     SizedBox(
                       height: 5.00,
