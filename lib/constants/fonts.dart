@@ -19,12 +19,30 @@ abstract class TextsFont {
           fontWeight: FontWeight.bold));
   }
 
+  static TextStyle get tituloHeader {
+    return GoogleFonts.montserrat(
+        textStyle: TextStyle(
+          color: ColorsApp.black, 
+          fontSize: 28.0,
+          fontWeight: FontWeight.bold));
+  }
+
   //botones 
 
   static TextStyle get loginButton {
     return GoogleFonts.montserrat(
         textStyle: TextStyle(
           color: ColorsApp.black54, 
+          fontSize: 20.0,
+          fontWeight: FontWeight.bold));
+  }
+
+  // textos 
+
+  static TextStyle get forgotPass {
+    return GoogleFonts.montserrat(
+        textStyle: TextStyle(
+          color: ColorsApp.black87, 
           fontSize: 20.0,
           fontWeight: FontWeight.bold));
   }

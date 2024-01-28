@@ -9,6 +9,7 @@ import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
+import 'package:pawcontrol/screens/auth_ui/forgotPass/forgotPass.dart';
 import 'package:pawcontrol/screens/auth_ui/sign_up/signup.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/socialMediaBtn.dart';
@@ -117,7 +118,12 @@ class LoginPage extends StatefulWidget {
                               text: '¿Olvidaste tu contraseña?',
                               style: TextsFont.cuerpo,
                               recognizer: TapGestureRecognizer()
-                                ..onTap = (){}
+                                ..onTap = (){
+                                  Routes.instance.push(
+                                    widget: ForgotPassword(),
+                                    context: context,
+                                    );
+                                }
                             ),
 
                             ),
@@ -158,26 +164,26 @@ class LoginPage extends StatefulWidget {
               SizedBox(height: 5.0),
 
               Padding(padding: EstilosBase.listPadding,
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          text: '¿Nuevo por aquí? ',
-                          style: TextsFont.cuerpo,
-                          children: [
-                            TextSpan(
-                              text: '¡Registrate ahora!',
-                              style: TextsFont.link,
-                              recognizer: TapGestureRecognizer()
-                              ..onTap= () {
-                                  Routes.instance.push(
-                                    widget: SignUp(),
-                                    context: context,
-                                  );
-                                },
-                            )
-                          ]
-                        ),),
-                        )
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: '¿Nuevo por aquí? ',
+                    style: TextsFont.cuerpo,
+                    children: [
+                      TextSpan(
+                        text: '¡Registrate ahora!',
+                        style: TextsFont.link,
+                        recognizer: TapGestureRecognizer()
+                        ..onTap= () {
+                            Routes.instance.push(
+                              widget: SignUp(),
+                              context: context,
+                            );
+                          },
+                      )
+                    ]
+                  ),),
+                )
             ],),
         ),
         ),

@@ -56,10 +56,7 @@ class SignUp extends StatefulWidget {
                   SizedBox(width: 10),
                   Text(
                     "PAW CONTROL",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextsFont.tituloHeader
                   ),
                 ],
               ),
