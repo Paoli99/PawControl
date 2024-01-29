@@ -54,7 +54,7 @@ class LoginPage extends StatefulWidget {
               Container(
                 margin: EdgeInsets.only(top: 20),
                 width: 340, // set the width of the container
-                height: 230, // set the height of the container
+                height: 250, // set the height of the container
                 decoration: BoxDecoration(
                 color: ColorsApp.white70,
                 borderRadius: BorderRadius.circular(10), // set border radius to make it circular
@@ -67,7 +67,7 @@ class LoginPage extends StatefulWidget {
                   children: [
 
                     SizedBox(
-                      height: 10.0,
+                      height: 15.0,
                     ),
                     
                     TextInputFields(
@@ -79,7 +79,7 @@ class LoginPage extends StatefulWidget {
                     ),
                                         
                      SizedBox(
-                      height: 10.0,
+                      height: 15.0,
                     ),
 
                     TextInputFields(
@@ -105,7 +105,7 @@ class LoginPage extends StatefulWidget {
                     ),
                     
                     SizedBox(
-                      height: 10.0,
+                      height: 15.0,
                     ),
 
                     PrimaryButton(title: 'Iniciar Sesión', onPressed: (){},),

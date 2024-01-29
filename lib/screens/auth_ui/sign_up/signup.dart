@@ -64,7 +64,7 @@ class SignUp extends StatefulWidget {
               Container(
                 //margin: EdgeInsets.only(top: 20),
                 width: 480, // set the width of the container
-                height: 550, // set the height of the container
+                height: 650, // set the height of the container
 
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -72,7 +72,7 @@ class SignUp extends StatefulWidget {
                   children: [
 
                     SizedBox(
-                      height: 10.0,
+                      height: 15.0,
                     ),
                     
                     TextInputFields(
@@ -85,7 +85,7 @@ class SignUp extends StatefulWidget {
                     ),
 
                      SizedBox(
-                      height: 10.0,
+                      height: 15.0,
                     ),
 
                     TextInputFields(
@@ -98,20 +98,33 @@ class SignUp extends StatefulWidget {
                     ),
                                         
                      SizedBox(
-                      height: 10.0,
+                      height: 15.0,
                     ),
 
                     TextInputFields(
-                      hintText: 'Ingrese su numero de telefono',
+                      hintText: 'Ingrese su numero de teléfono',
                       prefixIcon: Icon(
-                        Icons.phone_outlined,
+                        Icons.phone_iphone_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+
+                    SizedBox(
+                      height: 15.0,
+                    ),
+
+                    TextInputFields(
+                      hintText: 'Ingrese su dirección',
+                      prefixIcon: Icon(
+                        Icons.other_houses_outlined,
                         color: Colors.grey,
                       ),
                       backgroundColor: ColorsApp.white70,
                     ),
                                         
                      SizedBox(
-                      height: 10.0,
+                      height: 15.0,
                     ),
                     TextInputFields(
                       hintText: 'Ingrese su correo',
@@ -123,7 +136,7 @@ class SignUp extends StatefulWidget {
                     ),
                                         
                      SizedBox(
-                      height: 10.0,
+                      height: 15.0,
                     ),
 
 
@@ -151,7 +164,7 @@ class SignUp extends StatefulWidget {
                     ),
                     
                     SizedBox(
-                      height: 10.0,
+                      height: 15.0,
                     ),
 
                     TextInputFields(
@@ -177,13 +190,35 @@ class SignUp extends StatefulWidget {
                       backgroundColor: ColorsApp.white70,
                     ),
                     SizedBox(
-                      height: 10.00,
+                      height: 15.00,
                     ),
                     PrimaryButton(title: 'Registrame', onPressed: (){},),
                     SizedBox(
                       height: 5.00,
                     ),
-                    
+                    SizedBox(height: 5.0),
+
+                    Padding(padding: EstilosBase.listPadding,
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text: '¿Ya tienes una cuenta? ',
+                          style: TextsFont.cuerpo,
+                          children: [
+                            TextSpan(
+                              text: '¡Inicia sesión!',
+                              style: TextsFont.link,
+                              recognizer: TapGestureRecognizer()
+                              ..onTap= () {
+                                  Routes.instance.push(
+                                    widget: SignUp(),
+                                    context: context,
+                                  );
+                                },
+                            )
+                          ]
+                        ),),
+                      )
                   ],
                   
                 ),

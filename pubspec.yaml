@@ -64,6 +64,7 @@ flutter:
   assets:
      - assets/icons/PawControl.png
      - assets/icons/animalLogo.png
+     - assets/icons/lock.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
