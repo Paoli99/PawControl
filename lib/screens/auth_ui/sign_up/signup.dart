@@ -9,6 +9,8 @@ import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
+import 'package:pawcontrol/screens/home/home.dart';
+
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/socialMediaBtn.dart';
 
@@ -192,7 +194,11 @@ class SignUp extends StatefulWidget {
                     SizedBox(
                       height: 15.00,
                     ),
-                    PrimaryButton(title: 'Registrame', onPressed: (){},),
+                    PrimaryButton(title: 'Registrame', onPressed: (){
+                      Routes.instance.pushAndRemoveUntil(
+                        widget: Home(), 
+                        context: context);
+                    },),
                     SizedBox(
                       height: 5.00,
                     ),
