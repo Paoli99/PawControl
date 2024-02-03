@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "279513317809",
+    "project_id": "pawlink-94100",
+    "storage_bucket": "pawlink-94100.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279513317809:android:de90b511769d45cf7c3d90",
+        "android_client_info": {
+          "package_name": "com.example.pawcontrol"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhOSERTLEDjJxg1fXtPWItWPd4fAiMHPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
