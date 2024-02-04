@@ -113,10 +113,10 @@ class LoginPage extends StatefulWidget {
 
                     PrimaryButton(title: 'Iniciar Sesión', onPressed: () async{
                         bool isValidated =
-                        loginValidation(email.text, password.text);
+                        loginValidation(context, email.text, password.text);
                         if (isValidated) {
                         bool isLogedin = await FirebaseAuthenticator.instance
-                        .login(email.text, password.text, context);
+                        .loginValidation(email.text, password.text, context);
                         if (isLogedin) {
                         Routes.instance.pushAndRemoveUntil(
                         widget: Home(),

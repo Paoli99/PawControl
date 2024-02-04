@@ -1,16 +1,18 @@
-import 'package:flutter/cupertino.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pawcontrol/constants/colors.dart';
 
-void showMessage(String message) {
-  Fluttertoast.showToast(
-    msg: message,
-    timeInSecForIosWeb: 1,
-    backgroundColor: ColorsApp.red700,
-    textColor: ColorsApp.white70,
-    fontSize: 16.0,
-  );
+void showMessage(BuildContext context, String message) {
+  Flushbar(
+    message: '$message',
+    duration: Duration(milliseconds: 2500),
+    backgroundColor: ColorsApp.redAccent400,
+    messageColor: ColorsApp.white,
+    icon: Icon(
+      Icons.error_outline_outlined,
+      color: ColorsApp.white,
+    ),
+  ).show(context);
 }
 
 showLoaderDialog(BuildContext context) {
@@ -80,36 +82,36 @@ String getMessageFromErrorCode(String errorCode) {
   }
 }
 
-bool loginValidation(String email, String password) {
+bool loginValidation(BuildContext context, String email, String password) {
   if (email.isEmpty && password.isEmpty) {
-    showMessage("Por favor, llene las casillas");
+    showMessage(context, "Por favor, llene las casillas");
     return false;
   } else if (email.isEmpty) {
-    showMessage("Por favor, ingrese su correo electrónico");
+    showMessage(context, "Por favor, ingrese su correo electrónico");
     return false;
   } else if (password.isEmpty) {
-    showMessage("Por favor, ingrese su contraseña");
+    showMessage(context, "Por favor, ingrese su contraseña");
     return false;
   } else {
     return true;
   }
 }
 
-bool signUpValidation(String email, String password, String name, String phone) {
+bool signUpValidation(BuildContext context, String email, String password, String name, String phone) {
   if (email.isEmpty && password.isEmpty && name.isEmpty && phone.isEmpty) {
-    showMessage("Por favor, llene las casillas");
+    showMessage(context, "Por favor, llene las casillas");
     return false;
   } else if (name.isEmpty) {
-    showMessage("Por favor, ingrese un nombre");
+    showMessage(context, "Por favor, ingrese un nombre");
     return false;
   } else if (email.isEmpty) {
-    showMessage("Por favor, ingrese un correo electrónico");
+    showMessage(context, "Por favor, ingrese un correo electrónico");
     return false;
   } else if (phone.isEmpty) {
-    showMessage("Por favor, ingrese un número telefónico");
+    showMessage(context, "Por favor, ingrese un número telefónico");
     return false;
   } else if (password.isEmpty) {
-    showMessage("Por favor, ingrese una contraseña");
+    showMessage(context, "Por favor, ingrese una contraseña");
     return false;
   } else {
     return true;

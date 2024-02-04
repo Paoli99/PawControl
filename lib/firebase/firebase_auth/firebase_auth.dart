@@ -8,7 +8,7 @@ class FirebaseAuthenticator {
   FirebaseAuth _auth = FirebaseAuth.instance;
   Stream<User?> get getAuthChange => _auth.authStateChanges();
 
-  Future<bool> login(
+  Future<bool> loginValidation(
       String email, String password, BuildContext context) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
