@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +7,11 @@ import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
+import 'package:pawcontrol/constants/constants.dart';
+import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
 import 'package:pawcontrol/screens/auth_ui/forgotPass/forgotPass.dart';
 import 'package:pawcontrol/screens/auth_ui/sign_up/signup.dart';
+import 'package:pawcontrol/screens/home/home.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/socialMediaBtn.dart';
 
@@ -23,6 +24,8 @@ class LoginPage extends StatefulWidget {
   class _LoginPageState extends State<LoginPage>{
 
     bool _isPasswordVisible = true; 
+    TextEditingController email = TextEditingController();
+    TextEditingController password = TextEditingController();
 
     @override
     Widget build(BuildContext context) {
@@ -108,7 +111,20 @@ class LoginPage extends StatefulWidget {
                       height: 15.0,
                     ),
 
-                    PrimaryButton(title: 'Iniciar Sesión', onPressed: (){},),
+                    PrimaryButton(title: 'Iniciar Sesión', onPressed: () async{
+                        bool isValidated =
+                        loginValidation(email.text, password.text);
+                        if (isValidated) {
+                        bool isLogedin = await FirebaseAuthenticator.instance
+                        .login(email.text, password.text, context);
+                        if (isLogedin) {
+                        Routes.instance.pushAndRemoveUntil(
+                        widget: Home(),
+                        context: context,
+                        );
+                        }
+                        }
+                    },),
                     SizedBox(
                       height: 5.00,
                     ),
