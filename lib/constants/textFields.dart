@@ -1,89 +1,74 @@
-
 import 'package:flutter/material.dart';
-import 'package:pawcontrol/constants/base.dart';
+import 'package:flutter/services.dart';
+import 'package:pawcontrol/constants/buttons.dart';
 import 'package:pawcontrol/constants/colors.dart';
-import 'package:pawcontrol/constants/fonts.dart';
 
-abstract class TextosCampos {
-  static double textBoxHorizonatal() {
-    return 25.0;
-  }
+class TextFields extends StatelessWidget {
+  final String? hintText;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final bool obscureText;
+  final TextEditingController? controller;
+  final Color? borderColor;
+  final Color? backgroundColor;
 
-  static double textBoxVertical() {
-    return 8.0;
-  }
+  const TextFields({
+    Key? key,
+    this.hintText,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.obscureText = false,
+    this.controller,
+    this.borderColor,
+    this.backgroundColor,
+  }) : super(key: key);
 
-  static TextStyle text() {
-    return TextsFont.cuerpo;
-  }
+  @override
+  Widget build(BuildContext context) {
+    Color enabledBorderColor = borderColor ?? Colors.transparent;
+    Color focusedBorderColor = borderColor ?? Colors.transparent;
+    Color filledColor = backgroundColor ?? ColorsApp.grey300;
 
-  static TextStyle placeholder() {
-    return TextsFont.suggestion;
-  }
-
-  static Color colorCursor() {
-    return ColorsApp.deepPurple100;
-  }
-
-  static Widget iconPrefix(IconData icon) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0),
-      child: Icon(
-        icon,
-        size: 35.0,
-        color: ColorsApp.deepPurple100,
+      padding: const EdgeInsets.symmetric(horizontal: 22.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: filledColor,
+          borderRadius: BorderRadius.circular(30.0),
+          boxShadow: [
+            BoxShadow(
+              color: ColorsApp.grey300,
+              blurRadius: 25,
+            ),
+          ],
+          border: borderColor != null ? Border.all(color: borderColor!, width: 1.0) : null,
+        ),
+        child: TextField(
+          controller: controller,
+          obscureText: obscureText,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: filledColor,
+            hintText: hintText,
+            prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
+            contentPadding: EdgeInsets.symmetric(vertical: 12.0),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: enabledBorderColor),
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: focusedBorderColor),
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+          ),
+          keyboardType: TextInputType.phone,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(8),
+          ],
+        ),
       ),
-    );
-  }
-
-  static BoxDecoration get cupertino {
-    return BoxDecoration(
-        border: Border.all(
-          color: ColorsApp.black87,
-          width: EstilosBase.borderWidth,
-        ),
-        borderRadius: BorderRadius.circular(EstilosBase.borderRadius));
-  }
-  
-  static TextAlign textAlign() {
-    return TextAlign.center;
-  }
-
-  static BoxDecoration get cupertinoError {
-    return BoxDecoration(
-        border: Border.all(
-          color: ColorsApp.red700,
-          width: EstilosBase.borderWidth,
-        ),
-        borderRadius: BorderRadius.circular(EstilosBase.borderRadius));
-  }
-
-  static InputDecoration androidIcons(
-      String hintText, IconData icon, String errorText) {
-    return InputDecoration(
-      contentPadding: EdgeInsets.all(8.0),
-      hintText: hintText,
-      hintStyle: TextosCampos.placeholder(),
-      border: InputBorder.none,
-      errorText: errorText,
-      errorStyle: TextsFont.error,
-      focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: ColorsApp.deepPurple100, width: EstilosBase.borderWidth),
-          borderRadius: BorderRadius.circular(EstilosBase.borderRadius)),
-      enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: ColorsApp.deepPurple100, width: EstilosBase.borderWidth),
-          borderRadius: BorderRadius.circular(EstilosBase.borderRadius)),
-      focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: ColorsApp.deepPurple100, width: EstilosBase.borderWidth),
-          borderRadius: BorderRadius.circular(EstilosBase.borderRadius)),
-      errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: ColorsApp.red700, width: EstilosBase.borderWidth),
-          borderRadius: BorderRadius.circular(EstilosBase.borderRadius)),
-      prefixIcon: iconPrefix(icon),
     );
   }
 }

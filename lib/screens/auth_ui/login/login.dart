@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, library_private_types_in_public_api
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +76,7 @@ class LoginPage extends StatefulWidget {
                     ),
                     
                     TextInputFields(
+                      controller: email,
                       hintText: 'Ingrese su correo',
                       prefixIcon: Icon(
                         Icons.email_outlined,
@@ -86,6 +89,7 @@ class LoginPage extends StatefulWidget {
                     ),
 
                     TextInputFields(
+                      controller: password,
                       hintText: 'Ingrese su contraseña',
                       obscureText: _isPasswordVisible,
                       prefixIcon: Icon(
@@ -116,12 +120,12 @@ class LoginPage extends StatefulWidget {
                         loginValidation(context, email.text, password.text);
                         if (isValidated) {
                         bool isLogedin = await FirebaseAuthenticator.instance
-                        .loginValidation(email.text, password.text, context);
+                          .login(email.text, password.text, context);
                         if (isLogedin) {
-                        Routes.instance.pushAndRemoveUntil(
-                        widget: Home(),
-                        context: context,
-                        );
+                          Routes.instance.pushAndRemoveUntil(
+                          widget: const Home(),
+                          context: context,
+                          );
                         }
                         }
                     },),

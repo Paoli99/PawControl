@@ -60,9 +60,11 @@ String getMessageFromErrorCode(String errorCode) {
     case "wrong-password":
       return "Contraseña incorrecta";
     case "ERROR_USER_NOT_FOUND":
-      return "No se encontró ningún usuario con este correo.";
+      return "Usuario no encontrado.";
     case "user-not-found":
-      return "No se encontró ningún usuario con este correo.";
+      return "Usuario no encontrado.";
+    case "invalid-credential":
+      return "Usuario no encontrado.";
     case "ERROR_USER_DISABLED":
       return "Usuario no habilitado.";
     case "user-disabled":
@@ -97,23 +99,33 @@ bool loginValidation(BuildContext context, String email, String password) {
   }
 }
 
-bool signUpValidation(BuildContext context, String email, String password, String name, String phone) {
-  if (email.isEmpty && password.isEmpty && name.isEmpty && phone.isEmpty) {
-    showMessage(context, "Por favor, llene las casillas");
+bool signUpValidation(BuildContext context, String firstName,String lastName, String phone , String address, String email, String password, String confirmPassword) {
+  if (firstName.isEmpty && lastName.isEmpty && phone.isEmpty && address.isEmpty && email.isEmpty && password.isEmpty && confirmPassword.isEmpty) {
+    showMessage(context, "Por favor, llene las casillas.");
     return false;
-  } else if (name.isEmpty) {
-    showMessage(context, "Por favor, ingrese un nombre");
+  } else if (firstName.isEmpty) {
+    showMessage(context, "Por favor, ingrese un nombre.");
+    return false;
+  } else if (lastName.isEmpty) {
+    showMessage(context, "Por favor, ingrese un apellido.");
+    return false;
+  } else if (phone.isEmpty && phone.length != 8 ) {
+    showMessage(context, "Por favor, ingrese un numero de teléfono válido.");
+    return false;
+  }else if (address.isEmpty) {
+    showMessage(context, "Por favor, ingrese una dirección.");
     return false;
   } else if (email.isEmpty) {
-    showMessage(context, "Por favor, ingrese un correo electrónico");
-    return false;
-  } else if (phone.isEmpty) {
-    showMessage(context, "Por favor, ingrese un número telefónico");
+    showMessage(context, "Por favor, ingrese un correo electrónico.");
     return false;
   } else if (password.isEmpty) {
-    showMessage(context, "Por favor, ingrese una contraseña");
+    showMessage(context, "Por favor, ingrese una contraseña.");
+    return false;
+  } else if (password != confirmPassword) {
+    showMessage(context, "Las contraseñas no coinciden.");
     return false;
   } else {
     return true;
   }
 }
+

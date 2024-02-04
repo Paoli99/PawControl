@@ -1,14 +1,18 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, prefer_const_constructors
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pawcontrol/constants/asset_images.dart';
 import 'package:pawcontrol/constants/base.dart';
 import 'package:pawcontrol/constants/colors.dart';
+import 'package:pawcontrol/constants/constants.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
+import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
+import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
 import 'package:pawcontrol/screens/home/home.dart';
 
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
@@ -23,6 +27,13 @@ class SignUp extends StatefulWidget {
   class _SignUpState extends State<SignUp>{
 
     bool _isPasswordVisible = true; 
+    TextEditingController firtName = TextEditingController();
+    TextEditingController lastName = TextEditingController();
+    TextEditingController phone = TextEditingController();
+    TextEditingController address = TextEditingController();
+    TextEditingController email = TextEditingController();
+    TextEditingController password = TextEditingController();
+    TextEditingController confirmPassword = TextEditingController();
 
     @override
     Widget build(BuildContext context) {
@@ -78,6 +89,7 @@ class SignUp extends StatefulWidget {
                     ),
                     
                     TextInputFields(
+                      controller: firtName,
                       hintText: 'Ingrese su nombre',
                       prefixIcon: Icon(
                         Icons.person_2_outlined,
@@ -91,6 +103,7 @@ class SignUp extends StatefulWidget {
                     ),
 
                     TextInputFields(
+                      controller: lastName,
                       hintText: 'Ingrese su apellido',
                       prefixIcon: Icon(
                         Icons.person_2_outlined,
@@ -103,20 +116,23 @@ class SignUp extends StatefulWidget {
                       height: 15.0,
                     ),
 
-                    TextInputFields(
+                    TextFields(
+                      controller: phone,
                       hintText: 'Ingrese su numero de teléfono',
-                      prefixIcon: Icon(
-                        Icons.phone_iphone_outlined,
-                        color: Colors.grey,
+                        prefixIcon: Icon(
+                          Icons.phone_iphone_outlined,
+                          color: Colors.grey,
+                        ),
+                        backgroundColor: ColorsApp.white70,
                       ),
-                      backgroundColor: ColorsApp.white70,
-                    ),
+                      
 
                     SizedBox(
                       height: 15.0,
                     ),
 
                     TextInputFields(
+                      controller: address,
                       hintText: 'Ingrese su dirección',
                       prefixIcon: Icon(
                         Icons.other_houses_outlined,
@@ -129,6 +145,7 @@ class SignUp extends StatefulWidget {
                       height: 15.0,
                     ),
                     TextInputFields(
+                      controller: email,
                       hintText: 'Ingrese su correo',
                       prefixIcon: Icon(
                         Icons.email_outlined,
@@ -143,6 +160,7 @@ class SignUp extends StatefulWidget {
 
 
                     TextInputFields(
+                      controller: password,
                       hintText: 'Ingrese su contraseña',
                       obscureText: _isPasswordVisible,
                       prefixIcon: Icon(
@@ -170,6 +188,7 @@ class SignUp extends StatefulWidget {
                     ),
 
                     TextInputFields(
+                      controller: confirmPassword,
                       hintText: 'Confirme su contraseña',
                       obscureText: _isPasswordVisible,
                       prefixIcon: Icon(
@@ -194,11 +213,36 @@ class SignUp extends StatefulWidget {
                     SizedBox(
                       height: 15.00,
                     ),
-                    PrimaryButton(title: 'Registrame', onPressed: (){
-                      Routes.instance.pushAndRemoveUntil(
-                        widget: Home(), 
-                        context: context);
-                    },),
+                    PrimaryButton(title: 'Registrame', onPressed: () async{
+                      bool isValidated =
+                        signUpValidation(context, 
+                        firtName.text,
+                        lastName.text,
+                        phone.text,
+                        address.text,
+                        email.text, 
+                        password.text,
+                        confirmPassword.text);
+                        if (isValidated) {
+                        bool isLogedin = await FirebaseAuthenticator.instance
+                          .signUp(
+                          firtName.text,
+                          lastName.text,
+                          phone.text,
+                          address.text,
+                          email.text,
+                          password.text,
+                          confirmPassword.text,
+                          context);
+                        if (isLogedin) {
+                          Routes.instance.pushAndRemoveUntil(
+                          widget: const Home(),
+                          context: context,
+                          );
+                        }
+                      }
+                      },
+                    ),
                     SizedBox(
                       height: 5.00,
                     ),
