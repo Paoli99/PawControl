@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,16 @@ import 'package:pawcontrol/screens/home/home.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/socialMediaBtn.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   final int index;
 
   const Profile({Key? key, required this.index}) : super(key: key);
 
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,7 +58,10 @@ class Profile extends StatelessWidget {
                             color: Colors.black87,
                           ),
                           onPressed: () {
-                            // Agrega la acción deseada
+                            FirebaseAuth.instance.signOut();
+                            setState(() {
+                              
+                            });
                           },
                         ),
                       ),

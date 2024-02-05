@@ -55,5 +55,7 @@ class FirebaseAuthenticator {
       }
     }
 
-  void signout(){}
+  void signout() async{
+    await _auth.signOut();
+  }
 }
