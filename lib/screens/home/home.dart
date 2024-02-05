@@ -1,19 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/asset_images.dart';
-import 'package:pawcontrol/constants/base.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
-import 'package:pawcontrol/constants/routes.dart';
-import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/screens/home/profile.dart';
 import 'package:pawcontrol/screens/home/search.dart';
-import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
-import 'package:pawcontrol/widgets/socialMediaBtn.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   final int initialIndex;

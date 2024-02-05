@@ -16,7 +16,7 @@ import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
 import 'package:pawcontrol/screens/home/home.dart';
 
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
-import 'package:pawcontrol/widgets/socialMediaBtn.dart';
+
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});

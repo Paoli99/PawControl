@@ -2,19 +2,15 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:pawcontrol/constants/asset_images.dart';
-import 'package:pawcontrol/constants/base.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/listTitle.dart';
 import 'package:pawcontrol/constants/routes.dart';
-import 'package:pawcontrol/constants/textInputFields.dart';
-import 'package:pawcontrol/screens/home/home.dart';
+import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
+import 'package:pawcontrol/screens/auth_ui/login/login.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
-import 'package:pawcontrol/widgets/socialMediaBtn.dart';
-import 'package:provider/provider.dart';
+
 
 class Profile extends StatefulWidget {
   final int index;
@@ -28,7 +24,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
-    //AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
     
     return SafeArea(
       child: Scaffold(
@@ -60,11 +55,9 @@ class _ProfileState extends State<Profile> {
                             Icons.logout_outlined,
                             color: Colors.black87,
                           ),
-                          onPressed: () {
-                            FirebaseAuth.instance.signOut();
-                            setState(() {
-                              
-                            });
+                          onPressed: () async{
+                            await FirebaseAuth.instance.signOut();
+                            Routes.instance.pushAndRemoveUntil(widget: LoginPage(), context: context);
                           },
                         ),
                       ),

@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pawcontrol/constants/constants.dart';
@@ -9,7 +8,6 @@ import 'package:pawcontrol/constants/constants.dart';
 class FirebaseAuthenticator {
   static FirebaseAuthenticator instance = FirebaseAuthenticator();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  //final FirebaseFirestore _firestore = FirebaseFirestore.instance
   Stream<User?> get getAuthChange => _auth.authStateChanges();
 
   Future<bool> login(
@@ -41,8 +39,7 @@ class FirebaseAuthenticator {
     }
   }
 
-  void signout(){
-    _auth.signOut();
+  void signOut() async {
+    await _auth.signOut();
   }
-
 }
