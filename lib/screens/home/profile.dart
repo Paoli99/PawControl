@@ -14,6 +14,7 @@ import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/screens/home/home.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/socialMediaBtn.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
   final int index;
@@ -27,6 +28,8 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
+    //AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
+    
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -78,7 +81,7 @@ class _ProfileState extends State<Profile> {
                     Icon(
                       Icons.person_outline,  // Usa Icons.person_outline para un ícono de persona
                       size: 150,
-                    ),
+                    ) ,
                     Text(
                       "Paola Vilaseca",
                       style: TextStyle(
@@ -88,6 +91,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       Text(
                       "paolavilaseca.r@gmail.com",
+                      //appProvider.getUserInformation.email,
                       style: TextStyle(
                         fontSize: 15, 
                         fontWeight: FontWeight.normal,

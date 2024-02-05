@@ -13,6 +13,7 @@ import 'package:pawcontrol/screens/home/profile.dart';
 import 'package:pawcontrol/screens/home/search.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/socialMediaBtn.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   final int initialIndex;
@@ -28,6 +29,9 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+
+    //AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
+    //appProvider.getUserInfoFirebase();
     super.initState();
     _currentIndex = widget.initialIndex;
   }
