@@ -53,6 +53,11 @@ abstract class ColorsApp {
   static Color get purple100 {
     return const Color(0xFFF3E5F5);
   }
+
+  static Color get greenAccent400{
+    return const Color(0xFF00E676);
+  }
+  
   static Color get grey100 {
     return const Color(0xFFF5F5F5);
   } 

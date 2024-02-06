@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 
@@ -7,6 +8,19 @@ void showMessage(BuildContext context, String message) {
     message: '$message',
     duration: Duration(milliseconds: 2500),
     backgroundColor: ColorsApp.redAccent400,
+    messageColor: ColorsApp.white,
+    icon: Icon(
+      Icons.error_outline_outlined,
+      color: ColorsApp.white,
+    ),
+  ).show(context);
+}
+
+void showGoodMessage(BuildContext context, String message) {
+  Flushbar(
+    message: '$message',
+    duration: Duration(milliseconds: 2500),
+    backgroundColor: ColorsApp.greenAccent400,
     messageColor: ColorsApp.white,
     icon: Icon(
       Icons.error_outline_outlined,
@@ -128,4 +142,37 @@ bool signUpValidation(BuildContext context, String firstName,String lastName, St
     return true;
   }
 }
+
+Future<bool> isValidEmail(BuildContext context, String email) async {
+  if (email.isEmpty) {
+    showMessage(context, "Por favor, ingrese un correo electrónico.");
+    return false;
+  } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(email)) {
+    showMessage(context, "El correo electrónico no tiene un formato válido.");
+    return false;
+  } else {
+    try {
+      bool emailExists = await checkIfEmailExistsInDatabase(email);
+      if (!emailExists) {
+        showMessage(context, "El correo electrónico no existe en la base de datos.");
+      }
+      return emailExists;
+    } catch (e) {
+      print('Error al verificar la existencia del correo en la base de datos: $e');
+      showMessage(context, "Error al verificar la existencia del correo en la base de datos.");
+      return false;
+    }
+  }
+}
+
+Future<bool> checkIfEmailExistsInDatabase(String email) async {
+  try {
+    QuerySnapshot query = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: email).get();
+    return query.docs.isNotEmpty;
+  } catch (e) {
+    print('Error al verificar la existencia del correo en la base de datos: $e');
+    throw e; 
+  }
+}
+
 

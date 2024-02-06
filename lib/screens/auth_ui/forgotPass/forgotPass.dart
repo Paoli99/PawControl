@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/asset_images.dart';
 import 'package:pawcontrol/constants/base.dart';
 import 'package:pawcontrol/constants/colors.dart';
+import 'package:pawcontrol/constants/constants.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
+import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
+import 'package:pawcontrol/screens/auth_ui/login/login.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/socialMediaBtn.dart';
 
@@ -18,13 +21,21 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
+  final email = TextEditingController();
+  
+  @override
+  void dispose() { 
+    email.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(0),
             child: Column(
               children: [
                 Container(
@@ -36,7 +47,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back),
+                        icon: Icon(Icons.arrow_back_ios_outlined),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -101,6 +112,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
                       SizedBox(height: 10.0),
                       TextInputFields(
+                        controller: email,
                         hintText: 'Ingrese su correo',
                         prefixIcon: Icon(
                           Icons.email_outlined,
@@ -112,7 +124,28 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       SizedBox(height: 10.0),
                       PrimaryButton(
                         title: 'Cambiar Contraseña',
-                        onPressed: () {},
+                        onPressed: () async {
+                          String userEmail = email.text;
+                          
+                          try {
+                            bool isEmailValid = await isValidEmail(context, userEmail);
+
+                            if (isEmailValid) {
+                              bool resetResult = await FirebaseAuthenticator.instance.passwordReset(userEmail, context);
+
+                              if (resetResult) {
+                                showGoodMessage(context, "Correo enviado.");
+                              } else {
+                                showMessage(context, "No se pudo enviar el correo de restablecimiento.");
+                              }
+                            } else {
+                              // No es necesario mostrar un mensaje aquí, ya que isValidEmail maneja los mensajes de error.
+                            }
+                          } catch (e) {
+                            // Handle other potential errors if needed.
+                            print('Error al cambiar la contraseña: $e');
+                          }
+                        },
                       ),
                       SizedBox(height: 5.0),
                     ],
