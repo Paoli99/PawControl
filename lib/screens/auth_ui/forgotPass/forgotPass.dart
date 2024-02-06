@@ -1,17 +1,15 @@
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, library_private_types_in_public_api
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/asset_images.dart';
 import 'package:pawcontrol/constants/base.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/constants.dart';
 import 'package:pawcontrol/constants/fonts.dart';
-import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
-import 'package:pawcontrol/screens/auth_ui/login/login.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
-import 'package:pawcontrol/widgets/socialMediaBtn.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -142,7 +140,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               // No es necesario mostrar un mensaje aquí, ya que isValidEmail maneja los mensajes de error.
                             }
                           } catch (e) {
-                            // Handle other potential errors if needed.
                             print('Error al cambiar la contraseña: $e');
                           }
                         },
