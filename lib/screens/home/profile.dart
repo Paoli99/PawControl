@@ -5,12 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
-import 'package:pawcontrol/constants/listTitle.dart';
 import 'package:pawcontrol/constants/routes.dart';
-import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
+import 'package:pawcontrol/constants/textFields.dart';
+import 'package:pawcontrol/constants/textInputFields.dart';
+import 'package:pawcontrol/firebase/firebase_firestore/getUserInfo.dart';
 import 'package:pawcontrol/screens/auth_ui/login/login.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
-
 
 class Profile extends StatefulWidget {
   final int index;
@@ -22,9 +22,50 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController address = TextEditingController();
+
+  late User currentUser; // Variable para almacenar el usuario actual
+
+  @override
+  void initState() {
+    super.initState();
+    // Llama a la función para obtener la información del usuario al inicio
+    getUserInfo();
+  }
+
+  Future<void> getUserInfo() async {
+    try {
+      // Verifica si el usuario está autenticado
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        // Crea una instancia de GetUserInfo y llama a getUserData
+        GetUserInfo getUserInfoInstance = GetUserInfo(userId: user.uid);
+        Map<String, dynamic> userInfo = await getUserInfoInstance.getUserData();
+        print('Usuario ID: ${user.uid}');
+        print('Información del usuario: $userInfo');
+        // Actualiza los controladores de texto con la información del usuario
+        setState(() {
+        firstName.text = userInfo['firstName'] ?? '';
+        lastName.text = userInfo['lastName'] ?? '';
+        phone.text = userInfo['phone'] ?? '';
+        address.text = userInfo['address'] ?? '';
+        print('userInfo: $userInfo'); // Agrega este print para verificar el contenido de userInfo
+      });
+
+      } else {
+        print('Usuario no autenticado');
+      }
+    } catch (e) {
+      print('Error al obtener información del usuario: $e');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -55,81 +96,95 @@ class _ProfileState extends State<Profile> {
                             Icons.logout_outlined,
                             color: Colors.black87,
                           ),
-                          onPressed: () async{
+                          onPressed: () async {
                             await FirebaseAuth.instance.signOut();
-                            Routes.instance.pushAndRemoveUntil(widget: LoginPage(), context: context);
+                            Routes.instance.pushAndRemoveUntil(
+                                widget: LoginPage(), context: context);
                           },
                         ),
                       ),
                     ],
                   ),
                 ),
-
                 SizedBox(width: 10),
-                
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.person_outline,  // Usa Icons.person_outline para un ícono de persona
+                      Icons.person_outline,
                       size: 150,
-                    ) ,
-                    Text(
-                      "Paola Vilaseca",
-                      style: TextStyle(
-                        fontSize: 22, 
-                        fontWeight: FontWeight.bold,
+                    ),
+                    SizedBox(
+                      height: 50.0,
+                    ),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TextInputFields(
+                            controller: firstName,
+                            hintText: 'Ingrese su nombre',
+                            prefixIcon: Icon(
+                              Icons.person_2_outlined,
+                              color: Colors.grey,
+                            ),
+                            backgroundColor: ColorsApp.white70,
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextInputFields(
+                            controller: lastName,
+                            hintText: 'Ingrese su apellido',
+                            prefixIcon: Icon(
+                              Icons.person_2_outlined,
+                              color: Colors.grey,
+                            ),
+                            backgroundColor: ColorsApp.white70,
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextFields(
+                            controller: phone,
+                            hintText: 'Ingrese su numero de teléfono',
+                            prefixIcon: Icon(
+                              Icons.phone_iphone_outlined,
+                              color: Colors.grey,
+                            ),
+                            backgroundColor: ColorsApp.white70,
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextInputFields(
+                            controller: address,
+                            hintText: 'Ingrese su dirección',
+                            prefixIcon: Icon(
+                              Icons.other_houses_outlined,
+                              color: Colors.grey,
+                            ),
+                            backgroundColor: ColorsApp.white70,
+                          ),
+                          SizedBox(
+                            height: 25.0,
+                          ),
+                          
+                          PrimaryButton(
+                            title: 'Actualizar Información',
+                            onPressed: () {
+                              // Lógica para actualizar la información
+                            },
+                          ),
+                        ],
                       ),
-                      ),
-                      Text(
-                      "paolavilaseca.r@gmail.com",
-                      //appProvider.getUserInformation.email,
-                      style: TextStyle(
-                        fontSize: 15, 
-                        fontWeight: FontWeight.normal,
-                      ),
-                      )
+                    ),
                   ],
                 ),
-
-                SizedBox(
-                      height: 30.0,
-                    ),
-
-                Container(
-                    child: Column(children: const[
-                      CustomListTile(
-                        leading: Icon(Icons.person_outlined),
-                        title: "Editar tu información",
-                      ),
-                      CustomListTile(
-                        leading: Icon(Icons.pets_outlined),
-                        title: "Tus mascotas",
-                      ),
-                      CustomListTile(
-                        leading: Icon(Icons.business_center_outlined),
-                        title: "Sobre nosotros",
-                      ),
-                      CustomListTile(
-                        leading: Icon(Icons.headphones_outlined),
-                        title: "Soporte",
-                      )
-                    ]),
-                  ),
-
-                PrimaryButton(title: 'Actualizar Información', onPressed: () {
-
-                },
-                ),
-
-
-                 SizedBox(height: 15.0),
-
-                
               ],
             ),
-            
           ),
         ),
       ),
