@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,7 @@ void showGoodMessage(BuildContext context, String message) {
     backgroundColor: ColorsApp.greenAccent400,
     messageColor: ColorsApp.white,
     icon: Icon(
-      Icons.error_outline_outlined,
+      Icons.check_circle_outline,
       color: ColorsApp.white,
     ),
   ).show(context);
@@ -176,3 +178,23 @@ Future<bool> checkIfEmailExistsInDatabase(String email) async {
 }
 
 
+void updateUserInfo({
+  required String userId,
+  required String firstName,
+  required String lastName,
+  required String phone,
+  required String address,
+  required BuildContext context, 
+}) async {
+  try {
+    await FirebaseFirestore.instance.collection('users').doc(userId).update({
+      'firstName': firstName,
+      'lastName': lastName,
+      'phone': phone,
+      'address': address,
+    });
+    showGoodMessage(context, 'Información del usuario actualizada correctamente en la base de datos');
+  } catch (e) {
+    showMessage(context, 'Error al actualizar la información del usuario: $e');
+  }
+}

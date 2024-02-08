@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
+import 'package:pawcontrol/constants/constants.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/constants/textFields.dart';
@@ -62,6 +63,7 @@ class _ProfileState extends State<Profile> {
       print('Error al obtener información del usuario: $e');
     }
   }
+
 
 
   @override
@@ -175,7 +177,21 @@ class _ProfileState extends State<Profile> {
                           PrimaryButton(
                             title: 'Actualizar Información',
                             onPressed: () {
-                              // Lógica para actualizar la información
+                              String userId = FirebaseAuth.instance.currentUser!.uid;
+                              
+                              String updatedFirstName = firstName.text;
+                              String updatedLastName = lastName.text;
+                              String updatedPhone = phone.text;
+                              String updatedAddress = address.text;
+                        
+                              updateUserInfo(
+                                userId: userId,
+                                firstName: updatedFirstName,
+                                lastName: updatedLastName,
+                                phone: updatedPhone,
+                                address: updatedAddress,
+                                context: context,
+                              );
                             },
                           ),
                         ],
