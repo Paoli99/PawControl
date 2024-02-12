@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, prefer_const_constructors
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,7 @@ import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
 import 'package:pawcontrol/screens/home/home.dart';
 
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
+import 'package:pawcontrol/widgets/secondary_buttons/secondarty_buttons.dart';
 
 
 class SignUp extends StatefulWidget {
@@ -27,6 +30,8 @@ class SignUp extends StatefulWidget {
   class _SignUpState extends State<SignUp>{
 
     bool _isPasswordVisible = true; 
+    File? _image;
+
     TextEditingController firtName = TextEditingController();
     TextEditingController lastName = TextEditingController();
     TextEditingController phone = TextEditingController();
@@ -213,6 +218,14 @@ class SignUp extends StatefulWidget {
                     SizedBox(
                       height: 15.00,
                     ),
+                    SecondaryButton(
+                      title: 'Seleccionar imagen de perfil', 
+                      onPressed: (){
+                      },
+                    ),
+                    SizedBox(
+                      height: 15.00,
+                    ),
                     PrimaryButton(title: 'Registrame', onPressed: () async{
                       bool isValidated =
                         signUpValidation(context, 
@@ -226,6 +239,7 @@ class SignUp extends StatefulWidget {
                         if (isValidated) {
                         bool isLogedin = await FirebaseAuthenticator.instance
                           .signUp(
+                          _image,
                           firtName.text,
                           lastName.text,
                           phone.text,

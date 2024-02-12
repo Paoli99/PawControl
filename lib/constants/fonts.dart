@@ -45,6 +45,14 @@ abstract class TextsFont {
           fontWeight: FontWeight.bold));
   }
 
+  static TextStyle get secondaryButton {
+    return GoogleFonts.montserrat(
+        textStyle: TextStyle(
+          color: ColorsApp.black54, 
+          fontSize: 15.0,
+          fontWeight: FontWeight.bold));
+  }
+
   // textos 
 
   static TextStyle get forgotPass {

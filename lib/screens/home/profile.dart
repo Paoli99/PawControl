@@ -140,7 +140,7 @@ class _ProfileState extends State<Profile> {
                             width: 4,
                             color: ColorsApp.white70
                           ),
-                          color: ColorsApp.grey800
+                          color: ColorsApp.grey400
                         ),
                         child: IconButton(
                           padding: EdgeInsets.zero,

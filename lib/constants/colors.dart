@@ -65,6 +65,10 @@ abstract class ColorsApp {
     return const Color(0xFFE0E0E0);
   } 
 
+  static Color get grey400 {
+    return const Color(0xFFBDBDBD);
+  } 
+
   static Color get grey800 {
     return const Color(0xFF424242);
   } 
