@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,12 +49,12 @@ class _ProfileState extends State<Profile> {
         print('Información del usuario: $userInfo');
         // Actualiza los controladores de texto con la información del usuario
         setState(() {
-        firstName.text = userInfo['firstName'] ?? '';
-        lastName.text = userInfo['lastName'] ?? '';
-        phone.text = userInfo['phone'] ?? '';
-        address.text = userInfo['address'] ?? '';
-        print('userInfo: $userInfo'); // Agrega este print para verificar el contenido de userInfo
-      });
+          firstName.text = userInfo['firstName'] ?? '';
+          lastName.text = userInfo['lastName'] ?? '';
+          phone.text = userInfo['phone'] ?? '';
+          address.text = userInfo['address'] ?? '';
+          print('userInfo: $userInfo'); // Agrega este print para verificar el contenido de userInfo
+        });
 
       } else {
         print('Usuario no autenticado');
@@ -63,8 +63,6 @@ class _ProfileState extends State<Profile> {
       print('Error al obtener información del usuario: $e');
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -108,97 +106,137 @@ class _ProfileState extends State<Profile> {
                     ],
                   ),
                 ),
-                SizedBox(width: 10),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                
+                SizedBox(
+                  height: 20.0,
+                ),
+                
+                Stack(
                   children: [
-                    Icon(
-                      Icons.person_outline,
-                      size: 150,
-                    ),
-                    SizedBox(
-                      height: 50.0,
-                    ),
                     Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          TextInputFields(
-                            controller: firstName,
-                            hintText: 'Ingrese su nombre',
-                            prefixIcon: Icon(
-                              Icons.person_2_outlined,
-                              color: Colors.grey,
-                            ),
-                            backgroundColor: ColorsApp.white70,
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          TextInputFields(
-                            controller: lastName,
-                            hintText: 'Ingrese su apellido',
-                            prefixIcon: Icon(
-                              Icons.person_2_outlined,
-                              color: Colors.grey,
-                            ),
-                            backgroundColor: ColorsApp.white70,
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          TextFields(
-                            controller: phone,
-                            hintText: 'Ingrese su numero de teléfono',
-                            prefixIcon: Icon(
-                              Icons.phone_iphone_outlined,
-                              color: Colors.grey,
-                            ),
-                            backgroundColor: ColorsApp.white70,
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          TextInputFields(
-                            controller: address,
-                            hintText: 'Ingrese su dirección',
-                            prefixIcon: Icon(
-                              Icons.other_houses_outlined,
-                              color: Colors.grey,
-                            ),
-                            backgroundColor: ColorsApp.white70,
-                          ),
-                          SizedBox(
-                            height: 25.0,
-                          ),
-                          
-                          PrimaryButton(
-                            title: 'Actualizar Información',
-                            onPressed: () {
-                              String userId = FirebaseAuth.instance.currentUser!.uid;
-                              
-                              String updatedFirstName = firstName.text;
-                              String updatedLastName = lastName.text;
-                              String updatedPhone = phone.text;
-                              String updatedAddress = address.text;
-                        
-                              updateUserInfo(
-                                userId: userId,
-                                firstName: updatedFirstName,
-                                lastName: updatedLastName,
-                                phone: updatedPhone,
-                                address: updatedAddress,
-                                context: context,
-                              );
-                            },
-                          ),
+                      width: 120,
+                      height: 130,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 4, color: Colors.white70),
+                        boxShadow: [
+                          BoxShadow(
+                            spreadRadius: 2,
+                            blurRadius: 10,
+                            color: Colors.black87.withOpacity(0.1)
+                          )
                         ],
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 4,
+                            color: ColorsApp.white70
+                          ),
+                          color: ColorsApp.grey800
+                        ),
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: Icon(
+                            Icons.edit,
+                            color: ColorsApp.white,
+                          ),
+                          onPressed: () {  },
+                        ),
                       ),
                     ),
                   ],
                 ),
+
+                SizedBox(
+                  height: 20.0,
+                ),
+
+                //Datos usuario
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TextInputFields(
+                      controller: firstName,
+                      hintText: 'Ingrese su nombre',
+                      prefixIcon: Icon(
+                        Icons.person_2_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    TextInputFields(
+                      controller: lastName,
+                      hintText: 'Ingrese su apellido',
+                      prefixIcon: Icon(
+                        Icons.person_2_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    TextFields(
+                      controller: phone,
+                      hintText: 'Ingrese su numero de teléfono',
+                      prefixIcon: Icon(
+                        Icons.phone_iphone_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    TextInputFields(
+                      controller: address,
+                      hintText: 'Ingrese su dirección',
+                      prefixIcon: Icon(
+                        Icons.other_houses_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                    SizedBox(
+                      height: 25.0,
+                    ),
+                    
+                    PrimaryButton(
+                      title: 'Actualizar Información',
+                      onPressed: () {
+                        String userId = FirebaseAuth.instance.currentUser!.uid;
+
+                        String updatedFirstName = firstName.text;
+                        String updatedLastName = lastName.text;
+                        String updatedPhone = phone.text;
+                        String updatedAddress = address.text;
+                        
+                        updateUserInfo(
+                          userId: userId,
+                          firstName: updatedFirstName,
+                          lastName: updatedLastName,
+                          phone: updatedPhone,
+                          address: updatedAddress,
+                          context: context,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                
               ],
             ),
           ),
