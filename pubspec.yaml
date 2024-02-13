@@ -45,6 +45,7 @@ dependencies:
   fluttertoast: ^8.2.4
 
   another_flushbar: ^1.12.30
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
