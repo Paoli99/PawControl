@@ -7,6 +7,9 @@ import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/screens/home/profile.dart';
 import 'package:pawcontrol/screens/home/search.dart';
+import 'package:pawcontrol/screens/pets/addPets.dart';
+import 'package:pawcontrol/widgets/header/header.dart';
+import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
 
 class Home extends StatefulWidget {
   final int initialIndex;
@@ -84,47 +87,40 @@ class _HomeState extends State<Home> {
 class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Aquí puedes colocar el contenido de la página de inicio
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(0),
-            child: Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: ColorsApp.white70,
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(width: 10),
-                      Image.asset(
-                        AssetsImages.instance.logo,
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.fill,
+          child: Column(
+            children: [
+              Header(title: 'PAW CONTROL', 
+              showImage: true, 
+              showBackButton: false,),
+              SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: RoundButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AddPets()),
+                          );
+                        },
+                        icon: Icons.add,
                       ),
-                      SizedBox(width: 10),
-                      Text(
-                        "PAW CONTROL",
-                        style: TextsFont.tituloHeader,
-                      ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: 10.0),
+                    Text(
+                      'Agregar mascotas',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  ],
                 ),
-                // Agrega el contenido específico de la página de búsqueda a continuación
-                // Por ejemplo, barra de búsqueda, resultados, etc.
-                SizedBox(height: 20),
-                Text(
-                  "Pagina inicial",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                // ... Agrega más widgets según sea necesario
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

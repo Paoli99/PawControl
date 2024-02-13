@@ -23,7 +23,7 @@ abstract class TextsFont {
     return GoogleFonts.montserrat(
         textStyle: TextStyle(
           color: ColorsApp.black, 
-          fontSize: 18.0,
+          fontSize: 20.0,
           fontWeight: FontWeight.bold));
   }
 

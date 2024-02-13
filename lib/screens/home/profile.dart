@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, unnecessary_null_comparison
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/constants.dart';
@@ -11,6 +10,8 @@ import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/getUserInfo.dart';
 import 'package:pawcontrol/screens/auth_ui/login/login.dart';
+import 'package:pawcontrol/widgets/header/header.dart';
+import 'package:pawcontrol/widgets/pictures/addPicture.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
 
@@ -79,105 +80,30 @@ class _ProfileState extends State<Profile> {
             padding: const EdgeInsets.all(0),
             child: Column(
               children: [
-                Container(
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: ColorsApp.white70,
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Text(
-                          "Editar Perfil",
-                          style: TextsFont.tituloHeaderSmall,
-                        ),
-                      ),
-                      Positioned(
-                        right: 8.0,
-                        top: 0,
-                        bottom: 0,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.logout_outlined,
-                            color: Colors.black87,
-                          ),
-                          onPressed: () async {
-                            await FirebaseAuth.instance.signOut();
-                            Routes.instance.pushAndRemoveUntil(
-                                widget: LoginPage(), context: context);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                Header(
+                  title: 'Editar Perfil',
+                  showImage: false,
+                  showBackButton: false,
+                  showLogoutButton: true,
+                  onLogoutPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Routes.instance.pushAndRemoveUntil(
+                        widget: LoginPage(), context: context);
+                  },
                 ),
                 
                 SizedBox(
                   height: 20.0,
                 ),
                 
-                Stack(
-                children: [
-                  Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 4, color: Colors.white70),
-                    boxShadow: [
-                      BoxShadow(
-                        spreadRadius: 2,
-                        blurRadius: 10,
-                        color: Colors.black87.withOpacity(0.1)
-                      )
-                    ],
-                    shape: BoxShape.circle,
-                  ),
-                    child: ClipOval(
-                      child: imageUrl.isNotEmpty
-                        ? Image.network(
-                            imageUrl,
-                            width: 120,
-                            height: 120,
-                            fit: BoxFit.cover,
-                          )
-                        : Icon(
-                            Icons.person, // Icono de persona
-                            size: 100, // Tamaño del ícono
-                            color: ColorsApp.white70, // Color del ícono
-                          ),
-                    ),  
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          width: 4,
-                          color: ColorsApp.white70
-                        ),
-                        color: ColorsApp.grey400
-                      ),
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        icon: Icon(
-                          Icons.edit,
-                          color: ColorsApp.white,
-                        ),
-                        onPressed: () {  
-                          FirebaseAuthenticator firebaseAuthenticator = FirebaseAuthenticator();
-                          firebaseAuthenticator.pickUpLoadImage(setImageUrl);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
+                AddPicture(
+                  imageUrl: imageUrl,
+                  setImageUrl: setImageUrl,
+                  onPressed: () {  
+                    FirebaseAuthenticator firebaseAuthenticator = FirebaseAuthenticator();
+                    firebaseAuthenticator.pickUpLoadImage(setImageUrl);
+                  },
+                ),
 
                 SizedBox(
                   height: 20.0,
