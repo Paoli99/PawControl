@@ -19,11 +19,22 @@ class UpdateUserInfo {
         'lastName': lastName,
         'phone': phone,
         'address': address,
-        // Aquí puedes agregar más campos si es necesario
       });
       print('Información del usuario actualizada correctamente');
     } catch (e) {
       print("Error updating user data: $e");
     }
   }
+
+  Future<void> updateUserImage(String imageUrl) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'imageUrl': imageUrl,
+      });
+      print('Imagen del usuario actualizada correctamente');
+    } catch (e) {
+      print("Error al actualizar la imagen del usuario: $e");
+    }
+  }
+  
 }

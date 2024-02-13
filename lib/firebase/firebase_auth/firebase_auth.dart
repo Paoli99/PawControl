@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pawcontrol/constants/constants.dart';
+import 'package:pawcontrol/firebase/firebase_firestore/updateUserInfo.dart';
 
 
 class FirebaseAuthenticator {
@@ -56,7 +57,7 @@ class FirebaseAuthenticator {
       }
     }
 
-  Future<String?> pickUpLoadImage(Function(String) setImageUrl) async {
+    Future<String?> pickUpLoadImage(Function(String) setImageUrl) async {
     final image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxHeight: 512,
@@ -70,12 +71,21 @@ class FirebaseAuthenticator {
       String downloadURL = await ref.getDownloadURL();
       print(downloadURL);
       setImageUrl(downloadURL);
+
+      // Actualizar la URL de la imagen en Firestore
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        UpdateUserInfo updateUserInfoInstance = UpdateUserInfo(userId: user.uid);
+        await updateUserInfoInstance.updateUserImage(downloadURL);
+      }
+
       return downloadURL;
     } else {
       print('No image selected.');
       return null;
     }
   }
+
   
   void signOut() async {
     await _auth.signOut();
