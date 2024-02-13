@@ -56,6 +56,26 @@ class FirebaseAuthenticator {
       }
     }
 
+  Future<String?> pickUpLoadImage(Function(String) setImageUrl) async {
+    final image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 512,
+      maxWidth: 512,
+      imageQuality: 75,
+    );
+
+    if (image != null) {
+      Reference ref = FirebaseStorage.instance.ref().child("profile.jpg");
+      await ref.putFile(File(image.path));
+      String downloadURL = await ref.getDownloadURL();
+      print(downloadURL);
+      setImageUrl(downloadURL);
+      return downloadURL;
+    } else {
+      print('No image selected.');
+      return null;
+    }
+  }
   
   void signOut() async {
     await _auth.signOut();

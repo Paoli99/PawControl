@@ -1,5 +1,3 @@
-// ignore_for_file: file_names
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GetUserInfo {
@@ -9,8 +7,10 @@ class GetUserInfo {
 
   Future<Map<String, dynamic>> getUserData() async {
     try {
-      DocumentSnapshot userSnapshot =
-          await FirebaseFirestore.instance.collection('users').doc(userId).get();
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
 
       if (userSnapshot.exists) {
         Map<String, dynamic> userData =
@@ -24,4 +24,6 @@ class GetUserInfo {
       return {};
     }
   }
+
+  
 }
