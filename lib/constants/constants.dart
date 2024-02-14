@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unnecessary_null_comparison
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -198,3 +198,51 @@ void updateUserInfo({
     showMessage(context, 'Error al actualizar la información del usuario: $e');
   }
 }
+
+Future<bool> registerPet({
+  required BuildContext context,
+  required String petName,
+  required String selectedSpecies,
+  required String selectedBreed,
+  required String selectedSex,
+  required String selectedColor,
+  required String imageUrl,
+  required DateTime selectedDate,
+}) async {
+  if (petName.isEmpty ||
+      selectedSpecies.isEmpty ||
+      selectedBreed.isEmpty ||
+      selectedSex.isEmpty ||
+      selectedColor.isEmpty ||
+      imageUrl.isEmpty ||
+      selectedDate == null) {
+    String errorMessage = 'Por favor, complete todos los campos:\n';
+    if (petName.isEmpty) {
+      errorMessage += '- Ingrese el nombre de su mascota.\n';
+    }
+    if (selectedSpecies.isEmpty) {
+      errorMessage += '- Seleccione la especie de su mascota.\n';
+    }
+    if (selectedBreed.isEmpty) {
+      errorMessage += '- Seleccione la raza de su mascota.\n';
+    }
+    if (selectedSex.isEmpty) {
+      errorMessage += '- Seleccione el sexo de su mascota.\n';
+    }
+    if (selectedColor.isEmpty) {
+      errorMessage += '- Seleccione el color de su mascota.\n';
+    }
+    if (imageUrl.isEmpty) {
+      errorMessage += '- Seleccione una imagen para su mascota.\n';
+    }
+    if (selectedDate == null) {
+      errorMessage += '- Seleccione la fecha de nacimiento de su mascota.\n';
+    }
+    showMessage(context, errorMessage);
+    return false;
+  }
+
+  showGoodMessage(context, 'Mascota registrada exitosamente.');
+  return true;
+}
+

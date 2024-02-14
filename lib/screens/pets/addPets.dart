@@ -3,8 +3,10 @@ import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/datePicker.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
+import 'package:pawcontrol/widgets/pictures/addPicture.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/constants/dropListView.dart';
+import 'package:pawcontrol/constants/constants.dart';
 
 class AddPets extends StatefulWidget {
   @override
@@ -13,6 +15,39 @@ class AddPets extends StatefulWidget {
 
 class _AddPetsState extends State<AddPets> {
   DateTime? selectedDate;
+  String? selectedSpecies;
+  TextEditingController petNameController = TextEditingController();
+  TextEditingController petBreedController = TextEditingController();
+  TextEditingController petGenderController = TextEditingController();
+  TextEditingController petColorController = TextEditingController();
+  String? imageUrl;
+
+  List<String> dogBreeds = [
+    'Mestizo',
+    'Chihuahua',
+    'Bulldog',
+    'Labrador Retriever',
+    'Golden Retriever',
+    'Pastor Alemán',
+    'Boxer',
+    'Shih Tzu',
+    'Pomerania',
+    'Yorkshire Terrier',
+    'Otra',
+  ];
+
+  List<String> catBreeds = [
+    'Mestizo',
+    'Siamés',
+    'Persa',
+    'Maine Coon',
+    'Ragdoll',
+    'Bengal',
+    'British Shorthair',
+    'Scottish Fold',
+    'Sphynx',
+    'Otro',
+  ];
 
   void _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -32,12 +67,20 @@ class _AddPetsState extends State<AddPets> {
   Widget build(BuildContext context) {
     void _setImageUrl(String imageUrl) {}
 
+    List<String>? breedList =
+        selectedSpecies == null ? null : (selectedSpecies == 'Perro' ? dogBreeds : catBreeds);
+
+    List<DropdownMenuItem<String>> breedDropdownItems = breedList?.map((value) => DropdownMenuItem(
+          value: value,
+          child: Text(value),
+        )).toList() ?? [];
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Header(title: 'PAW CONTROL', showImage: true, showBackButton: true,),
+              Header(title: 'PAW CONTROL', showImage: true, showBackButton: true),
               SizedBox(height: 20),
               Container(
                 width: double.infinity,
@@ -46,7 +89,19 @@ class _AddPetsState extends State<AddPets> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Container(
+                      width: double.infinity,
+                      child: Center(
+                        child: AddPicture(
+                          imageUrl: imageUrl ?? "",
+                          setImageUrl: _setImageUrl,
+                          onPressed: () {},
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
                     TextInputFields(
+                      controller: petNameController,
                       hintText: 'Ingrese el nombre de su mascota',
                       prefixIcon: Icon(
                         Icons.pets_outlined,
@@ -57,26 +112,27 @@ class _AddPetsState extends State<AddPets> {
                     SizedBox(height: 20),
                     DropDownListView<String>(
                       label: 'Especie',
-                      items: ['Perro', 'Gato', 'Otro']
+                      value: selectedSpecies,
+                      items: ['Perro', 'Gato']
                           .map((value) => DropdownMenuItem(
                                 value: value,
                                 child: Text(value),
                               ))
                           .toList(),
                       onChanged: (value) {
+                        setState(() {
+                          selectedSpecies = value!;
+                        });
                       },
                     ),
                     SizedBox(height: 20),
                     DropDownListView<String>(
                       label: 'Raza',
-                      items: ['Golden Retriever', 'Labrador Retriever', 'Bulldog', 'Otra']
-                          .map((value) => DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              ))
-                          .toList(),
+                      items: breedDropdownItems,
                       onChanged: (value) {
-                        // Handle selection
+                        setState(() {
+                          petBreedController.text = value ?? '';
+                        });
                       },
                     ),
                     SizedBox(height: 20),
@@ -89,20 +145,36 @@ class _AddPetsState extends State<AddPets> {
                               ))
                           .toList(),
                       onChanged: (value) {
-                        // Handle selection
+                        setState(() {
+                          petGenderController.text = value ?? '';
+                        });
                       },
                     ),
                     SizedBox(height: 20),
                     DropDownListView<String>(
                       label: 'Color',
-                      items: ['Blanco', 'Negro', 'Marrón', 'Otro']
+                      items: [
+                        'Blanco',
+                        'Negro',
+                        'Marrón',
+                        'Gris',
+                        'Beige',
+                        'Naranja',
+                        'Atigrado',
+                        'Tricolor',
+                        'Gris Azulado',
+                        'Blanco y negro',
+                        'Otro',
+                      ]
                           .map((value) => DropdownMenuItem(
                                 value: value,
                                 child: Text(value),
                               ))
                           .toList(),
                       onChanged: (value) {
-                        // Handle selection
+                        setState(() {
+                          petColorController.text = value ?? '';
+                        });
                       },
                     ),
                     SizedBox(height: 20),
@@ -120,15 +192,27 @@ class _AddPetsState extends State<AddPets> {
                         onTap: (context) {
                           _selectDate(context);
                         },
-                        placeholderText: 'Seleccione la fecha de nacimiento', // Define el texto del marcador de posición aquí
+                        placeholderText: 'Seleccione la fecha de nacimiento',
                       ),
                     ),
-                    SizedBox(height: 20), 
-                    Center( // Envuelve el botón en un Center
+                    SizedBox(height: 20),
+                    Center(
                       child: PrimaryButton(
                         title: 'Registrar mascota',
-                        onPressed: () {
-                          // Acción al presionar el botón
+                        onPressed: () async {
+                          bool success = await registerPet(
+                            context: context,
+                            petName: petNameController.text,
+                            selectedSpecies: selectedSpecies ?? '',
+                            selectedBreed: petBreedController.text,
+                            selectedSex: petGenderController.text,
+                            selectedColor: petColorController.text,
+                            imageUrl: imageUrl ?? '',
+                            selectedDate: selectedDate ?? DateTime.now(),
+                          );
+                          if (success) {
+                            // Aquí puedes navegar a la siguiente pantalla o realizar otras acciones
+                          }
                         },
                       ),
                     ),
