@@ -1,12 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/datePicker.dart';
+import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
+import 'package:pawcontrol/screens/home/home.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/pictures/addPicture.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/constants/dropListView.dart';
 import 'package:pawcontrol/constants/constants.dart';
+import 'package:pawcontrol/firebase/firebase_firestore/addPetsInfo.dart';
 
 class AddPets extends StatefulWidget {
   @override
@@ -95,7 +100,18 @@ class _AddPetsState extends State<AddPets> {
                         child: AddPicture(
                           imageUrl: imageUrl ?? "",
                           setImageUrl: _setImageUrl,
-                          onPressed: () {},
+                          onPressed: () async {
+                            String? uploadedImageUrl = await AddPetsInfo().pickAndUploadImage((String url) {
+                              setState(() {
+                                imageUrl = url;
+                              });
+                            });
+                            if (uploadedImageUrl != null) {
+                              setState(() {
+                                imageUrl = uploadedImageUrl;
+                              });
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -200,7 +216,7 @@ class _AddPetsState extends State<AddPets> {
                       child: PrimaryButton(
                         title: 'Registrar mascota',
                         onPressed: () async {
-                          bool success = await registerPet(
+                          bool success = await AddPetsInfo.registerPet(
                             context: context,
                             petName: petNameController.text,
                             selectedSpecies: selectedSpecies ?? '',
@@ -211,7 +227,10 @@ class _AddPetsState extends State<AddPets> {
                             selectedDate: selectedDate ?? DateTime.now(),
                           );
                           if (success) {
-                            // Aquí puedes navegar a la siguiente pantalla o realizar otras acciones
+                            Routes.instance.pushAndRemoveUntil(
+                            widget: const Home(),
+                            context: context,
+                          );
                           }
                         },
                       ),
