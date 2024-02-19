@@ -35,6 +35,7 @@ abstract class TextsFont {
           fontWeight: FontWeight.bold));
   }
 
+
   //botones 
 
   static TextStyle get loginButton {
@@ -94,5 +95,14 @@ abstract class TextsFont {
   static TextStyle get suggestion {
     return GoogleFonts.montserrat(
         textStyle: TextStyle(color: ColorsApp.black, fontSize: 14.0));
+  }
+
+  static TextStyle get tituloNames{
+    return GoogleFonts.montserrat(
+        textStyle: TextStyle(
+          color: ColorsApp.black, 
+          fontSize: 20.0,
+          fontWeight: FontWeight.w500
+        ));
   }
 }

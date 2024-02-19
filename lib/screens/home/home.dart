@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/asset_images.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
+import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/screens/home/profile.dart';
 import 'package:pawcontrol/screens/home/search.dart';
 import 'package:pawcontrol/screens/pets/addPets.dart';
+import 'package:pawcontrol/screens/pets/pets.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart'; // Importar el archivo getPetInfo.dart
@@ -110,8 +112,7 @@ class HomeContent extends StatelessWidget {
                 showBackButton: false,
               ),
               SizedBox(height: 20),
-              // Mostrar la lista de mascotas si hay mascotas registradas
-              // de lo contrario, mostrar un mensaje que indica que no hay mascotas registradas
+            
               userPets.isNotEmpty
                   ? Column(
                       children: userPets.map((pet) {
@@ -119,19 +120,24 @@ class HomeContent extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                              // Lógica para manejar el tap en la mascota
-                            },
+                            Routes.instance.push(
+                              widget: Pets(),
+                              context: context,
+                            );
+                          },
                             child: Row(
                               children: [
+                                SizedBox(width: 10),
                                 // Muestra la imagen de la mascota
                                 CircleAvatar(
                                   backgroundImage: NetworkImage(pet['imageUrl']),
+                                  radius: 25,
                                 ),
                                 SizedBox(width: 10),
                                 // Muestra el nombre de la mascota
                                 Text(
                                   pet['name'],
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextsFont.tituloNames,
                                 ),
                               ],
                             ),
@@ -163,7 +169,7 @@ class HomeContent extends StatelessWidget {
                     SizedBox(width: 10.0),
                     Text(
                       'Agregar mascotas',
-                      style: TextStyle(fontSize: 16.0),
+                      style: TextsFont.tituloNames,
                     ),
                   ],
                 ),

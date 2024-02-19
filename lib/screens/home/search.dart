@@ -1,10 +1,8 @@
 // search.dart
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:pawcontrol/constants/asset_images.dart';
-import 'package:pawcontrol/constants/colors.dart';
-import 'package:pawcontrol/constants/fonts.dart';
+import 'package:pawcontrol/widgets/header/header.dart';
 
 class Search extends StatelessWidget {
   final int index;
@@ -20,28 +18,12 @@ class Search extends StatelessWidget {
             padding: const EdgeInsets.all(0),
             child: Column(
               children: [
-                Container(
-                  width: double.infinity,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: ColorsApp.white70,
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(width: 10),
-                      Image.asset(
-                        AssetsImages.instance.logo,
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.fill,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        "PAW CONTROL",
-                        style: TextsFont.tituloHeader,
-                      ),
-                    ],
-                  ),
+                Header(
+                  title: 'Mascotas Perdidas',
+                  showImage: true,
+                  showBackButton: false,
+                  showLogoutButton: false,
+                  
                 ),
                 // Agrega el contenido específico de la página de búsqueda a continuación
                 // Por ejemplo, barra de búsqueda, resultados, etc.
@@ -50,7 +32,6 @@ class Search extends StatelessWidget {
                   "Resultados de búsqueda",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                // ... Agrega más widgets según sea necesario
               ],
             ),
           ),

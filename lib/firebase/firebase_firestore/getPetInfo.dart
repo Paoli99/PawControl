@@ -23,7 +23,11 @@ class GetPetInfo {
           Map<String, dynamic> petInfo = {
             'name': petDoc['petName'],
             'imageUrl': petDoc['imageUrl'],
-            // Agrega más campos si es necesario
+            'breed': petDoc['selectedBreed'],
+            'color': petDoc['selectedColor'],
+            'birthDate':petDoc['selectedDate'],
+            'sex': petDoc['selectedSex'],
+            'species': petDoc['selectedSpecies']
           };
           userPets.add(petInfo);
         });
