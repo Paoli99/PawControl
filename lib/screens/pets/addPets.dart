@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/datePicker.dart';
@@ -10,7 +8,6 @@ import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/pictures/addPicture.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/constants/dropListView.dart';
-import 'package:pawcontrol/constants/constants.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/addPetsInfo.dart';
 
 class AddPets extends StatefulWidget {
@@ -30,6 +27,7 @@ class _AddPetsState extends State<AddPets> {
   List<String> dogBreeds = [
     'Mestizo',
     'Chihuahua',
+    'Cooker',
     'Bulldog',
     'Labrador Retriever',
     'Golden Retriever',
@@ -70,7 +68,11 @@ class _AddPetsState extends State<AddPets> {
 
   @override
   Widget build(BuildContext context) {
-    void _setImageUrl(String imageUrl) {}
+    void _setImageUrl(String url) {
+      setState(() {
+        imageUrl = url;
+      });
+    }
 
     List<String>? breedList =
         selectedSpecies == null ? null : (selectedSpecies == 'Perro' ? dogBreeds : catBreeds);
@@ -101,16 +103,9 @@ class _AddPetsState extends State<AddPets> {
                           imageUrl: imageUrl ?? "",
                           setImageUrl: _setImageUrl,
                           onPressed: () async {
-                            String? uploadedImageUrl = await AddPetsInfo().pickAndUploadImage((String url) {
-                              setState(() {
-                                imageUrl = url;
-                              });
+                            String? uploadedImageUrl = await AddPetsInfo.pickAndUploadImage((String url) {
+                              _setImageUrl(url);
                             });
-                            if (uploadedImageUrl != null) {
-                              setState(() {
-                                imageUrl = uploadedImageUrl;
-                              });
-                            }
                           },
                         ),
                       ),
@@ -228,9 +223,9 @@ class _AddPetsState extends State<AddPets> {
                           );
                           if (success) {
                             Routes.instance.pushAndRemoveUntil(
-                            widget: const Home(),
-                            context: context,
-                          );
+                              widget: const Home(),
+                              context: context,
+                            );
                           }
                         },
                       ),

@@ -10,6 +10,7 @@ import 'package:pawcontrol/screens/home/search.dart';
 import 'package:pawcontrol/screens/pets/addPets.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
+import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart'; // Importar el archivo getPetInfo.dart
 
 class Home extends StatefulWidget {
   final int initialIndex;
@@ -22,14 +23,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
-
+  late List<Map<String, dynamic>> userPets;
+  
   @override
   void initState() {
-
-    //AppProvider appProvider = Provider.of<AppProvider>(context, listen: false);
-    //appProvider.getUserInfoFirebase();
     super.initState();
     _currentIndex = widget.initialIndex;
+    _loadUserPets(); // Cargar las mascotas al inicializar el widget
+  }
+
+  // Método para cargar las mascotas del usuario
+  void _loadUserPets() async {
+    List<Map<String, dynamic>> pets = await GetPetInfo.getUserPetsInfo();
+    setState(() {
+      userPets = pets;
+    });
   }
 
   void onTabTapped(int index) {
@@ -44,7 +52,7 @@ class _HomeState extends State<Home> {
 
     switch (_currentIndex) {
       case 0:
-        body = HomeContent();
+        body = HomeContent(userPets: userPets); // Pasar la lista de mascotas al HomeContent
         break;
       case 1:
         body = Search(index: 1);
@@ -85,6 +93,10 @@ class _HomeState extends State<Home> {
 }
 
 class HomeContent extends StatelessWidget {
+  final List<Map<String, dynamic>> userPets; // Lista de mascotas
+
+  const HomeContent({Key? key, required this.userPets}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -92,9 +104,45 @@ class HomeContent extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Header(title: 'PAW CONTROL', 
-              showImage: true, 
-              showBackButton: false,),
+              Header(
+                title: 'PAW CONTROL',
+                showImage: true,
+                showBackButton: false,
+              ),
+              SizedBox(height: 20),
+              // Mostrar la lista de mascotas si hay mascotas registradas
+              // de lo contrario, mostrar un mensaje que indica que no hay mascotas registradas
+              userPets.isNotEmpty
+                  ? Column(
+                      children: userPets.map((pet) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Lógica para manejar el tap en la mascota
+                            },
+                            child: Row(
+                              children: [
+                                // Muestra la imagen de la mascota
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage(pet['imageUrl']),
+                                ),
+                                SizedBox(width: 10),
+                                // Muestra el nombre de la mascota
+                                Text(
+                                  pet['name'],
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    )
+                  : Text(
+                      'No tiene mascotas registradas',
+                      style: TextStyle(fontSize: 16),
+                    ),
               SizedBox(height: 20),
               Container(
                 width: double.infinity,

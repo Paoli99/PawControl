@@ -1,7 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, use_build_context_synchronously
-
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -44,7 +41,7 @@ class AddPetsInfo {
     }
   }
 
-  Future<String?> pickAndUploadImage(Function(String) setImageUrl) async {
+  static Future<String?> pickAndUploadImage(Function(String) setImageUrl) async {
     final image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxHeight: 512,
@@ -53,7 +50,10 @@ class AddPetsInfo {
     );
 
     if (image != null) {
-      Reference ref = FirebaseStorage.instance.ref().child("profilePet.jpg");
+      // Generar un nombre único para la imagen
+      String imageName = '${DateTime.now().millisecondsSinceEpoch}_${image.path.split('/').last}';
+
+      Reference ref = FirebaseStorage.instance.ref().child("petProfileImages/$imageName");
       await ref.putFile(File(image.path));
       String downloadURL = await ref.getDownloadURL();
       print(downloadURL);
