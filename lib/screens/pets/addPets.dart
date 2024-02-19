@@ -78,6 +78,13 @@ class _AddPetsState extends State<AddPets> {
       });
     }
 
+    void navigateBack(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Home()),
+  );
+  }
+
     List<String>? breedList =
         selectedSpecies == null ? null : (selectedSpecies == 'Perro' ? dogBreeds : catBreeds);
 
@@ -91,7 +98,7 @@ class _AddPetsState extends State<AddPets> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Header(title: 'PAW CONTROL', showImage: true, showBackButton: true),
+              Header(title: 'PAW CONTROL', showImage: true, showBackButton: true, navigateTo: navigateBack),
               Container(
                 padding: EdgeInsets.all(20),
                 child: Column(

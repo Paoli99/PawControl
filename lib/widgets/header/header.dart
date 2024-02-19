@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/asset_images.dart';
 import 'package:pawcontrol/constants/colors.dart';
@@ -11,8 +9,17 @@ class Header extends StatelessWidget {
   final bool showLogoutButton; 
   final bool showImage; 
   final bool showBackButton; 
+  final Function(BuildContext)? navigateTo; // Cambio: Ahora es opcional
 
-  const Header({Key? key, required this.title, this.onLogoutPressed, this.showLogoutButton = false, this.showImage = true, this.showBackButton = true}) : super(key: key);
+  const Header({
+    Key? key,
+    required this.title,
+    this.onLogoutPressed,
+    this.showLogoutButton = false,
+    this.showImage = true,
+    this.showBackButton = true,
+    this.navigateTo, // Cambio: Ahora es opcional
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +32,11 @@ class Header extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween, 
         children: [
-          if (showBackButton) 
+          if (showBackButton && navigateTo != null) // Cambio: Verifica si navigateTo es no nulo
             IconButton(
               icon: Icon(Icons.arrow_back), 
               onPressed: () {
-                Navigator.of(context).pop(); 
+                navigateTo!(context); // Cambio: Usa navigateTo solo si no es nulo
               },
             ),
           if (showImage) 

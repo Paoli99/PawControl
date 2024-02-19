@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/textFields.dart';
+import 'package:pawcontrol/screens/pets/pets.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/pictures/addPicture.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/constants/dropListView.dart';
@@ -36,6 +36,14 @@ class _EditPetProfileState extends State<EditPetProfile> {
     getUserPets();
   }
 
+  void navigateBack(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Pets()),
+  );
+}
+
+
   Future<void> getUserPets() async {
     try {
       List<Map<String, dynamic>> petsInfo = await GetPetInfo.getUserPetsInfo();
@@ -55,10 +63,10 @@ class _EditPetProfileState extends State<EditPetProfile> {
           child: Column(
             children: [
               Header(
-                title: 'Editar Perfil de Mascotas',
-                showImage: false,
+                title: 'PAW CONTROL',
+                showImage: true,
                 showBackButton: true,
-                showLogoutButton: false,
+                navigateTo: navigateBack, // Define la ruta específica aquí
               ),
               SizedBox(height: 20),
               Column(
@@ -88,7 +96,9 @@ class _EditPetProfileState extends State<EditPetProfile> {
                                   ))
                               .toList(),
                           onChanged: (value) {
-                            // Implementa la lógica para cambiar la especie
+                            setState(() {
+                              petInfo['species'] = value;
+                            });
                           },
                         ),
                         SizedBox(height: 20),
@@ -97,7 +107,9 @@ class _EditPetProfileState extends State<EditPetProfile> {
                           value: petInfo['breed'] ?? '',
                           items: breedDropdownItems(petInfo['species']),
                           onChanged: (value) {
-                            // Implementa la lógica para cambiar la raza
+                            setState(() {
+                              petInfo['breed'] = value;
+                            });
                           },
                         ),
                         SizedBox(height: 20),
@@ -111,7 +123,9 @@ class _EditPetProfileState extends State<EditPetProfile> {
                                   ))
                               .toList(),
                           onChanged: (value) {
-                            // Implementa la lógica para cambiar el sexo
+                            setState(() {
+                              petInfo['sex'] = value;
+                            });
                           },
                         ),
                         SizedBox(height: 20),
@@ -137,21 +151,25 @@ class _EditPetProfileState extends State<EditPetProfile> {
                                   ))
                               .toList(),
                           onChanged: (value) {
-                            // Implementa la lógica para cambiar el color
+                            setState(() {
+                              petInfo['color'] = value;
+                            });
                           },
                         ),
                         SizedBox(height: 20),
                         InkWell(
                           onTap: () {
-                            // Implementa la lógica para seleccionar la fecha de nacimiento
+                            // Implementar lógica para seleccionar la fecha de nacimiento
                           },
                           child: DatePickerField(
                             selectedDate: DateTime.parse(petInfo['birthDate'] ?? ''),
                             onSelectDate: (DateTime? date) {
-                              // Implementa la lógica para seleccionar la fecha de nacimiento
+                              setState(() {
+                                petInfo['birthDate'] = date.toString();
+                              });
                             },
                             onTap: (context) {
-                              // Implementa la lógica para seleccionar la fecha de nacimiento
+                              // Implementar lógica para seleccionar la fecha de nacimiento
                             },
                             placeholderText: 'Fecha de nacimiento',
                           ),
@@ -171,7 +189,7 @@ class _EditPetProfileState extends State<EditPetProfile> {
                         PrimaryButton(
                           title: 'Actualizar Mascota',
                           onPressed: () {
-                            // Implementa la lógica para actualizar la información de la mascota
+                            
                           },
                         ),
                       ],
@@ -221,4 +239,5 @@ class _EditPetProfileState extends State<EditPetProfile> {
     'Sphynx',
     'Otro',
   ];
+
 }

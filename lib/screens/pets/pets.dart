@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
+import 'package:pawcontrol/screens/home/home.dart';
 import 'package:pawcontrol/screens/pets/editPetProfile.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
@@ -32,6 +33,13 @@ class _PetsState extends State<Pets> {
     });
   }
 
+  void navigateBack(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Home()),
+  );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -46,6 +54,7 @@ class _PetsState extends State<Pets> {
                   showImage: true,
                   showBackButton: true,
                   showLogoutButton: false,
+                  navigateTo: navigateBack,
                 ),
                 SizedBox(height: 20),
                 if (userPets.isNotEmpty) ...[
