@@ -14,6 +14,7 @@ class AddPetsInfo {
     required String selectedSex,
     required String selectedColor,
     required String imageUrl,
+    required String petWeight,
     required DateTime selectedDate,
   }) async {
     try {
@@ -25,13 +26,14 @@ class AddPetsInfo {
 
       // Crear la subcolección "mascotas" si no existe
       await userDoc.collection('mascotas').doc().set({
-        'petName': petName,
-        'selectedSpecies': selectedSpecies,
-        'selectedBreed': selectedBreed,
-        'selectedSex': selectedSex,
-        'selectedColor': selectedColor,
+        'name': petName,
+        'species': selectedSpecies,
+        'breed': selectedBreed,
+        'sex': selectedSex,
+        'color': selectedColor,
+        'weight': petWeight,
         'imageUrl': imageUrl,
-        'selectedDate': selectedDate,
+        'birthDate': selectedDate,
       });
 
       return true;

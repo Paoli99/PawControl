@@ -147,6 +147,8 @@ class _ProfileState extends State<Profile> {
                         color: Colors.grey,
                       ),
                       backgroundColor: ColorsApp.white70,
+                      keyboardType: TextInputType.numberWithOptions(decimal: false),
+
                     ),
                     SizedBox(
                       height: 15.0,

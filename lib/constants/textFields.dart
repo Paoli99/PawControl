@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pawcontrol/constants/buttons.dart';
 import 'package:pawcontrol/constants/colors.dart';
 
 class TextFields extends StatelessWidget {
@@ -11,6 +10,7 @@ class TextFields extends StatelessWidget {
   final TextEditingController? controller;
   final Color? borderColor;
   final Color? backgroundColor;
+  final TextInputType keyboardType;
 
   const TextFields({
     Key? key,
@@ -21,6 +21,7 @@ class TextFields extends StatelessWidget {
     this.controller,
     this.borderColor,
     this.backgroundColor,
+    required this.keyboardType,
   }) : super(key: key);
 
   @override
@@ -28,6 +29,13 @@ class TextFields extends StatelessWidget {
     Color enabledBorderColor = borderColor ?? Colors.transparent;
     Color focusedBorderColor = borderColor ?? Colors.transparent;
     Color filledColor = backgroundColor ?? ColorsApp.grey300;
+
+    List<TextInputFormatter>? inputFormatters = [];
+
+    // Verificar si el campo no está oculto y el tipo de teclado es número sin opción decimal
+    if (!obscureText && keyboardType == TextInputType.number) {
+      inputFormatters.add(FilteringTextInputFormatter.digitsOnly); // Permitir solo dígitos
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22.0),
@@ -46,6 +54,8 @@ class TextFields extends StatelessWidget {
         child: TextField(
           controller: controller,
           obscureText: obscureText,
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
           decoration: InputDecoration(
             filled: true,
             fillColor: filledColor,
@@ -62,11 +72,6 @@ class TextFields extends StatelessWidget {
               borderRadius: BorderRadius.circular(30.0),
             ),
           ),
-          keyboardType: TextInputType.phone,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(8),
-          ],
         ),
       ),
     );

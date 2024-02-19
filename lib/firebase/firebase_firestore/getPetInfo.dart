@@ -21,13 +21,14 @@ class GetPetInfo {
         // Iterar sobre los documentos de las mascotas y agregar la información al resultado
         petSnapshot.docs.forEach((petDoc) {
           Map<String, dynamic> petInfo = {
-            'name': petDoc['petName'],
+            'name': petDoc['name'],
             'imageUrl': petDoc['imageUrl'],
-            'breed': petDoc['selectedBreed'],
-            'color': petDoc['selectedColor'],
-            'birthDate':petDoc['selectedDate'],
-            'sex': petDoc['selectedSex'],
-            'species': petDoc['selectedSpecies']
+            'breed': petDoc['breed'],
+            'color': petDoc['color'],
+            'birthDate':petDoc['birthDate'],
+            'sex': petDoc['sex'],
+            'species': petDoc['species'],
+            'weight':petDoc['weight']
           };
           userPets.add(petInfo);
         });

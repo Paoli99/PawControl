@@ -113,6 +113,8 @@ class SignUp extends StatefulWidget {
                           color: Colors.grey,
                         ),
                         backgroundColor: Colors.white70,
+                        keyboardType: TextInputType.numberWithOptions(decimal: false),
+
                       ),
                       SizedBox(height: 15.0),
                       TextInputFields(

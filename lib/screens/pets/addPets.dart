@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/datePicker.dart';
 import 'package:pawcontrol/constants/routes.dart';
+import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/screens/home/home.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
@@ -22,6 +23,7 @@ class _AddPetsState extends State<AddPets> {
   TextEditingController petBreedController = TextEditingController();
   TextEditingController petGenderController = TextEditingController();
   TextEditingController petColorController = TextEditingController();
+  TextEditingController petWeight = TextEditingController();
   String? imageUrl;
 
   List<String> dogBreeds = [
@@ -88,26 +90,20 @@ class _AddPetsState extends State<AddPets> {
           child: Column(
             children: [
               Header(title: 'PAW CONTROL', showImage: true, showBackButton: true),
-              SizedBox(height: 20),
               Container(
-                width: double.infinity,
-                height: 650,
                 padding: EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: double.infinity,
-                      child: Center(
-                        child: AddPicture(
-                          imageUrl: imageUrl ?? "",
-                          setImageUrl: _setImageUrl,
-                          onPressed: () async {
-                            String? uploadedImageUrl = await AddPetsInfo.pickAndUploadImage((String url) {
-                              _setImageUrl(url);
-                            });
-                          },
-                        ),
+                    Center(
+                      child: AddPicture(
+                        imageUrl: imageUrl ?? "",
+                        setImageUrl: _setImageUrl,
+                        onPressed: () async {
+                          String? uploadedImageUrl = await AddPetsInfo.pickAndUploadImage((String url) {
+                            _setImageUrl(url);
+                          });
+                        },
                       ),
                     ),
                     SizedBox(height: 20),
@@ -189,6 +185,18 @@ class _AddPetsState extends State<AddPets> {
                       },
                     ),
                     SizedBox(height: 20),
+                    TextFields(
+                      controller: petWeight,
+                      hintText: 'Ingrese el peso de su mascota',
+                      prefixIcon: Icon(
+                        Icons.line_weight_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
+
+                    ),
+                    SizedBox(height: 20),
                     InkWell(
                       onTap: () {
                         _selectDate(context);
@@ -219,6 +227,7 @@ class _AddPetsState extends State<AddPets> {
                             selectedSex: petGenderController.text,
                             selectedColor: petColorController.text,
                             imageUrl: imageUrl ?? '',
+                            petWeight: petWeight.text,
                             selectedDate: selectedDate ?? DateTime.now(),
                           );
                           if (success) {
