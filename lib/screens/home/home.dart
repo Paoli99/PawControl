@@ -23,7 +23,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
-  late List<Map<String, dynamic>> userPets;
+  List<Map<String, dynamic>> userPets = [];
   
   @override
   void initState() {
