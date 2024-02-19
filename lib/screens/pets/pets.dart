@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
@@ -12,7 +14,7 @@ class Pets extends StatefulWidget {
 }
 
 class _PetsState extends State<Pets> {
-  late List<Map<String, dynamic>> userPets;
+  List<Map<String, dynamic>> userPets = [];
 
   @override
   void initState() {
@@ -44,7 +46,6 @@ class _PetsState extends State<Pets> {
                   showLogoutButton: false,
                 ),
                 SizedBox(height: 20),
-                // Mostrar la foto de la mascota encima de los botones
                 if (userPets.isNotEmpty) ...[
                   CircleAvatar(
                     backgroundImage: NetworkImage(userPets.first['imageUrl']),
