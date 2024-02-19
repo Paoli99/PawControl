@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/fonts.dart';
+import 'package:pawcontrol/constants/routes.dart';
+import 'package:pawcontrol/screens/pets/editPetProfile.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart';
@@ -127,7 +129,10 @@ class _PetsState extends State<Pets> {
                         children: [
                           RoundButton(
                             onPressed: () {
-                              // Lógica para el botón de editar perfil
+                              Routes.instance.pushAndRemoveUntil(
+                              widget: EditPetProfile(),
+                              context: context,
+                            );
                             },
                             icon: Icons.mode_edit_outlined,
                           ),

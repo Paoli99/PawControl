@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/datePicker.dart';
@@ -189,7 +191,7 @@ class _AddPetsState extends State<AddPets> {
                       controller: petWeight,
                       hintText: 'Ingrese el peso de su mascota',
                       prefixIcon: Icon(
-                        Icons.line_weight_outlined,
+                        Icons.monitor_weight_outlined,
                         color: Colors.grey,
                       ),
                       backgroundColor: ColorsApp.white70,
