@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/textFields.dart';
+import 'package:pawcontrol/firebase/firebase_firestore/updatePetInfo.dart';
 import 'package:pawcontrol/screens/pets/pets.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/pictures/addPicture.dart';
@@ -27,11 +29,13 @@ class _EditPetProfileState extends State<EditPetProfile> {
   TextEditingController speciesController = TextEditingController();
   TextEditingController weightController = TextEditingController();
 
+  late UpdatePetInfo _updatePetInfo;
   List<Map<String, dynamic>> userPets = [];
 
   @override
   void initState() {
     super.initState();
+    _updatePetInfo = UpdatePetInfo(userId: FirebaseAuth.instance.currentUser!.uid);
     loadPetInfo();
   }
 
@@ -56,6 +60,24 @@ class _EditPetProfileState extends State<EditPetProfile> {
   }
   }
 
+  String imageUrl = "";
+
+  void setImageUrl(String url) {
+        setState(() {
+          imageUrl = url;
+        });
+      }
+
+  void updatePet() {
+    _updatePetInfo.updatePetInfo(
+      petId: widget.petId,
+      name: nameController.text,
+      breed: breedController.text,
+      color: colorController.text,
+      // Pasa más parámetros según sea necesario para otros campos de la mascota
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -75,7 +97,12 @@ class _EditPetProfileState extends State<EditPetProfile> {
                   for (var petInfo in userPets)
                     Column(
                       children: [
-                        AddPicture(imageUrl: petInfo['imageUrl'] ?? '', onPressed: () {}, setImageUrl: (String) {}),
+                        AddPicture(imageUrl: petInfo['imageUrl'] ?? '', 
+                        setImageUrl: setImageUrl,
+                        onPressed: () {
+
+                        }, 
+                        ),
                         SizedBox(height: 20),
                         TextInputFields(
                           controller: nameController..text = petInfo['name'] ?? '',
@@ -189,9 +216,7 @@ class _EditPetProfileState extends State<EditPetProfile> {
                         SizedBox(height: 20),
                         PrimaryButton(
                           title: 'Actualizar Mascota',
-                          onPressed: () {
-                            
-                          },
+                          onPressed: updatePet,
                         ),
                       ],
                     ),
