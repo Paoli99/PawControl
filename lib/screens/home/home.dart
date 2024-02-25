@@ -36,11 +36,11 @@ class _HomeState extends State<Home> {
 
   // Método para cargar las mascotas del usuario
   void _loadUserPets() async {
-    List<Map<String, dynamic>> pets = await GetPetInfo.getUserPetsInfo();
-    setState(() {
-      userPets = pets;
-    });
-  }
+  List<Map<String, dynamic>> pets = await GetPetInfo.getUserPetsInfo();
+  setState(() {
+    userPets = pets;
+  });
+}
 
   void onTabTapped(int index) {
     setState(() {
@@ -114,41 +114,44 @@ class HomeContent extends StatelessWidget {
               SizedBox(height: 20),
             
               userPets.isNotEmpty
-                  ? Column(
-                      children: userPets.map((pet) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                            Routes.instance.push(
-                              widget: Pets(),
-                              context: context,
-                            );
-                          },
-                            child: Row(
-                              children: [
-                                SizedBox(width: 10),
-                                // Muestra la imagen de la mascota
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(pet['imageUrl']),
-                                  radius: 25,
-                                ),
-                                SizedBox(width: 10),
-                                // Muestra el nombre de la mascota
-                                Text(
-                                  pet['name'],
-                                  style: TextsFont.tituloNames,
-                                ),
-                              ],
-                            ),
-                          ),
+          ? Column(
+              children: userPets.map((pet) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      // Verificar si la clave 'id' existe antes de acceder a ella
+                      if (pet.containsKey('id')) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Pets(petId: pet['id'])),
                         );
-                      }).toList(),
-                    )
-                  : Text(
-                      'No tiene mascotas registradas',
-                      style: TextStyle(fontSize: 16),
+                      } else {
+                        print('El mapa no tiene la clave \'id\'');
+                      }
+                      },
+                      child: Row(
+                        children: [
+                          SizedBox(width: 10),
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(pet['imageUrl']),
+                            radius: 25,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            pet['name'],
+                            style: TextsFont.tituloNames,
+                          ),
+                        ],
+                      ),
                     ),
+                  );
+                }).toList(),
+              )
+            : Text(
+                'No tiene mascotas registradas',
+                style: TextStyle(fontSize: 16),
+              ),
               SizedBox(height: 20),
               Container(
                 width: double.infinity,

@@ -15,22 +15,19 @@ class GetPetInfo {
             await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
 
         // Obtener la colección de mascotas del usuario
-        CollectionReference petCollection = userDoc.reference.collection('mascotas');
+        CollectionReference petCollection = userDoc.reference.collection('pets');
         QuerySnapshot petSnapshot = await petCollection.get();
         
         // Iterar sobre los documentos de las mascotas y agregar la información al resultado
         petSnapshot.docs.forEach((petDoc) {
           Map<String, dynamic> petInfo = {
+            'id': petDoc.id,
             'name': petDoc['name'],
             'imageUrl': petDoc['imageUrl'],
-            'breed': petDoc['breed'],
-            'color': petDoc['color'],
-            'birthDate':petDoc['birthDate'],
-            'sex': petDoc['sex'],
-            'species': petDoc['species'],
-            'weight':petDoc['weight']
+            // Agrega más campos según necesites
           };
           userPets.add(petInfo);
+          print('ID de la mascota: ${petDoc.id}');
         });
       }
     } catch (e) {
@@ -38,5 +35,39 @@ class GetPetInfo {
     }
 
     return userPets;
+  }
+}
+
+class GetPetsInfo {
+  static Future<Map<String, dynamic>> getPetInfo(String petId) async {
+    try {
+      // Obtener el usuario actual
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Obtener la referencia del documento de la mascota específica
+        DocumentSnapshot<Map<String, dynamic>> petDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('pets')
+            .doc(petId)
+            .get();
+
+        // Verificar si el documento existe
+        if (petDoc.exists) {
+          print('ID de la mascota: ${petDoc.id}');
+          // Obtener la información de la mascota
+          Map<String, dynamic> petInfo = petDoc.data()!;
+          return petInfo;
+        } else {
+          throw 'La mascota con ID $petId no existe.';
+        }
+      } else {
+        throw 'No se pudo obtener el usuario actual.';
+      }
+    } catch (e) {
+      print('Error al obtener la información de la mascota: $e');
+      rethrow;
+    }
   }
 }

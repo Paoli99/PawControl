@@ -10,14 +10,16 @@ import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart';
 
 class Pets extends StatefulWidget {
-  const Pets({Key? key}) : super(key: key);
+   final String petId;
+
+  const Pets({Key? key, required this.petId}) : super(key: key);
 
   @override
   _PetsState createState() => _PetsState();
 }
 
 class _PetsState extends State<Pets> {
-  List<Map<String, dynamic>> userPets = [];
+   Map<String, dynamic> petInfo = {};
 
   @override
   void initState() {
@@ -27,10 +29,14 @@ class _PetsState extends State<Pets> {
 
   // Método para cargar las mascotas del usuario
   void _loadUserPets() async {
-    List<Map<String, dynamic>> pets = await GetPetInfo.getUserPetsInfo();
-    setState(() {
-      userPets = pets;
-    });
+    try {
+      Map<String, dynamic> pet = await GetPetsInfo.getPetInfo(widget.petId);
+      setState(() {
+        petInfo = pet;
+      });
+    } catch (e) {
+      print('Error al cargar la información de la mascota: $e');
+    }
   }
 
   void navigateBack(BuildContext context) {
@@ -57,14 +63,14 @@ class _PetsState extends State<Pets> {
                   navigateTo: navigateBack,
                 ),
                 SizedBox(height: 20),
-                if (userPets.isNotEmpty) ...[
+                if (petInfo.isNotEmpty) ...[
                   CircleAvatar(
-                    backgroundImage: NetworkImage(userPets.first['imageUrl']),
+                    backgroundImage: NetworkImage(petInfo['imageUrl']),
                     radius: 50,
                   ),
                   SizedBox(height: 10),
                   Text(
-                    userPets.first['name'],
+                    petInfo['name'],
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20),
@@ -139,7 +145,7 @@ class _PetsState extends State<Pets> {
                           RoundButton(
                             onPressed: () {
                               Routes.instance.pushAndRemoveUntil(
-                              widget: EditPetProfile(),
+                              widget: EditPetProfile(petId: widget.petId),
                               context: context,
                             );
                             },

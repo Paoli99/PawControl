@@ -28,7 +28,7 @@ class AddPetsInfo {
       String formattedDate = selectedDate.toIso8601String();
 
       // Crear la subcolección "mascotas" si no existe
-      await userDoc.collection('mascotas').doc().set({
+      await userDoc.collection('pets').doc().set({
         'name': petName,
         'species': selectedSpecies,
         'breed': selectedBreed,
@@ -55,7 +55,6 @@ class AddPetsInfo {
     );
 
     if (image != null) {
-      // Generar un nombre único para la imagen
       String imageName = '${DateTime.now().millisecondsSinceEpoch}_${image.path.split('/').last}';
 
       Reference ref = FirebaseStorage.instance.ref().child("petProfileImages/$imageName");

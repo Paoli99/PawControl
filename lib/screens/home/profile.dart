@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/constants.dart';
-import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';

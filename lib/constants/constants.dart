@@ -246,3 +246,32 @@ Future<bool> registerPet({
   return true;
 }
 
+void updatePetInfo({
+  required String userId,
+  required String petId,
+  required String petName,
+  required String selectedSpecies,
+  required String selectedBreed,
+  required String selectedSex,
+  required String selectedColor,
+  required String petWeight,
+  required DateTime selectedDate,
+  required BuildContext context, 
+}) async {
+  try {
+    String formattedDate = selectedDate.toIso8601String();
+
+    await FirebaseFirestore.instance.collection('users').doc(userId).collection('pets').doc(petId).update({
+      'name': petName,
+        'species': selectedSpecies,
+        'breed': selectedBreed,
+        'sex': selectedSex,
+        'color': selectedColor,
+        'weight': petWeight,
+        'birthDate': formattedDate,
+    });
+    showGoodMessage(context, 'Información del usuario actualizada correctamente en la base de datos');
+  } catch (e) {
+    showMessage(context, 'Error al actualizar la información del usuario: $e');
+  }
+}

@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/textFields.dart';
@@ -13,7 +11,8 @@ import 'package:pawcontrol/constants/dropListView.dart';
 import 'package:pawcontrol/constants/datePicker.dart';
 
 class EditPetProfile extends StatefulWidget {
-  const EditPetProfile({Key? key}) : super(key: key);
+  final String petId; 
+  const EditPetProfile({Key? key, required this.petId}) : super(key: key);
 
   @override
   State<EditPetProfile> createState() => _EditPetProfileState();
@@ -33,26 +32,28 @@ class _EditPetProfileState extends State<EditPetProfile> {
   @override
   void initState() {
     super.initState();
-    getUserPets();
+    loadPetInfo();
   }
 
   void navigateBack(BuildContext context) {
-  Navigator.push(
+  Navigator.pushReplacement(
     context,
-    MaterialPageRoute(builder: (context) => Pets()),
-  );
+    MaterialPageRoute(builder: (context) => Pets(petId: widget.petId)),
+  ); 
 }
 
-
-  Future<void> getUserPets() async {
+  Future<void> loadPetInfo() async {
     try {
-      List<Map<String, dynamic>> petsInfo = await GetPetInfo.getUserPetsInfo();
-      setState(() {
-        userPets = petsInfo;
-      });
-    } catch (e) {
-      print('Error al obtener la información de las mascotas: $e');
-    }
+    Map<String, dynamic> petInfo = await GetPetsInfo.getPetInfo(widget.petId);
+    setState(() {
+      nameController.text = petInfo['name'] ?? '';
+      breedController.text = petInfo['breed'] ?? '';
+      colorController.text = petInfo['color'] ?? '';
+      userPets.add(petInfo); // Agregar la información de la mascota a la lista userPets
+    });
+  } catch (e) {
+    print('Error al cargar la información de la mascota: $e');
+  }
   }
 
   @override
