@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
@@ -10,7 +12,6 @@ import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/constants/dropListView.dart';
-import 'package:pawcontrol/constants/datePicker.dart';
 
 class EditPetProfile extends StatefulWidget {
   final String petId; 
@@ -35,7 +36,7 @@ class _EditPetProfileState extends State<EditPetProfile> {
   @override
   void initState() {
     super.initState();
-    _updatePetInfo = UpdatePetInfo(userId: FirebaseAuth.instance.currentUser!.uid);
+    _updatePetInfo = UpdatePetInfo(userId: FirebaseAuth.instance.currentUser!.uid, context: context);
     loadPetInfo();
   }
 
@@ -51,9 +52,13 @@ class _EditPetProfileState extends State<EditPetProfile> {
     Map<String, dynamic> petInfo = await GetPetsInfo.getPetInfo(widget.petId);
     setState(() {
       nameController.text = petInfo['name'] ?? '';
+      speciesController.text = petInfo['species'];
       breedController.text = petInfo['breed'] ?? '';
       colorController.text = petInfo['color'] ?? '';
-      userPets.add(petInfo); // Agregar la información de la mascota a la lista userPets
+      birthDateController.text = petInfo['birthDate'] ?? '';
+      weightController.text = petInfo['weight'] ?? '';
+      sexController.text = petInfo['sex'] ?? '';
+      userPets.add(petInfo); 
     });
   } catch (e) {
     print('Error al cargar la información de la mascota: $e');
@@ -70,13 +75,19 @@ class _EditPetProfileState extends State<EditPetProfile> {
 
   void updatePet() {
     _updatePetInfo.updatePetInfo(
+      species: speciesController.text,
       petId: widget.petId,
       name: nameController.text,
       breed: breedController.text,
       color: colorController.text,
-      // Pasa más parámetros según sea necesario para otros campos de la mascota
+      sex: sexController.text,
+      weight: weightController.text,
+      birthDate: birthDateController.text,
+      context: context,
     );
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -115,35 +126,35 @@ class _EditPetProfileState extends State<EditPetProfile> {
                         ),
                         SizedBox(height: 20),
                         DropDownListView<String>(
-                          label: 'Especie',
-                          value: petInfo['species'] ?? '',
-                          items: ['Perro', 'Gato']
-                              .map((value) => DropdownMenuItem(
-                                    value: value,
-                                    child: Text(value),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              petInfo['species'] = value;
-                            });
-                          },
-                        ),
+                        label: 'Especie',
+                        value: speciesController.text ?? '',
+                        items: ['Perro', 'Gato']
+                            .map((value) => DropdownMenuItem(
+                                  value: value,
+                                  child: Text(value),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            speciesController.text = value ?? '';
+                          });
+                        },
+                      ),
                         SizedBox(height: 20),
                         DropDownListView<String>(
                           label: 'Raza',
-                          value: petInfo['breed'] ?? '',
-                          items: breedDropdownItems(petInfo['species']),
+                          value: breedController.text ?? '',
+                          items: breedDropdownItems(speciesController.text),
                           onChanged: (value) {
                             setState(() {
-                              petInfo['breed'] = value;
+                              breedController.text = value ?? '';
                             });
                           },
                         ),
                         SizedBox(height: 20),
                         DropDownListView<String>(
                           label: 'Sexo',
-                          value: petInfo['sex'] ?? '',
+                          value: sexController.text ?? '',
                           items: ['Macho', 'Hembra']
                               .map((value) => DropdownMenuItem(
                                     value: value,
@@ -152,14 +163,14 @@ class _EditPetProfileState extends State<EditPetProfile> {
                               .toList(),
                           onChanged: (value) {
                             setState(() {
-                              petInfo['sex'] = value;
+                              sexController.text = value ?? '';
                             });
                           },
                         ),
                         SizedBox(height: 20),
                         DropDownListView<String>(
                           label: 'Color',
-                          value: petInfo['color'] ?? '',
+                          value: colorController.text ?? '',
                           items: [
                             'Blanco',
                             'Negro',
@@ -180,27 +191,19 @@ class _EditPetProfileState extends State<EditPetProfile> {
                               .toList(),
                           onChanged: (value) {
                             setState(() {
-                              petInfo['color'] = value;
+                              colorController.text = value ?? '';
                             });
                           },
                         ),
                         SizedBox(height: 20),
-                        InkWell(
-                          onTap: () {
-                            // Implementar lógica para seleccionar la fecha de nacimiento
-                          },
-                          child: DatePickerField(
-                            selectedDate: DateTime.parse(petInfo['birthDate'] ?? ''),
-                            onSelectDate: (DateTime? date) {
-                              setState(() {
-                                petInfo['birthDate'] = date.toString();
-                              });
-                            },
-                            onTap: (context) {
-                              // Implementar lógica para seleccionar la fecha de nacimiento
-                            },
-                            placeholderText: 'Fecha de nacimiento',
+                        TextInputFields(
+                          controller: birthDateController..text = petInfo['birthDate'] ?? '',
+                          hintText: 'Fecha de nacimiento',
+                          prefixIcon: Icon(
+                            Icons.cake_outlined,
+                            color: Colors.grey,
                           ),
+                          backgroundColor: ColorsApp.white70,
                         ),
                         SizedBox(height: 20),
                         TextFields(

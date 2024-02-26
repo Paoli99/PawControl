@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
-import 'package:pawcontrol/constants/datePicker.dart';
 import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
@@ -19,13 +18,13 @@ class AddPets extends StatefulWidget {
 }
 
 class _AddPetsState extends State<AddPets> {
-  DateTime? selectedDate;
   String? selectedSpecies;
   TextEditingController petNameController = TextEditingController();
   TextEditingController petBreedController = TextEditingController();
   TextEditingController petGenderController = TextEditingController();
   TextEditingController petColorController = TextEditingController();
   TextEditingController petWeight = TextEditingController();
+  TextEditingController petBirthDate = TextEditingController();
   String? imageUrl;
 
   List<String> dogBreeds = [
@@ -55,20 +54,6 @@ class _AddPetsState extends State<AddPets> {
     'Sphynx',
     'Otro',
   ];
-
-  void _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,22 +191,14 @@ class _AddPetsState extends State<AddPets> {
 
                     ),
                     SizedBox(height: 20),
-                    InkWell(
-                      onTap: () {
-                        _selectDate(context);
-                      },
-                      child: DatePickerField(
-                        selectedDate: selectedDate,
-                        onSelectDate: (DateTime? date) {
-                          setState(() {
-                            selectedDate = date;
-                          });
-                        },
-                        onTap: (context) {
-                          _selectDate(context);
-                        },
-                        placeholderText: 'Seleccione la fecha de nacimiento',
+                    TextInputFields(
+                      controller: petBirthDate,
+                      hintText: 'Ingrese el nombre de su mascota',
+                      prefixIcon: Icon(
+                        Icons.pets_outlined,
+                        color: Colors.grey,
                       ),
+                      backgroundColor: ColorsApp.white70,
                     ),
                     SizedBox(height: 20),
                     Center(
@@ -237,7 +214,7 @@ class _AddPetsState extends State<AddPets> {
                             selectedColor: petColorController.text,
                             imageUrl: imageUrl ?? '',
                             petWeight: petWeight.text,
-                            selectedDate: selectedDate ?? DateTime.now(),
+                            birthDate: petBirthDate.text,
                           );
                           if (success) {
                             Routes.instance.pushAndRemoveUntil(

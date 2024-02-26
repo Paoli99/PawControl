@@ -15,7 +15,7 @@ class AddPetsInfo {
     required String selectedColor,
     required String imageUrl,
     required String petWeight,
-    required DateTime selectedDate,
+    required String  birthDate
   }) async {
     try {
       // Obtener el ID del usuario actualmente autenticado
@@ -25,7 +25,7 @@ class AddPetsInfo {
       final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
 
       // Convertir la fecha seleccionada a una cadena ISO 8601 antes de guardarla en Firestore
-      String formattedDate = selectedDate.toIso8601String();
+      
 
       // Crear la subcolección "mascotas" si no existe
       await userDoc.collection('pets').doc().set({
@@ -36,7 +36,7 @@ class AddPetsInfo {
         'color': selectedColor,
         'weight': petWeight,
         'imageUrl': imageUrl,
-        'birthDate': formattedDate, // Utilizar la fecha formateada en lugar del objeto DateTime
+        'birthDate': birthDate, 
       });
 
       return true;
