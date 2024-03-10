@@ -1,3 +1,4 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/theme.dart';
 import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
@@ -11,7 +12,7 @@ void main() async{
     await Firebase.initializeApp(
       options: DefaultFirebaseConfig.platformOptions, 
     );
-    
+  await FirebaseAppCheck.instance.activate();  
   runApp(const MyApp());
 }
 

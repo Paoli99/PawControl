@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/screens/home/home.dart';
+import 'package:pawcontrol/screens/pets/addVaccines.dart';
+import 'package:pawcontrol/screens/pets/addVetVisit.dart';
 import 'package:pawcontrol/screens/pets/editPetProfile.dart';
+import 'package:pawcontrol/screens/pets/petClinicHistory.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart';
 
 class Pets extends StatefulWidget {
-   final String petId;
+  final String petId;
 
   const Pets({Key? key, required this.petId}) : super(key: key);
 
@@ -84,13 +87,16 @@ class _PetsState extends State<Pets> {
                         children: [
                           RoundButton(
                             onPressed: () {
-                              // Lógica para el botón de registro médico
+                              Routes.instance.pushAndRemoveUntil(
+                              widget: AddVetVisit(petId: widget.petId,),
+                              context: context,
+                              ); 
                             },
                             icon: Icons.local_hospital_outlined,
                           ),
                           SizedBox(width: 10.0),
                           Text(
-                            'Registro médico',
+                            'Registrar consulta médica',
                             style: TextsFont.tituloNames,
                           ),
                         ],
@@ -104,7 +110,10 @@ class _PetsState extends State<Pets> {
                         children: [
                           RoundButton(
                             onPressed: () {
-                              // Lógica para el botón de vacunas
+                              Routes.instance.pushAndRemoveUntil(
+                              widget: AddVaccines(petId: widget.petId,),
+                              context: context,
+                              ); 
                             },
                             icon: Icons.vaccines_outlined,
                           ),
@@ -124,13 +133,16 @@ class _PetsState extends State<Pets> {
                         children: [
                           RoundButton(
                             onPressed: () {
-                              // Lógica para el botón de medicación
+                              Routes.instance.pushAndRemoveUntil(
+                              widget: PetClinicHistory(petId: widget.petId,),
+                              context: context,
+                              ); 
                             },
                             icon: Icons.medication_outlined,
                           ),
                           SizedBox(width: 10.0),
                           Text(
-                            'Medicación',
+                            'Historial médico',
                             style: TextsFont.tituloNames,
                           ),
                         ],

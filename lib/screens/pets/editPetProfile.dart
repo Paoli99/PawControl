@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/updatePetInfo.dart';
@@ -35,6 +38,7 @@ class _EditPetProfileState extends State<EditPetProfile> {
 
   @override
   void initState() {
+    checkUserAuthentication();
     super.initState();
     _updatePetInfo = UpdatePetInfo(userId: FirebaseAuth.instance.currentUser!.uid, context: context);
     loadPetInfo();
@@ -87,7 +91,28 @@ class _EditPetProfileState extends State<EditPetProfile> {
     );
   }
 
-  
+  void updatePetProfileImage() async {
+    UpdatePetInfo updatePetInfoInstance = UpdatePetInfo(userId: widget.petId, context: context);
+    String? uploadedImageUrl = await updatePetInfoInstance.pickAndUploadImage(setImageUrl);
+    if (uploadedImageUrl != null) {
+      // La imagen se cargó correctamente, puedes hacer cualquier otra acción necesaria aquí
+    } else {
+      // La carga de la imagen falló, manejar según sea necesario
+    }
+  }
+
+  void checkUserAuthentication() {
+  // Obtener el usuario actualmente autenticado
+  User? user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    // El usuario está autenticado
+    print('El usuario ${user.uid} está autenticado.');
+  } else {
+    // El usuario no está autenticado
+    print('El usuario no está autenticado.');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -110,9 +135,7 @@ class _EditPetProfileState extends State<EditPetProfile> {
                       children: [
                         AddPicture(imageUrl: petInfo['imageUrl'] ?? '', 
                         setImageUrl: setImageUrl,
-                        onPressed: () {
-
-                        }, 
+                        onPressed: updatePetProfileImage,
                         ),
                         SizedBox(height: 20),
                         TextInputFields(
