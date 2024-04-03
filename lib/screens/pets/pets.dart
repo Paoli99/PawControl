@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/screens/home/home.dart';
@@ -8,6 +9,7 @@ import 'package:pawcontrol/screens/pets/addVaccines.dart';
 import 'package:pawcontrol/screens/pets/addVetVisit.dart';
 import 'package:pawcontrol/screens/pets/editPetProfile.dart';
 import 'package:pawcontrol/screens/pets/petClinicHistory.dart';
+import 'package:pawcontrol/screens/pets/petLostFoundForm.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart';
@@ -179,16 +181,90 @@ class _PetsState extends State<Pets> {
                         children: [
                           RoundButton(
                             onPressed: () {
-                              // Lógica para el botón de ¿Se perdió tu mascota?
-                            },
-                            icon: Icons.location_pin,
-                          ),
-                          SizedBox(width: 10.0),
-                          Text(
-                            '¿Se perdió tu mascota?',
-                            style: TextsFont.tituloNames,
-                          ),
-                        ],
+                              showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  title: Text("¿Se perdió tu mascota?"),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                      margin: EdgeInsets.symmetric(horizontal: 20.0),
+                                      child: RichText(
+                                        textAlign: TextAlign.center,
+                                        text: TextSpan(
+                                          style: TextStyle(color: ColorsApp.black87),
+                                          children: [
+                                            TextSpan(
+                                              text: '¿Deseas llenar un formulario para que ',
+                                            ),
+                                            TextSpan(
+                                              text: petInfo['name'],
+                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                            ),
+                                            TextSpan(
+                                              text: ' aparezca en el foro?',
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          top: BorderSide(color: ColorsApp.grey400),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: TextButton(
+                                              onPressed: () {
+                                                Routes.instance.pushAndRemoveUntil(
+                                                widget: PetLostFoundForum(petId: widget.petId,),
+                                                context: context,
+                                                );
+                                              },
+                                              child: Text("Sí"),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            width: 1,
+                                            color: ColorsApp.grey400,
+                                          ),
+                                          Expanded(
+                                            child: TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text("No"),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                        },
+                        icon: Icons.location_pin,
+                      ),
+                      SizedBox(width: 10.0),
+                      Text(
+                        '¿Se perdió tu mascota?',
+                        style: TextsFont.tituloNames,
+                      ),
+                    ],
                       ),
                     ),
                   ],
