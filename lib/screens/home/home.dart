@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/asset_images.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
+import 'package:pawcontrol/screens/home/notifications.dart';
 import 'package:pawcontrol/screens/home/profile.dart';
 import 'package:pawcontrol/screens/home/search.dart';
 import 'package:pawcontrol/screens/pets/addPets.dart';
@@ -60,7 +60,10 @@ class _HomeState extends State<Home> {
         body = Search(index: 1);
         break;
       case 2:
-        body = Profile(index: 2);
+        body = Notifications(index: 2);
+        break;
+      case 3:
+        body = Profile(index: 3);
         break;
       default:
         body = Container(); // Puedes cambiar esto según tus necesidades
@@ -82,6 +85,10 @@ class _HomeState extends State<Home> {
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
               label: 'Buscar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications),
+              label: 'Notificaciones',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),

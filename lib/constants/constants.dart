@@ -1,7 +1,10 @@
 // ignore_for_file: use_build_context_synchronously, unnecessary_null_comparison
 
+import 'dart:io';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 
@@ -246,3 +249,19 @@ Future<bool> registerPet({
   return true;
 }
 
+Future<bool> validateLostPetForm({
+  required BuildContext context,
+  required String name,
+  required String date,
+  required String location,
+  required String description,
+  required int phone,
+  required String imageUrl,
+}) async {
+  if (name.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone <= 0 || imageUrl.isEmpty) {
+    showMessage(context, "Por favor, complete todos los campos antes de publicar.");
+    return false;
+  } else {
+    return true;
+  }
+}

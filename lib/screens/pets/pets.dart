@@ -9,7 +9,7 @@ import 'package:pawcontrol/screens/pets/addVaccines.dart';
 import 'package:pawcontrol/screens/pets/addVetVisit.dart';
 import 'package:pawcontrol/screens/pets/editPetProfile.dart';
 import 'package:pawcontrol/screens/pets/petClinicHistory.dart';
-import 'package:pawcontrol/screens/pets/petLostFoundForm.dart';
+import 'package:pawcontrol/screens/pets/petLostForm.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart';
