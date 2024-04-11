@@ -8,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/constants.dart';
+import 'package:pawcontrol/constants/dropListView.dart';
 import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/publishLostPet.dart';
+import 'package:pawcontrol/screens/home/search.dart';
 import 'package:pawcontrol/screens/pets/pets.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/pictures/addPicture.dart';
@@ -18,26 +20,75 @@ import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:path/path.dart' as Path;
 
 
-class PetLostForum extends StatefulWidget {
-  final String petId;
+class PetFoundForm extends StatefulWidget {
+  const PetFoundForm({Key? key}) : super(key: key);
 
-  const PetLostForum({Key? key, required this.petId}) : super(key: key);
+  
 
   @override
-  State<PetLostForum> createState() => _PetLostForumState();
+  State<PetFoundForm> createState() => _PetFoundFormState();
 }
 
-class _PetLostForumState extends State<PetLostForum> {
+class _PetFoundFormState extends State<PetFoundForm> {
   TextEditingController nameController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController petBreedController = TextEditingController();
+  TextEditingController petGenderController = TextEditingController();
+  TextEditingController petColorController = TextEditingController();
   String imageUrl = "";
+
+  List<String>? breedList;
+  List<DropdownMenuItem<String>> breedDropdownItems = [];
+
+  String? selectedSpecies;
+  
+  List<String> dogBreeds = [
+    'Mestizo',
+    'Chihuahua',
+    'Cooker',
+    'Bulldog',
+    'Labrador Retriever',
+    'Golden Retriever',
+    'Pastor Alemán',
+    'Boxer',
+    'Shih Tzu',
+    'Pomerania',
+    'Yorkshire Terrier',
+    'Otra',
+  ];
+
+  List<String> catBreeds = [
+    'Mestizo',
+    'Siamés',
+    'Persa',
+    'Maine Coon',
+    'Ragdoll',
+    'Bengal',
+    'British Shorthair',
+    'Scottish Fold',
+    'Sphynx',
+    'Otro',
+  ];
+
 
   @override
   void initState() {
     super.initState();
+    _updateBreedsAndItems();
+  }
+
+  void _updateBreedsAndItems() {
+    breedList = selectedSpecies == null 
+                ? null 
+                : (selectedSpecies == 'Perro' ? dogBreeds : catBreeds);
+    
+    breedDropdownItems = breedList?.map((value) => DropdownMenuItem(
+      value: value,
+      child: Text(value),
+    )).toList() ?? [];
   }
 
   void pickImage() async {
@@ -47,7 +98,7 @@ class _PetLostForumState extends State<PetLostForum> {
     if (pickedFile != null) {
       showLoaderDialog(context);
       try {
-        String fileName = "lostPets/${DateTime.now().millisecondsSinceEpoch}_${Path.basename(pickedFile.path)}";
+        String fileName = "foundPets/${DateTime.now().millisecondsSinceEpoch}_${Path.basename(pickedFile.path)}";
         Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
         await storageRef.putFile(File(pickedFile.path));
         String downloadUrl = await storageRef.getDownloadURL();
@@ -71,12 +122,11 @@ class _PetLostForumState extends State<PetLostForum> {
     void navigateBack(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Pets(petId: widget.petId,)),
+      MaterialPageRoute(builder: (context) => Search(index: 1)),
     );
     }
 
-  
-  
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -104,15 +154,74 @@ class _PetLostForumState extends State<PetLostForum> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    TextInputFields(
-                      controller: nameController,
-                      hintText: 'Ingrese el nombre de su mascota',
-                      prefixIcon: Icon(
-                        Icons.pets_outlined,
-                        color: Colors.grey,
-                      ),
-                      backgroundColor: ColorsApp.white70,
+                    DropDownListView<String>(
+                      label: 'Especie',
+                      value: selectedSpecies,
+                      items: ['Perro', 'Gato']
+                          .map((value) => DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedSpecies = value!;
+                        });
+                      },
                     ),
+                    SizedBox(height: 20),
+                    DropDownListView<String>(
+                      label: 'Raza',
+                      items: breedDropdownItems,
+                      onChanged: (value) {
+                        setState(() {
+                          petBreedController.text = value ?? '';
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    DropDownListView<String>(
+                      label: 'Sexo',
+                      items: ['Macho', 'Hembra']
+                          .map((value) => DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          petGenderController.text = value ?? '';
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    DropDownListView<String>(
+                      label: 'Color',
+                      items: [
+                        'Blanco',
+                        'Negro',
+                        'Marrón',
+                        'Gris',
+                        'Beige',
+                        'Naranja',
+                        'Atigrado',
+                        'Tricolor',
+                        'Gris Azulado',
+                        'Blanco y negro',
+                        'Otro',
+                      ]
+                          .map((value) => DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          petColorController.text = value ?? '';
+                        });
+                      },
+                    ),
+                    
                     SizedBox(
                       height: 15.0,
                     ),

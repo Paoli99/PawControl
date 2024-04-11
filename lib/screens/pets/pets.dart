@@ -229,7 +229,7 @@ class _PetsState extends State<Pets> {
                                             child: TextButton(
                                               onPressed: () {
                                                 Routes.instance.pushAndRemoveUntil(
-                                                widget: PetLostFoundForum(petId: widget.petId,),
+                                                widget: PetLostForum(petId: widget.petId,),
                                                 context: context,
                                                 );
                                               },
