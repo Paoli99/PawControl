@@ -1,12 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
+import 'package:pawcontrol/constants/theme.dart';
 import 'package:pawcontrol/screens/pets/petFoundForm.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
 
-void main() => runApp(const Search(index: 0));
 
 class Search extends StatefulWidget {
   final int index;
@@ -22,8 +23,7 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+     return Scaffold(
         body: SafeArea(
           child: Scaffold(
             body: SingleChildScrollView(
@@ -34,11 +34,12 @@ class _SearchState extends State<Search> {
                     Visibility(
                       visible: !isSearching,
                       child: Container(
-                        width: 430,
+                        color: ColorsApp.white70, // Asume que tienes un color predefinido
+                        width: MediaQuery.of(context).size.width,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
+                            if (!isSearching) Expanded(
                               child: Header(
                                 title: 'Mascotas Perdidas',
                                 showImage: true,
@@ -46,30 +47,29 @@ class _SearchState extends State<Search> {
                                 showLogoutButton: false,
                               ),
                             ),
-                            IconButton(
+                            if (!isSearching) IconButton(
                               onPressed: () {
                                 setState(() {
-                                  isSearching = !isSearching;
+                                  isSearching = true;
                                 });
                               },
-                              icon: Icon(
-                                Icons.search,
-                                color: isSearching ? Colors.blue : Colors.black,
-                              ),
+                              icon: Icon(Icons.search),
+                              color: Colors.black,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                // Agrega aquí la lógica para el filtro
-                              },
+                            if (!isSearching) IconButton(
+                              onPressed: () {},
                               icon: Icon(Icons.filter_list),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
-                    if (isSearching)
-                      Row(
+                    if (isSearching) 
+                      Container(
+                      height: 50, // Altura deseada para el TextField
+                      color: ColorsApp.white70, 
+                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                      child: Row(
                         children: [
                           IconButton(
                             onPressed: () {
@@ -80,15 +80,35 @@ class _SearchState extends State<Search> {
                             icon: Icon(Icons.arrow_back),
                           ),
                           Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Buscar...',
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: ColorsApp.grey300, // Color del interior del TextField
+                                borderRadius: BorderRadius.circular(25.0), // Radio del borde más redondeado
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 3,
+                                    offset: Offset(0, 2), // Cambios en la posición de la sombra
+                                  ),
+                                ],
                               ),
-                              // Aquí puedes manejar la lógica de búsqueda
+                              child: TextField(
+                                autofocus: true,
+                                decoration: InputDecoration(
+                                  hintText: 'Buscar...',
+                                  contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0), // Padding interno del TextField
+                                  border: InputBorder.none, // Elimina el borde por completo
+                                ),
+                              ),
                             ),
                           ),
-                        ],
-                      ),
+                        ]
+                      )
+                  ),
+
+              SizedBox(height: 20),
+                    
 
                       
               Container(
@@ -122,7 +142,7 @@ class _SearchState extends State<Search> {
             ),
           ),
         ),
-      ),
-    );
+      );
+  
   }
 }

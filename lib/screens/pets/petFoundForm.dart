@@ -120,10 +120,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
   }
 
     void navigateBack(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Search(index: 1)),
-    );
+    Navigator.pop(context);
     }
 
 
@@ -166,6 +163,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
                       onChanged: (value) {
                         setState(() {
                           selectedSpecies = value!;
+                          _updateBreedsAndItems();
                         });
                       },
                     ),
@@ -274,7 +272,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
                       keyboardType: TextInputType.numberWithOptions(decimal: false),
                     ),
                     SizedBox(
-                      height: 25.0,
+                      height: 20.0,
                     ),
                   ],
                 ),
@@ -291,6 +289,9 @@ class _PetFoundFormState extends State<PetFoundForm> {
                           imageUrl: imageUrl,
                         );
                       },
+                    ),
+                SizedBox(
+                      height: 25.0,
                     ),
               ],
             ),
