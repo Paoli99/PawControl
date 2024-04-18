@@ -2,7 +2,6 @@
 
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,9 +10,7 @@ import 'package:pawcontrol/constants/constants.dart';
 import 'package:pawcontrol/constants/dropListView.dart';
 import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
-import 'package:pawcontrol/firebase/firebase_firestore/publishLostPet.dart';
-import 'package:pawcontrol/screens/home/search.dart';
-import 'package:pawcontrol/screens/pets/pets.dart';
+import 'package:pawcontrol/firebase/firebase_firestore/publishFoundPet.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/pictures/addPicture.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
@@ -30,7 +27,6 @@ class PetFoundForm extends StatefulWidget {
 }
 
 class _PetFoundFormState extends State<PetFoundForm> {
-  TextEditingController nameController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -192,40 +188,13 @@ class _PetFoundFormState extends State<PetFoundForm> {
                         });
                       },
                     ),
-                    SizedBox(height: 20),
-                    DropDownListView<String>(
-                      label: 'Color',
-                      items: [
-                        'Blanco',
-                        'Negro',
-                        'Marrón',
-                        'Gris',
-                        'Beige',
-                        'Naranja',
-                        'Atigrado',
-                        'Tricolor',
-                        'Gris Azulado',
-                        'Blanco y negro',
-                        'Otro',
-                      ]
-                          .map((value) => DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          petColorController.text = value ?? '';
-                        });
-                      },
-                    ),
                     
                     SizedBox(
                       height: 15.0,
                     ),
                     TextInputFields(
                       controller: dateController,
-                      hintText: 'Dia que se perdio',
+                      hintText: 'Dia que se encotró',
                       prefixIcon: Icon(
                         Icons.calendar_month_outlined,
                         color: Colors.grey,
@@ -247,16 +216,41 @@ class _PetFoundFormState extends State<PetFoundForm> {
                     SizedBox(
                       height: 15.0,
                     ),
-                    SizedBox(height: 150,
-                    child: TextInputFields(
-                      controller: descriptionController,
-                      hintText: 'Descripcion detallada de la mascota',
-                      prefixIcon: Icon(
-                        Icons.description_outlined,
-                        color: Colors.grey,
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: ColorsApp.grey300,
+                        borderRadius: BorderRadius.circular(30.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: ColorsApp.grey300,
+                            blurRadius: 25,
+                          ),
+                        ],
+                        border: Border.all(color: Colors.transparent, width: 1.0),
                       ),
-                      backgroundColor: ColorsApp.white70,
-                    ),
+                      child: TextField(
+                        controller: descriptionController,
+                        maxLines: null,
+                        minLines: 5,
+                        decoration: InputDecoration(
+                          hintText: 'Descripcion detallada de la mascota',
+                          prefixIcon: Icon(Icons.description_outlined, color: Colors.grey, size: 24), 
+                          fillColor: ColorsApp.white70,
+                          filled: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 60.0, horizontal: 10.0), 
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        keyboardType: TextInputType.multiline,
+                      ),
                     ),
                     SizedBox(
                       height: 15.0,
@@ -279,15 +273,17 @@ class _PetFoundFormState extends State<PetFoundForm> {
                 PrimaryButton(
                       title: 'Publicar',
                       onPressed: () {
-                        publishLostPet(
+                         publishFoundPet(
                           context: context,
-                          name: nameController.text,
+                          species: selectedSpecies ?? '', 
+                          breed: petBreedController.text,
                           date: dateController.text,
+                          gender: petGenderController.text,
                           location: locationController.text,
                           description: descriptionController.text,
                           phone: int.tryParse(phoneController.text) ?? 0,
                           imageUrl: imageUrl,
-                        );
+                        ); 
                       },
                     ),
                 SizedBox(

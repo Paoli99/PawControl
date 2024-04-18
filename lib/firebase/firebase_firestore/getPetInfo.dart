@@ -24,7 +24,6 @@ class GetPetInfo {
             'id': petDoc.id,
             'name': petDoc['name'],
             'imageUrl': petDoc['imageUrl'],
-            // Agrega más campos según necesites
           };
           userPets.add(petInfo);
           print('ID de la mascota: ${petDoc.id}');

@@ -9,7 +9,8 @@ class TextInputFields extends StatelessWidget {
   final bool obscureText;
   final TextEditingController? controller;
   final Color? borderColor;
-  final Color? backgroundColor; // Agrega el parámetro backgroundColor
+  final Color? backgroundColor; 
+  
 
   const TextInputFields({
     Key? key,
@@ -19,14 +20,14 @@ class TextInputFields extends StatelessWidget {
     this.obscureText = false,
     this.controller,
     this.borderColor,
-    this.backgroundColor, // Agrega el parámetro backgroundColor
+    this.backgroundColor, 
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Color enabledBorderColor = borderColor ?? Colors.transparent;
     Color focusedBorderColor = borderColor ?? Colors.transparent;
-    Color filledColor = backgroundColor ?? ColorsApp.grey300; // Establece el color de fondo dinámico
+    Color filledColor = backgroundColor ?? ColorsApp.grey300; 
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22.0),

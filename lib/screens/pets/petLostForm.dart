@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,9 @@ class PetLostForum extends StatefulWidget {
 
 class _PetLostForumState extends State<PetLostForum> {
   TextEditingController nameController = TextEditingController();
+  TextEditingController speciesController = TextEditingController();
+  TextEditingController breedController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -38,7 +42,34 @@ class _PetLostForumState extends State<PetLostForum> {
   @override
   void initState() {
     super.initState();
+    fetchPetData();
   }
+
+  void fetchPetData() async {
+  try {
+    DocumentSnapshot petDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('pets')
+        .doc(widget.petId)
+        .get();
+
+    if (petDoc.exists) {
+      Map<String, dynamic> petData = petDoc.data() as Map<String, dynamic>;
+      setState(() {
+        nameController.text = petData['name'] ?? ''; 
+        speciesController.text = petData['species'] ?? '';
+        breedController.text = petData['breed'] ?? '';
+        genderController.text = petData['sex'] ?? '';
+      });
+    } else {
+      print("No se encontró la mascota con ID: ${widget.petId}");
+    }
+  } catch (e) {
+    print("Error al cargar los datos de la mascota: $e");
+  }
+}
+
 
   void pickImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -106,7 +137,6 @@ class _PetLostForumState extends State<PetLostForum> {
                   children: [
                     TextInputFields(
                       controller: nameController,
-                      hintText: 'Ingrese el nombre de su mascota',
                       prefixIcon: Icon(
                         Icons.pets_outlined,
                         color: Colors.grey,
@@ -116,6 +146,33 @@ class _PetLostForumState extends State<PetLostForum> {
                     SizedBox(
                       height: 15.0,
                     ),
+                    TextInputFields(
+                      controller: speciesController,
+                      prefixIcon: Icon(
+                        Icons.pets_rounded,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                    SizedBox(height: 15),
+                    TextInputFields(
+                      controller: breedController,
+                      prefixIcon: Icon(
+                        Icons.pets_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                    SizedBox(height: 15),
+                    TextInputFields(
+                      controller: genderController,
+                      prefixIcon: Icon(
+                        Icons.pets_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                    SizedBox(height: 20),
                     TextInputFields(
                       controller: dateController,
                       hintText: 'Dia que se perdio',
@@ -140,17 +197,43 @@ class _PetLostForumState extends State<PetLostForum> {
                     SizedBox(
                       height: 15.0,
                     ),
-                    SizedBox(height: 150,
-                    child: TextInputFields(
-                      controller: descriptionController,
-                      hintText: 'Descripcion detallada de la mascota',
-                      prefixIcon: Icon(
-                        Icons.description_outlined,
-                        color: Colors.grey,
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: ColorsApp.grey300,
+                        borderRadius: BorderRadius.circular(30.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: ColorsApp.grey300,
+                            blurRadius: 25,
+                          ),
+                        ],
+                        border: Border.all(color: Colors.transparent, width: 1.0),
                       ),
-                      backgroundColor: ColorsApp.white70,
+                      child: TextField(
+                        controller: descriptionController,
+                        maxLines: null,
+                        minLines: 5,
+                        decoration: InputDecoration(
+                          hintText: 'Descripcion detallada de la mascota',
+                          prefixIcon: Icon(Icons.description_outlined, color: Colors.grey, size: 24), 
+                          fillColor: ColorsApp.white70,
+                          filled: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 60.0, horizontal: 10.0), 
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        keyboardType: TextInputType.multiline,
+                      ),
                     ),
-                    ),
+
                     SizedBox(
                       height: 15.0,
                     ),
@@ -175,6 +258,9 @@ class _PetLostForumState extends State<PetLostForum> {
                         publishLostPet(
                           context: context,
                           name: nameController.text,
+                          species: speciesController.text,
+                          breed: breedController.text,
+                          gender: genderController.text,
                           date: dateController.text,
                           location: locationController.text,
                           description: descriptionController.text,
