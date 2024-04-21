@@ -34,6 +34,8 @@ class Pet {
   });
 
   factory Pet.fromMap(Map<String, dynamic> data, bool isLostPet) {
+    String imageUrl = data['imageUrl'] ?? 'https://via.placeholder.com/150'; // Default image if not provided
+    print("Loaded image URL: $imageUrl"); // Debugging to see what URL we get
     return Pet(
       name: data['name'] ?? '',
       species: data['species'] ?? '',
@@ -43,7 +45,7 @@ class Pet {
       location: data['location'] ?? '',
       description: data['description'] ?? '',
       phone: data['phone'] as int? ?? 0,
-      imageUrl: data['imageUrl'] ?? '',  // Ensure this field matches your Firestore field
+      imageUrl: imageUrl,
       isLostPet: isLostPet,
     );
   }
@@ -65,8 +67,7 @@ class PetCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.network(pet.imageUrl, width: 100, height: 100, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
-              // Handle error if the image fails to load
-              return Container(width: 100, height: 100, color: Colors.grey[300], child: Icon(Icons.broken_image));
+              return Container(width: 100, height: 100, color: Colors.grey[300], child: Icon(Icons.broken_image)); // Fallback icon
             }),
             Expanded(
               child: Padding(
@@ -74,7 +75,7 @@ class PetCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(pet.isLostPet ? "Mascota Extraviada" : "Mascota Encontrada", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text(pet.isLostPet ? "Mascota Extraviada" : "Mascota Encontrada", style: TextStyle(color: ColorsApp.rojoGoogle, fontWeight: FontWeight.bold, fontSize: 16)),
                     Text("Nombre: ${pet.name}", style: TextStyle(fontWeight: FontWeight.bold)),
                     Text("Especie: ${pet.species}"),
                     Text("Raza: ${pet.breed}"),
