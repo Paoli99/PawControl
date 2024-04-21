@@ -1,13 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/screens/pets/petFoundForm.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
-
 
 class Pet {
   final String name;
@@ -18,7 +17,8 @@ class Pet {
   final String location;
   final String description;
   final int phone;
-  //final String imageUrl;
+  final String imageUrl;
+  final bool isLostPet;
 
   Pet({
     this.name = '',
@@ -29,20 +29,22 @@ class Pet {
     required this.location,
     required this.description,
     required this.phone,
-    //required this.imageUrl,
+    required this.imageUrl,
+    this.isLostPet = true,
   });
 
-  factory Pet.fromMap(Map<String, dynamic> data, {bool isLostPet = true}) {
+  factory Pet.fromMap(Map<String, dynamic> data, bool isLostPet) {
     return Pet(
-      name: isLostPet ? data['name'] ?? '' : '',
+      name: data['name'] ?? '',
       species: data['species'] ?? '',
       breed: data['breed'] ?? '',
       gender: data['gender'] ?? '',
       date: data['date'] ?? '',
       location: data['location'] ?? '',
       description: data['description'] ?? '',
-      phone: data['phone'] ?? 0,
-      //imageUrl: data['imageURL'] ?? '',
+      phone: data['phone'] as int? ?? 0,
+      imageUrl: data['imageUrl'] ?? '',  // Ensure this field matches your Firestore field
+      isLostPet: isLostPet,
     );
   }
 }
@@ -59,23 +61,30 @@ class PetCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         margin: EdgeInsets.all(8),
-        child: Column(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //Image.network(pet.imageUrl, height: 150, width: double.infinity, fit: BoxFit.cover),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (pet.name.isNotEmpty) Text("Nombre: ${pet.name}", style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text("Especie: ${pet.species}"),
-                  Text("Raza: ${pet.breed}"),
-                  Text("Género: ${pet.gender}"),
-                  Text("Fecha: ${pet.date}"),
-                  Text("Ubicación: ${pet.location}"),
-                  Text("Descripción: ${pet.description}"),
-                  Text("Teléfono: ${pet.phone}"),
-                ],
+            Image.network(pet.imageUrl, width: 100, height: 100, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
+              // Handle error if the image fails to load
+              return Container(width: 100, height: 100, color: Colors.grey[300], child: Icon(Icons.broken_image));
+            }),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(pet.isLostPet ? "Mascota Extraviada" : "Mascota Encontrada", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text("Nombre: ${pet.name}", style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text("Especie: ${pet.species}"),
+                    Text("Raza: ${pet.breed}"),
+                    Text("Género: ${pet.gender}"),
+                    Text("Fecha: ${pet.date}"),
+                    Text("Ubicación: ${pet.location}"),
+                    Text("Descripción: ${pet.description}"),
+                    Text("Teléfono: ${pet.phone}"),
+                  ],
+                ),
               ),
             )
           ],
@@ -97,128 +106,126 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   bool isSearching = false;
 
-
   Future<List<Pet>> fetchPets(String collection) async {
     bool isLostPet = collection == 'lostPets';
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(collection).get();
-    return querySnapshot.docs.map((doc) => Pet.fromMap(doc.data() as Map<String, dynamic>, isLostPet: isLostPet)).toList();
+    List<Pet> pets = [];
+    for (var doc in querySnapshot.docs) {
+      pets.add(Pet.fromMap(doc.data() as Map<String, dynamic>, isLostPet));
+    }
+    return pets;
   }
 
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
-        body: SafeArea(
-          child: Scaffold(
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(0),
-                child: Column(
-                  children: [
-                    Visibility(
-                      visible: !isSearching,
-                      child: Container(
-                        color: ColorsApp.white70, 
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            if (!isSearching) Expanded(
-                              child: Header(
-                                title: 'Mascotas Perdidas',
-                                showImage: true,
-                                showBackButton: false,
-                                showLogoutButton: false,
-                              ),
-                            ),
-                            if (!isSearching) IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isSearching = true;
-                                });
-                              },
-                              icon: Icon(Icons.search),
-                              color: Colors.black,
-                            ),
-                            if (!isSearching) IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.filter_list),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (isSearching) 
-                      Container(
-                      height: 50, // Altura deseada para el TextField
-                      color: ColorsApp.white70, 
-                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+    return Scaffold(
+      body: SafeArea(
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(0),
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: !isSearching,
+                    child: Container(
+                      color: ColorsApp.white70,
+                      width: MediaQuery.of(context).size.width,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          IconButton(
+                          if (!isSearching) Expanded(
+                            child: Header(
+                              title: 'Mascotas Perdidas',
+                              showImage: true,
+                              showBackButton: false,
+                              showLogoutButton: false,
+                            ),
+                          ),
+                          if (!isSearching) IconButton(
                             onPressed: () {
                               setState(() {
-                                isSearching = false;
+                                isSearching = true;
                               });
                             },
-                            icon: Icon(Icons.arrow_back),
+                            icon: Icon(Icons.search),
+                            color: Colors.black,
                           ),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: ColorsApp.grey300, 
-                                borderRadius: BorderRadius.circular(25.0), 
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: Offset(0, 2), 
-                                  ),
-                                ],
-                              ),
-                              child: TextField(
-                                autofocus: true,
-                                decoration: InputDecoration(
-                                  hintText: 'Buscar...',
-                                  contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0), 
+                          if (!isSearching) IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.filter_list),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (isSearching) Container(
+                    height: 50,
+                    color: ColorsApp.white70,
+                    padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isSearching = false;
+                            });
+                          },
+                          icon: Icon(Icons.arrow_back),
+                        ),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: ColorsApp.grey300,
+                              borderRadius: BorderRadius.circular(25.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(0, 2),
                                 ),
+                              ],
+                            ),
+                            child: TextField(
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                hintText: 'Buscar...',
+                                contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                                border: InputBorder.none,
                               ),
                             ),
                           ),
-                        ]
-                      )
+                        ),
+                      ],
+                    )
                   ),
-
-              SizedBox(height: 20),
-                    
-
-                      
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 40.0, 
-                      child: RoundButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => PetFoundForm()),
-                          );
-                        },
-                        icon: Icons.add,
-                      ),
+                  SizedBox(height: 20),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 40.0,
+                          child: RoundButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => PetFoundForm()),
+                              );
+                            },
+                            icon: Icons.add,
+                          ),
+                        ),
+                        SizedBox(width: 10.0),
+                        Text(
+                          'Agregar publicación',
+                          style: TextsFont.tituloNames,
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 10.0),
-                    Text(
-                      'Agregar publicación',
-                      style: TextsFont.tituloNames,
-                    ),
-                  ],
-                ),
-              ),
-              
-              FutureBuilder<List<Pet>>(
+                  ),
+                  FutureBuilder<List<Pet>>(
                     future: fetchPets('lostPets'),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -233,15 +240,14 @@ class _SearchState extends State<Search> {
                           itemBuilder: (context, index) => PetCard(
                             pet: snapshot.data![index],
                             onTap: () {
-                              //
+                              // Implement navigation to detail page here
                             },
                           ),
                         );
                       }
                     },
                   ),
-
-              FutureBuilder<List<Pet>>(
+                  FutureBuilder<List<Pet>>(
                     future: fetchPets('foundPets'),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -256,21 +262,19 @@ class _SearchState extends State<Search> {
                           itemBuilder: (context, index) => PetCard(
                             pet: snapshot.data![index],
                             onTap: () {
-                              // 
+                              // Implement navigation to detail page here
                             },
                           ),
                         );
                       }
                     },
                   ),
-
-              ],
-              ),
+                ],
               ),
             ),
           ),
         ),
-      );
-  
+      ),
+    );
   }
 }
