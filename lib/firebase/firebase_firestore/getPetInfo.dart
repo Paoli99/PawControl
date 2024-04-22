@@ -10,15 +10,12 @@ class GetPetInfo {
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Obtener la referencia del documento del usuario actual
         DocumentSnapshot<Map<String, dynamic>> userDoc =
             await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
 
-        // Obtener la colección de mascotas del usuario
         CollectionReference petCollection = userDoc.reference.collection('pets');
         QuerySnapshot petSnapshot = await petCollection.get();
         
-        // Iterar sobre los documentos de las mascotas y agregar la información al resultado
         petSnapshot.docs.forEach((petDoc) {
           Map<String, dynamic> petInfo = {
             'id': petDoc.id,

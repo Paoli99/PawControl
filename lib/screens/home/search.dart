@@ -34,8 +34,8 @@ class Pet {
   });
 
   factory Pet.fromMap(Map<String, dynamic> data, bool isLostPet) {
-    String imageUrl = data['imageUrl'] ?? 'https://via.placeholder.com/150'; // Default image if not provided
-    print("Loaded image URL: $imageUrl"); // Debugging to see what URL we get
+    String imageUrl = data['imageURL'] as String? ?? 'https://via.placeholder.com/150';
+    print("Loaded image URL: $imageUrl"); 
     return Pet(
       name: data['name'] ?? '',
       species: data['species'] ?? '',
@@ -45,11 +45,13 @@ class Pet {
       location: data['location'] ?? '',
       description: data['description'] ?? '',
       phone: data['phone'] as int? ?? 0,
-      imageUrl: imageUrl,
+      imageUrl: imageUrl, 
       isLostPet: isLostPet,
     );
   }
+
 }
+
 
 class PetCard extends StatelessWidget {
   final Pet pet;
@@ -66,9 +68,12 @@ class PetCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(pet.imageUrl, width: 100, height: 100, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
-              return Container(width: 100, height: 100, color: Colors.grey[300], child: Icon(Icons.broken_image)); // Fallback icon
-            }),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 60.0, horizontal: 15.0),
+              child: Image.network(pet.imageUrl, width: 120, height: 150, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
+                return Container(width: 100, height: 100, color: Colors.grey[300], child: Icon(Icons.broken_image));
+              }),
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -76,14 +81,14 @@ class PetCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(pet.isLostPet ? "Mascota Extraviada" : "Mascota Encontrada", style: TextStyle(color: ColorsApp.rojoGoogle, fontWeight: FontWeight.bold, fontSize: 16)),
-                    Text("Nombre: ${pet.name}", style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text("Especie: ${pet.species}"),
-                    Text("Raza: ${pet.breed}"),
-                    Text("Género: ${pet.gender}"),
-                    Text("Fecha: ${pet.date}"),
-                    Text("Ubicación: ${pet.location}"),
-                    Text("Descripción: ${pet.description}"),
-                    Text("Teléfono: ${pet.phone}"),
+                    if (pet.isLostPet) buildDetailRow("Nombre:", pet.name),
+                    buildDetailRow("Especie:", pet.species),
+                    buildDetailRow("Raza:", pet.breed),
+                    buildDetailRow("Género:", pet.gender),
+                    buildDetailRow("Fecha:", pet.date),
+                    buildDetailRow("Ubicación:", pet.location),
+                    buildDetailRow("Descripción:", pet.description),
+                    buildDetailRow("Teléfono:", pet.phone.toString()),
                   ],
                 ),
               ),
@@ -94,6 +99,19 @@ class PetCard extends StatelessWidget {
     );
   }
 }
+
+Widget buildDetailRow(String label, String value) {
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(color: Colors.black), 
+        children: [
+          TextSpan(text: "$label ", style: TextStyle(fontWeight: FontWeight.bold)),
+          TextSpan(text: value, style: TextStyle(fontWeight: FontWeight.normal)),
+        ],
+      ),
+    );
+  }
+
 
 class Search extends StatefulWidget {
   final int index;
