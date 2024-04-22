@@ -142,7 +142,7 @@ class HomeContent extends StatelessWidget {
                           SizedBox(width: 10),
                           CircleAvatar(
                             backgroundImage: NetworkImage(pet['imageUrl']),
-                            radius: 25,
+                            radius: 40,
                           ),
                           SizedBox(width: 10),
                           Text(

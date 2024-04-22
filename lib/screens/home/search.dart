@@ -69,8 +69,8 @@ class PetCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 60.0, horizontal: 15.0),
-              child: Image.network(pet.imageUrl, width: 120, height: 150, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
+              padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 15.0),
+              child: Image.network(pet.imageUrl, width: 120, height: 180, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
                 return Container(width: 100, height: 100, color: Colors.grey[300], child: Icon(Icons.broken_image));
               }),
             ),
