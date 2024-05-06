@@ -33,6 +33,7 @@ Future<void> publishLostPet({
       'description': description,
       'phone': phone,
       'imageURL': imageUrl,
+      'createdAt': FieldValue.serverTimestamp(),
     });
     Navigator.pop(context);
     showGoodMessage(context, "La mascota perdida ha sido publicada exitosamente.");

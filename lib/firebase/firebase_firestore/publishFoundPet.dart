@@ -32,6 +32,7 @@ Future<void> publishFoundPet({
       'description': description,
       'phone': phone,
       'imageURL': imageUrl, 
+      'createdAt': FieldValue.serverTimestamp(),
     });
 
     Navigator.pop(context); 

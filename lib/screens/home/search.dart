@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pawcontrol/constants/colors.dart';
@@ -126,14 +128,33 @@ class _SearchState extends State<Search> {
   bool isSearching = false;
 
   Future<List<Pet>> fetchPets(String collection) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+              .collection(collection)
+              .orderBy('createdAt', descending: true)
+              .get();
     bool isLostPet = collection == 'lostPets';
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(collection).get();
-    List<Pet> pets = [];
-    for (var doc in querySnapshot.docs) {
-      pets.add(Pet.fromMap(doc.data() as Map<String, dynamic>, isLostPet));
-    }
-    return pets;
+    return querySnapshot.docs.map((doc) => Pet.fromMap(doc.data() as Map<String, dynamic>, isLostPet)).toList();
   }
+
+  Future<List<Pet>> getInterleavedPets() async {
+    List<Pet> lostPets = await fetchPets('lostPets');
+    List<Pet> foundPets = await fetchPets('foundPets');
+    List<Pet> interleaved = [];
+
+    int maxLength = max(lostPets.length, foundPets.length);
+    for (int i = 0; i < maxLength; i++) {
+      if (i < lostPets.length) {
+        interleaved.add(lostPets[i]);
+      }
+      if (i < foundPets.length) {
+        interleaved.add(foundPets[i]);
+      }
+    }
+
+    return interleaved;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +166,7 @@ class _SearchState extends State<Search> {
               padding: const EdgeInsets.all(0),
               child: Column(
                 children: [
+                  
                   Visibility(
                     visible: !isSearching,
                     child: Container(
@@ -245,22 +267,22 @@ class _SearchState extends State<Search> {
                     ),
                   ),
                   FutureBuilder<List<Pet>>(
-                    future: fetchPets('lostPets'),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index) => PetCard(
-                            pet: snapshot.data![index],
-                            onTap: () {
-                              // Implement navigation to detail page here
-                            },
+                  future: getInterleavedPets(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) => PetCard(
+                          pet: snapshot.data![index],
+                          onTap: () {
+                            // Handle tap
+                          },
                           ),
                         );
                       }

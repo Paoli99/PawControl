@@ -1,10 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pawcontrol/constants/asset_images.dart';
-import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
-import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/screens/home/notifications.dart';
 import 'package:pawcontrol/screens/home/profile.dart';
 import 'package:pawcontrol/screens/home/search.dart';
@@ -31,7 +28,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
-    _loadUserPets(); // Cargar las mascotas al inicializar el widget
+    _loadUserPets(); 
   }
 
   // Método para cargar las mascotas del usuario
