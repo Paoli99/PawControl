@@ -126,6 +126,7 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   bool isSearching = false;
+  bool isLoading = true;
 
   Future<List<Pet>> fetchPets(String collection) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -150,18 +151,23 @@ class _SearchState extends State<Search> {
         interleaved.add(foundPets[i]);
       }
     }
-
+    isLoading = false;
     return interleaved;
   }
 
-
+  Future<void> refreshPets() async {
+    setState(() {
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Scaffold(
-          body: SingleChildScrollView(
+        child: RefreshIndicator(
+          onRefresh: refreshPets,
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.all(0),
               child: Column(
@@ -267,29 +273,7 @@ class _SearchState extends State<Search> {
                     ),
                   ),
                   FutureBuilder<List<Pet>>(
-                  future: getInterleavedPets(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) => PetCard(
-                          pet: snapshot.data![index],
-                          onTap: () {
-                            // Handle tap
-                          },
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                  FutureBuilder<List<Pet>>(
-                    future: fetchPets('foundPets'),
+                    future: getInterleavedPets(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -303,7 +287,6 @@ class _SearchState extends State<Search> {
                           itemBuilder: (context, index) => PetCard(
                             pet: snapshot.data![index],
                             onTap: () {
-                              // Implement navigation to detail page here
                             },
                           ),
                         );
