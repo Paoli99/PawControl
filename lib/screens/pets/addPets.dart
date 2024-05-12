@@ -41,6 +41,8 @@ class _AddPetsState extends State<AddPets> {
     'Pequines Albino'
     'Yorkshire Terrier',
     'Chapi',
+    'Pincher',
+    'Schnauzer',
     'Otra',
   ];
 

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,16 +20,10 @@ class AddPetsInfo {
     required String  birthDate
   }) async {
     try {
-      // Obtener el ID del usuario actualmente autenticado
       String userId = FirebaseAuth.instance.currentUser!.uid;
 
-      // Obtener la referencia del documento del usuario actual
       final userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
 
-      // Convertir la fecha seleccionada a una cadena ISO 8601 antes de guardarla en Firestore
-      
-
-      // Crear la subcolección "mascotas" si no existe
       await userDoc.collection('pets').doc().set({
         'name': petName,
         'species': selectedSpecies,

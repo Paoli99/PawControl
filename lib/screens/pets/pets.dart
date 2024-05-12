@@ -10,6 +10,7 @@ import 'package:pawcontrol/screens/pets/addVetVisit.dart';
 import 'package:pawcontrol/screens/pets/editPetProfile.dart';
 import 'package:pawcontrol/screens/pets/petClinicHistory.dart';
 import 'package:pawcontrol/screens/pets/petLostForm.dart';
+import 'package:pawcontrol/screens/pets/viewVaccines.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart';
@@ -113,7 +114,7 @@ class _PetsState extends State<Pets> {
                           RoundButton(
                             onPressed: () {
                               Routes.instance.pushAndRemoveUntil(
-                              widget: AddVaccines(petId: widget.petId,),
+                              widget: ViewVaccines(petId: widget.petId,),
                               context: context,
                               ); 
                             },

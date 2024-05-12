@@ -5,4 +5,8 @@ class AssetsImages {
   final String logo = "$_imagesPath/animalLogo.png";
 
   final String lock = "$_imagesPath/lock.png";
+
+  final String back = "$_imagesPath/BackDog.png";
+  final String front = "$_imagesPath/FrontDog.png";
+  final String side = "$_imagesPath/SideDog.png";
 }

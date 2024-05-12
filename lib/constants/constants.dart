@@ -1,10 +1,6 @@
-// ignore_for_file: use_build_context_synchronously, unnecessary_null_comparison
-
-import 'dart:io';
-
+// ignore_for_file: use_build_context_synchronously, unnecessary_null_comparison, prefer_const_constructors, unnecessary_string_interpolations, avoid_print, use_rethrow_when_possible
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
 
@@ -264,4 +260,36 @@ Future<bool> validateLostPetForm({
   } else {
     return true;
   }
+}
+
+Future<bool> validateVaccineForm({
+  required BuildContext context,
+  required String vaccineName,
+  required String productName,
+  required String vaccineDate,
+  required String nextVaccineDate,
+  required List<String> imageUrls,
+}) async {
+  if (vaccineName.isEmpty || productName.isEmpty || vaccineDate.isEmpty || nextVaccineDate.isEmpty || imageUrls.any((url) => url.isEmpty)) {
+    String errorMessage = "Por favor, complete todos los campos antes de registrar la vacuna:\n";
+    if (vaccineName.isEmpty) {
+      errorMessage += "- Ingrese el nombre de la vacuna.\n";
+    }
+    if (productName.isEmpty) {
+      errorMessage += "- Ingrese el nombre del producto.\n";
+    }
+    if (vaccineDate.isEmpty) {
+      errorMessage += "- Ingrese la fecha de vacunación.\n";
+    }
+    if (nextVaccineDate.isEmpty) {
+      errorMessage += "- Ingrese la fecha de la próxima vacuna.\n";
+    }
+    if (imageUrls.any((url) => url.isEmpty)) {
+      errorMessage += "- Suba todas las imágenes requeridas.\n";
+    }
+    showMessage(context, errorMessage);
+    return false;
+  }
+  showGoodMessage(context, "Vacuna registrada exitosamente.");
+  return true;
 }

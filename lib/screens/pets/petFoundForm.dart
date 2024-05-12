@@ -55,6 +55,8 @@ class _PetFoundFormState extends State<PetFoundForm> {
     'Yorkshire Terrier',
     'Pequines Albino',
     'Chapi',
+    'Pincher',
+    'Schnauzer',
     'Otra',
   ];
 
