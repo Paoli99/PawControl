@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:io';
 
@@ -40,8 +40,10 @@ class _EditPetProfileState extends State<EditPetProfile> {
   void initState() {
     checkUserAuthentication();
     super.initState();
-    _updatePetInfo = UpdatePetInfo(userId: FirebaseAuth.instance.currentUser!.uid, context: context);
+    UpdatePetInfo _updatePetInfo = UpdatePetInfo(userId: FirebaseAuth.instance.currentUser!.uid, petId: widget.petId, context: context);
     loadPetInfo();
+
+    
   }
 
   void navigateBack(BuildContext context) {
@@ -62,6 +64,7 @@ class _EditPetProfileState extends State<EditPetProfile> {
       birthDateController.text = petInfo['birthDate'] ?? '';
       weightController.text = petInfo['weight'] ?? '';
       sexController.text = petInfo['sex'] ?? '';
+      imageUrl = petInfo['imageUrl'];
       userPets.add(petInfo); 
     });
   } catch (e) {
@@ -80,29 +83,29 @@ class _EditPetProfileState extends State<EditPetProfile> {
   void updatePet() {
     _updatePetInfo.updatePetInfo(
       species: speciesController.text,
-      petId: widget.petId,
       name: nameController.text,
       breed: breedController.text,
       color: colorController.text,
       sex: sexController.text,
       weight: weightController.text,
       birthDate: birthDateController.text,
-      context: context,
     );
   }
 
   void updatePetProfileImage() async {
-    UpdatePetInfo updatePetInfoInstance = UpdatePetInfo(userId: widget.petId, context: context);
-    String? uploadedImageUrl = await updatePetInfoInstance.pickAndUploadImage(setImageUrl);
-    if (uploadedImageUrl != null) {
-      // La imagen se cargó correctamente, puedes hacer cualquier otra acción necesaria aquí
-    } else {
-      // La carga de la imagen falló, manejar según sea necesario
-    }
-  }
+  _updatePetInfo = UpdatePetInfo(userId: FirebaseAuth.instance.currentUser!.uid, petId: widget.petId, context: context);
+  String? uploadedImageUrl = await _updatePetInfo.pickAndUploadImage(setImageUrl);
+   if (uploadedImageUrl != null) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => EditPetProfile(petId: widget.petId)),
+    );
+  } else {
+
+  } 
+} 
 
   void checkUserAuthentication() {
-  // Obtener el usuario actualmente autenticado
   User? user = FirebaseAuth.instance.currentUser;
 
   if (user != null) {

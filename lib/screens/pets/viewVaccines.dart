@@ -1,21 +1,39 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:pawcontrol/constants/colors.dart';
-import 'package:pawcontrol/constants/dropListView.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/routes.dart';
-import 'package:pawcontrol/constants/textInputFields.dart';
-import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart';
-import 'package:pawcontrol/screens/home/home.dart';
-import 'package:pawcontrol/screens/home/profile.dart';
-import 'package:pawcontrol/screens/home/search.dart';
 import 'package:pawcontrol/screens/pets/addVaccines.dart';
 import 'package:pawcontrol/screens/pets/pets.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
-import 'package:pawcontrol/widgets/pictures/addPicture.dart';
-import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
+
+class Vaccine {
+  final String nextVaccineDate;
+  final String productName;
+  final String vaccineDate;
+  final String vaccineName;
+
+  Vaccine({
+    required this.nextVaccineDate,
+    required this.productName,
+    required this.vaccineDate,
+    required this.vaccineName,
+  });
+
+  factory Vaccine.fromFirestore(Map<String, dynamic> data) {
+    return Vaccine(
+      nextVaccineDate: data['nextVaccineDate'] ?? '',
+      productName: data['productName'] ?? '',
+      vaccineDate: data['vaccineDate'] ?? '',
+      vaccineName: data['vaccineName'] ?? '',
+    );
+  }
+}
 
 class ViewVaccines extends StatefulWidget {
   final String petId;
@@ -27,12 +45,32 @@ class ViewVaccines extends StatefulWidget {
 }
 
 class _ViewVaccinesState extends State<ViewVaccines> {
+  List<Vaccine> vaccines = [];
 
-  
-  TextEditingController vaccineNameController = TextEditingController();
-  TextEditingController vaccineDateController = TextEditingController();
-  TextEditingController nextVaccineDateController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    loadVaccines();
+  }
 
+  void loadVaccines() async {
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('pets')
+      .doc(widget.petId)
+      .collection('vaccines')
+      .get();
+
+    List<Vaccine> loadedVaccines = snapshot.docs
+      .map((doc) => Vaccine.fromFirestore(doc.data() as Map<String, dynamic>))
+      .toList();
+
+    setState(() {
+      vaccines = loadedVaccines;
+    });
+  }
 
   @override
   void navigateBack(BuildContext context) {
@@ -42,6 +80,7 @@ class _ViewVaccinesState extends State<ViewVaccines> {
   );
   }
 
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -54,28 +93,46 @@ class _ViewVaccinesState extends State<ViewVaccines> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
-                        children: [
-                          RoundButton(
-                            onPressed: () {
-                              Routes.instance.pushAndRemoveUntil(
+                    Row(
+                      children: [
+                        RoundButton(
+                          onPressed: () {
+                            Routes.instance.pushAndRemoveUntil(
                               widget: AddVaccines(petId: widget.petId),
                               context: context,
                             );
-                            },
-                            icon: Icons.add,
-                          ),
-                          SizedBox(width: 10.0),
-                          Text(
-                            'Registrar Vacuna',
-                            style: TextsFont.tituloNames,
-                          ),
-                        ],
-                      ),
+                          },
+                          icon: Icons.add,
+                        ),
+                        SizedBox(width: 10.0),
+                        Text(
+                          'Registrar Vacuna',
+                          style: TextsFont.tituloNames,
+                        ),
+                      ],
                     ),
+                    SizedBox(height: 20),
+                    if (vaccines.isNotEmpty)
+                      ...vaccines.map((vaccine) => Card(
+                        child: ListTile(
+                          title: Text(vaccine.vaccineName, style: TextStyle(color: ColorsApp.redAccent400, fontWeight: FontWeight.bold, fontSize: 20)),
+                          subtitle: RichText(
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(text: 'Nombre del producto: ', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.bold, fontSize: 16)),
+                                TextSpan(text: '${vaccine.productName}\n', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.normal, fontSize: 16) ),
+                                TextSpan(text: 'Fecha de vacunación: ', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.bold, fontSize: 16)),
+                                TextSpan(text: '${vaccine.vaccineDate}\n', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.normal, fontSize: 16) ),
+                                TextSpan(text: 'Fecha de próxima vacuna: ', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.bold, fontSize: 16)),
+                                TextSpan(text: '${vaccine.nextVaccineDate}', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.normal, fontSize: 16) ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )).toList(),
+                    if (vaccines.isEmpty)
+                      Text('No hay vacunas disponibles.'),
+
                   ],
                 ),
               ),
@@ -84,7 +141,6 @@ class _ViewVaccinesState extends State<ViewVaccines> {
         ),
       ),
     );
-    
+  }
 
-}
 }
