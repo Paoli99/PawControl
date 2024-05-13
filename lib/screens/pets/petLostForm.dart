@@ -290,8 +290,8 @@ void loadVaccineImages() async {
                 ),
                 PrimaryButton(
                       title: 'Publicar',
-                      onPressed: () {
-                        publishLostPet(
+                      onPressed: () async{
+                        bool success = await publishLostPet(
                           context: context,
                           name: nameController.text,
                           species: speciesController.text,
@@ -302,7 +302,11 @@ void loadVaccineImages() async {
                           description: descriptionController.text,
                           phone: int.tryParse(phoneController.text) ?? 0, 
                           petId: widget.petId,
+                          imageUrls: vaccineImages,
                         );
+                        if(success){
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pets(petId: widget.petId)));
+                        }
                       },
                     ),
               ],

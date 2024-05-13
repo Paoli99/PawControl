@@ -348,7 +348,7 @@ Widget imagePlaceholder(int index, String title, String defaultImagePath) {
                 PrimaryButton(
                       title: 'Publicar',
                       onPressed: () async {
-                         String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+                        String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
                         bool success = await validateFoundPet(
                           context: context,
                           userId: userId,
@@ -365,7 +365,7 @@ Widget imagePlaceholder(int index, String title, String defaultImagePath) {
                         if (success) {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => Search(index: 2,)),  // Asegúrate de cambiar 'SuccessScreen' al nombre real de la pantalla de destino.
+                            MaterialPageRoute(builder: (context) => Search(index: 2,)),  
                           );
                         }
                       },

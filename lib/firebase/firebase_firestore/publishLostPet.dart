@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pawcontrol/constants/constants.dart';
 
-Future<void> publishLostPet({
+Future<bool> publishLostPet({
   required BuildContext context,
   required String petId,
   required String name,
@@ -16,9 +16,18 @@ Future<void> publishLostPet({
   required String location,
   required String description,
   required int phone,
+  required List<String> imageUrls, 
+
   //
   //required String imageUrl,
 }) async {
+  if (species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 || imageUrls.isEmpty) {
+    showMessage(context, "Por favor, llene todos los campos.");
+    return false;
+  }
+
+  showLoaderDialog(context);
+
   try {
     String userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -30,6 +39,7 @@ Future<void> publishLostPet({
 
     if (petSnapshot.exists) {
       showMessage(context, "Mascota ya publicada");
+      return false;
     } else {
       await FirebaseFirestore.instance.collection('lostPetsForms').doc(petId).set({
         'userId': userId,
@@ -42,16 +52,20 @@ Future<void> publishLostPet({
         'location': location,
         'description': description,
         'phone': phone,
+        'imageUrls': imageUrls,
       });
+      
 
       //espacio para la lógica de notificaciones
 
       createNotificationForLostPet(petId, userId);
 
       //Navigator.of(context).pop();
+      return true;
     }
   } catch (e) {
     showMessage(context, "Error al publicar la mascota: $e");
+    return false;
   }
 }
 

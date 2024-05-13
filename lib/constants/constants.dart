@@ -314,3 +314,26 @@ Future<bool> validateFoundPet({
   return true;
 
 }
+
+Future<bool> validateLostPet({
+  required BuildContext context,
+  required String name,
+  required String userId,
+  required String species,
+  required String breed,
+  required String gender,
+  required String date,
+  required String location,
+  required String description,
+  required int phone,
+  required String petId,
+  required List<String> imageUrls,
+}) async {
+  if (species.isEmpty || name.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 || imageUrls.any((url) => url.isEmpty)) {
+    showMessage(context, "Todos los campos deben estar completos, incluyendo la imagen de la mascota.");
+    return false;
+  }
+  showGoodMessage(context, "Anuncio de mascota perdida registrado exitosamente.");
+  return true;
+
+}
