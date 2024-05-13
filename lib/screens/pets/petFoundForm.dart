@@ -1,7 +1,8 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,10 +12,12 @@ import 'package:pawcontrol/constants/dropListView.dart';
 import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/publishFoundPet.dart';
+import 'package:pawcontrol/screens/home/search.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/pictures/addPicture.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:path/path.dart' as Path;
+import 'package:uuid/uuid.dart'; 
 
 
 class PetFoundForm extends StatefulWidget {
@@ -34,7 +37,9 @@ class _PetFoundFormState extends State<PetFoundForm> {
   TextEditingController petBreedController = TextEditingController();
   TextEditingController petGenderController = TextEditingController();
   TextEditingController petColorController = TextEditingController();
-  String imageUrl = "";
+  List<String> imageUrls = ['', '', ''];
+  bool isPickerActive = false;
+  String publicationId = Uuid().v4();
 
   List<String>? breedList;
   List<DropdownMenuItem<String>> breedDropdownItems = [];
@@ -91,7 +96,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
     )).toList() ?? [];
   }
 
-  void pickImage() async {
+/*   void pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -117,13 +122,69 @@ class _PetFoundFormState extends State<PetFoundForm> {
     setState(() {
       imageUrl = path;
     });
+  } */
+
+  void pickImage(int index) async {
+    if (isPickerActive) return;
+    setState(() => isPickerActive = true);
+    
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 512,
+      maxWidth: 512,
+      imageQuality: 75,
+    );
+
+    if (image != null) {
+      String fileName = '$publicationId/${publicationId}_$index.jpg';
+      Reference ref = FirebaseStorage.instance.ref().child("foundPetFormPhotos/$fileName");
+      await ref.putFile(File(image.path));
+      String downloadURL = await ref.getDownloadURL();
+      setState(() {
+        imageUrls[index] = downloadURL;
+        print(downloadURL);
+      });
+    }
+
+    setState(() => isPickerActive = false);
   }
 
     void navigateBack(BuildContext context) {
     Navigator.pop(context);
     }
 
-
+Widget imagePlaceholder(int index, String title, String defaultImagePath) {
+  bool isBackImage = index == 2;
+  double imageSize = isBackImage ? 100 : 100;  
+  return Column(
+    children: [
+      Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      SizedBox(height: 8),
+      InkWell(
+        onTap: () => pickImage(index),
+        child: Container(
+          width: 100,  
+          height: 100,  
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            border: Border.all(color: Colors.grey),
+          ),
+          child: Center(
+            child: imageUrls[index].isEmpty
+                ? Image.asset(
+                    defaultImagePath,
+                    fit: BoxFit.contain,  
+                    width: imageSize, 
+                    height: imageSize
+                  )
+                : Image.network(imageUrls[index], fit: BoxFit.cover),
+          ),
+        ),
+      ),
+    ],
+  );
+}
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -141,11 +202,21 @@ class _PetFoundFormState extends State<PetFoundForm> {
                   navigateTo: navigateBack,
                 ),
                 SizedBox(height: 20.0),
-                AddPicture(
+                /* AddPicture(
                   imageUrl: imageUrl,
                   setImageUrl: setImageUrl,
                   onPressed: pickImage
-                ),
+                ), */
+
+                Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        imagePlaceholder(0, 'Frente', 'assets/icons/FrontDog.png'),
+                        imagePlaceholder(1, 'Costado', 'assets/icons/SideDog.png'),
+                        imagePlaceholder(2, 'Espalda', 'assets/icons/BackDog.png'),
+                      ],
+                    ),
+
                 SizedBox(height: 20.0),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -276,18 +347,27 @@ class _PetFoundFormState extends State<PetFoundForm> {
                 ),
                 PrimaryButton(
                       title: 'Publicar',
-                      onPressed: () {
-                         publishFoundPet(
+                      onPressed: () async {
+                         String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+                        bool success = await validateFoundPet(
                           context: context,
-                          species: selectedSpecies ?? '', 
+                          userId: userId,
+                          species: selectedSpecies ?? '',  
                           breed: petBreedController.text,
                           date: dateController.text,
                           gender: petGenderController.text,
                           location: locationController.text,
                           description: descriptionController.text,
                           phone: int.tryParse(phoneController.text) ?? 0,
-                          imageUrl: imageUrl,
-                        ); 
+                          imageUrls: imageUrls,
+                        );
+
+                        if (success) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Search(index: 2,)),  // Asegúrate de cambiar 'SuccessScreen' al nombre real de la pantalla de destino.
+                          );
+                        }
                       },
                     ),
                 SizedBox(

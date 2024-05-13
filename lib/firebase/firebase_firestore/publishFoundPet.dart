@@ -6,6 +6,7 @@ import 'package:pawcontrol/constants/constants.dart';
 
 Future<void> publishFoundPet({
   required BuildContext context,
+  required String userId,
   required String species,
   required String breed,
   required String gender, 
@@ -13,9 +14,9 @@ Future<void> publishFoundPet({
   required String location,
   required String description,
   required int phone,
-  required String imageUrl,
+  required List<String> imageUrls, 
 }) async {
-  if (imageUrl.isEmpty || species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0) {
+  if ( species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 || imageUrls.any((url) => url.isEmpty)) {
     showMessage(context, "Todos los campos deben estar completos, incluyendo la imagen de la mascota.");
     return;
   }
@@ -23,7 +24,8 @@ Future<void> publishFoundPet({
   showLoaderDialog(context); 
 
   try {
-    await FirebaseFirestore.instance.collection('foundPets').add({
+    await FirebaseFirestore.instance.collection('foundPetsForms').add({
+      'userId': userId,
       'species': species,
       'breed': breed,
       'gender':gender,
@@ -31,7 +33,7 @@ Future<void> publishFoundPet({
       'location': location,
       'description': description,
       'phone': phone,
-      'imageURL': imageUrl, 
+      'imageUrls': imageUrls,
       'createdAt': FieldValue.serverTimestamp(),
     });
 
@@ -41,4 +43,22 @@ Future<void> publishFoundPet({
     Navigator.pop(context); 
     showMessage(context, "Error al publicar la mascota perdida: $e");
   }
+}
+
+void showLoaderDialog(BuildContext context) {
+  AlertDialog alert = AlertDialog(
+    content: Row(
+      children: [
+        CircularProgressIndicator(),
+        Container(margin: EdgeInsets.only(left: 7), child: Text("Loading...")),
+      ],
+    ),
+  );
+  showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

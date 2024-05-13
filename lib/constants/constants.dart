@@ -293,3 +293,24 @@ Future<bool> validateVaccineForm({
   showGoodMessage(context, "Vacuna registrada exitosamente.");
   return true;
 }
+
+Future<bool> validateFoundPet({
+  required BuildContext context,
+  required String userId,
+  required String species,
+  required String breed,
+  required String gender,
+  required String date,
+  required String location,
+  required String description,
+  required int phone,
+  required List<String> imageUrls,
+}) async {
+  if (species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 || imageUrls.any((url) => url.isEmpty)) {
+    showMessage(context, "Todos los campos deben estar completos, incluyendo la imagen de la mascota.");
+    return false;
+  }
+  showGoodMessage(context, "Anuncio de mascota perdida registrado exitosamente.");
+  return true;
+
+}
