@@ -1,12 +1,8 @@
 // ignore_for_file: prefer_const_constructors, unused_local_variable
-
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/constants.dart';
 import 'package:pawcontrol/constants/textFields.dart';
@@ -14,9 +10,7 @@ import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/publishLostPet.dart';
 import 'package:pawcontrol/screens/pets/pets.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
-import 'package:pawcontrol/widgets/pictures/addPicture.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
-import 'package:path/path.dart' as Path;
 
 
 class PetLostForum extends StatefulWidget {
@@ -307,6 +301,7 @@ void loadVaccineImages() async {
                         if(success){
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pets(petId: widget.petId)));
                         }
+                        showGoodMessage(context, "Mascota publicada correctamente");
                       },
                     ),
               ],

@@ -53,6 +53,7 @@ Future<bool> publishLostPet({
         'description': description,
         'phone': phone,
         'imageUrls': imageUrls,
+        'createdAt': FieldValue.serverTimestamp(),
       });
       
 

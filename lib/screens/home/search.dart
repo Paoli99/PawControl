@@ -19,8 +19,8 @@ class Pet {
   final String location;
   final String description;
   final int phone;
-  final String imageUrl;
-  final bool isLostPet;
+  final List<String> imageUrls;
+  final bool isFoundPet;
 
   Pet({
     this.name = '',
@@ -31,13 +31,18 @@ class Pet {
     required this.location,
     required this.description,
     required this.phone,
-    required this.imageUrl,
-    this.isLostPet = true,
+    required this.imageUrls,
+    this.isFoundPet = true,
   });
 
-  factory Pet.fromMap(Map<String, dynamic> data, bool isLostPet) {
-    String imageUrl = data['imageURL'] as String? ?? 'https://via.placeholder.com/150';
-    print("Loaded image URL: $imageUrl"); 
+  factory Pet.fromMap(Map<String, dynamic> data, bool isFoundPet) {
+    List<String> imageUrls = [];
+    if (data['imageUrls'] != null) {
+      imageUrls = List<String>.from(data['imageUrls']);
+    } else {
+      imageUrls = ['https://via.placeholder.com/150'];
+    }
+    //print("Loaded image URL: $imageUrl"); 
     return Pet(
       name: data['name'] ?? '',
       species: data['species'] ?? '',
@@ -47,8 +52,8 @@ class Pet {
       location: data['location'] ?? '',
       description: data['description'] ?? '',
       phone: data['phone'] as int? ?? 0,
-      imageUrl: imageUrl, 
-      isLostPet: isLostPet,
+      imageUrls: imageUrls, 
+      isFoundPet: isFoundPet,
     );
   }
 
@@ -72,7 +77,7 @@ class PetCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 15.0),
-              child: Image.network(pet.imageUrl, width: 120, height: 180, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
+              child: Image.network(pet.imageUrls.isNotEmpty ? pet.imageUrls[0] : 'https://via.placeholder.com/150', width: 120, height: 180, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
                 return Container(width: 100, height: 100, color: Colors.grey[300], child: Icon(Icons.broken_image));
               }),
             ),
@@ -82,8 +87,8 @@ class PetCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(pet.isLostPet ? "Mascota Extraviada" : "Mascota Encontrada", style: TextStyle(color: ColorsApp.rojoGoogle, fontWeight: FontWeight.bold, fontSize: 16)),
-                    if (pet.isLostPet) buildDetailRow("Nombre:", pet.name),
+                    Text(pet.isFoundPet ? "Mascota Encontrada" : "Mascota Extraviada", style: TextStyle(color: ColorsApp.rojoGoogle, fontWeight: FontWeight.bold, fontSize: 16)),
+                    if (!pet.isFoundPet) buildDetailRow("Nombre:", pet.name),
                     buildDetailRow("Especie:", pet.species),
                     buildDetailRow("Raza:", pet.breed),
                     buildDetailRow("Género:", pet.gender),
@@ -129,27 +134,26 @@ class _SearchState extends State<Search> {
   bool isLoading = true;
 
   Future<List<Pet>> fetchPets(String collection) async {
+    print("Fetching pets from: $collection");  
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
               .collection(collection)
               .orderBy('createdAt', descending: true)
               .get();
-    bool isLostPet = collection == 'lostPets';
-    return querySnapshot.docs.map((doc) => Pet.fromMap(doc.data() as Map<String, dynamic>, isLostPet)).toList();
+    bool isFoundPet = collection.contains('foundPetsForms');  
+    return querySnapshot.docs.map((doc) {
+      print("Pet ID from $collection: ${doc.id}");  
+      return Pet.fromMap(doc.data() as Map<String, dynamic>, isFoundPet);
+    }).toList();
   }
 
   Future<List<Pet>> getInterleavedPets() async {
-    List<Pet> lostPets = await fetchPets('lostPets');
-    List<Pet> foundPets = await fetchPets('foundPets');
+    List<Pet> lostPets = await fetchPets('lostPetsForms');
+    List<Pet> foundPets = await fetchPets('foundPetsForms');
     List<Pet> interleaved = [];
-
     int maxLength = max(lostPets.length, foundPets.length);
     for (int i = 0; i < maxLength; i++) {
-      if (i < lostPets.length) {
-        interleaved.add(lostPets[i]);
-      }
-      if (i < foundPets.length) {
-        interleaved.add(foundPets[i]);
-      }
+      if (i < lostPets.length) interleaved.add(lostPets[i]);
+      if (i < foundPets.length) interleaved.add(foundPets[i]);
     }
     isLoading = false;
     return interleaved;
