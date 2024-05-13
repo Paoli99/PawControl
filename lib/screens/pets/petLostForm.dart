@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unused_local_variable
 
 import 'dart:io';
 
@@ -38,15 +38,22 @@ class _PetLostForumState extends State<PetLostForum> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   String imageUrl = "";
+  List<String> vaccineImages = [];
 
   @override
   void initState() {
     super.initState();
     fetchPetData();
+    loadVaccineImages();
   }
 
   void fetchPetData() async {
   try {
+    if (widget.petId.isEmpty) {
+      print("Pet ID is empty");
+      return;
+    }
+    
     DocumentSnapshot petDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -71,7 +78,29 @@ class _PetLostForumState extends State<PetLostForum> {
 }
 
 
-  void pickImage() async {
+
+void loadVaccineImages() async {
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+  List<String> loadedImages = [];
+
+
+  for (int i = 0; i <= 2; i++) {
+    String path = "petVaccinePhotos/${widget.petId}/_$i.jpg";
+    print(path);
+     try {
+      String imageUrl = await FirebaseStorage.instance.ref(path).getDownloadURL();
+      loadedImages.add(imageUrl);
+    } catch (e) {
+      print("Error al cargar la imagen: $e");
+    } 
+  }
+
+  setState(() {
+    vaccineImages = loadedImages;
+  });
+}
+
+/*   void pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -91,13 +120,13 @@ class _PetLostForumState extends State<PetLostForum> {
         print(e);
       }
     }
-  }
+  } */
   
-  void setImageUrl(String path) {
+  /* void setImageUrl(String path) {
     setState(() {
       imageUrl = path;
     });
-  }
+  } */
 
     void navigateBack(BuildContext context) {
     Navigator.push(
@@ -125,11 +154,18 @@ class _PetLostForumState extends State<PetLostForum> {
                   navigateTo: navigateBack,
                 ),
                 SizedBox(height: 20.0),
-                AddPicture(
+                
+                /* AddPicture(
                   imageUrl: imageUrl,
                   setImageUrl: setImageUrl,
                   onPressed: pickImage
-                ),
+                ), */
+
+                if (vaccineImages.isNotEmpty)
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: vaccineImages.map((url) => Image.network(url, width: 100, height: 100)).toList(),
+                    ),
                 SizedBox(height: 20.0),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -264,8 +300,8 @@ class _PetLostForumState extends State<PetLostForum> {
                           date: dateController.text,
                           location: locationController.text,
                           description: descriptionController.text,
-                          phone: int.tryParse(phoneController.text) ?? 0,
-                          imageUrl: imageUrl,
+                          phone: int.tryParse(phoneController.text) ?? 0, 
+                          petId: widget.petId,
                         );
                       },
                     ),

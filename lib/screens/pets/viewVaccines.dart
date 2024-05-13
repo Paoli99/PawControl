@@ -51,6 +51,7 @@ class _ViewVaccinesState extends State<ViewVaccines> {
   void initState() {
     super.initState();
     loadVaccines();
+    loadVaccineImages();
   }
 
   void loadVaccines() async {
@@ -71,6 +72,30 @@ class _ViewVaccinesState extends State<ViewVaccines> {
       vaccines = loadedVaccines;
     });
   }
+
+  List<String> vaccineImages = [];
+
+void loadVaccineImages() async {
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+  List<String> loadedImages = [];
+
+
+  for (int i = 0; i <= 2; i++) {
+    String path = "petVaccinePhotos/${widget.petId}/_$i.jpg";
+    print(path);
+     try {
+      String imageUrl = await FirebaseStorage.instance.ref(path).getDownloadURL();
+      loadedImages.add(imageUrl);
+    } catch (e) {
+      print("Error al cargar la imagen: $e");
+    } 
+  }
+
+  setState(() {
+    vaccineImages = loadedImages;
+  });
+}
+
 
   @override
   void navigateBack(BuildContext context) {
@@ -111,6 +136,13 @@ class _ViewVaccinesState extends State<ViewVaccines> {
                         ),
                       ],
                     ),
+                    /*SizedBox(height: 20),
+                     if (vaccineImages.isNotEmpty)
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: vaccineImages.map((url) => Image.network(url, width: 100, height: 100)).toList(),
+                    ),  */
+                    
                     SizedBox(height: 20),
                     if (vaccines.isNotEmpty)
                       ...vaccines.map((vaccine) => Card(
