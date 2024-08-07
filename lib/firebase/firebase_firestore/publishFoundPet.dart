@@ -2,35 +2,52 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pawcontrol/constants/constants.dart'; 
+import 'package:pawcontrol/constants/constants.dart';
 
 Future<void> publishFoundPet({
   required BuildContext context,
   required String userId,
   required String species,
   required String breed,
-  required String gender, 
+  required String gender,
   required String date,
   required String location,
   required String description,
   required int phone,
-  required List<String> imageUrls, 
+  required List<String> imageUrls,
 }) async {
-  if ( species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 
-  //|| imageUrls.any((url) => url.isEmpty)
-  ){
-    showMessage(context, "Todos los campos deben estar completos, incluyendo la imagen de la mascota.");
+  if (species.isEmpty ||
+      breed.isEmpty ||
+      gender.isEmpty ||
+      date.isEmpty ||
+      location.isEmpty ||
+      description.isEmpty ||
+      phone == 0 ||
+      imageUrls.any((url) => url.isEmpty)) {
+    showMessage(
+        context, "Todos los campos deben estar completos, incluyendo la imagen de la mascota.");
     return;
   }
 
-  showLoaderDialog(context); 
+  showLoaderDialog(context);
 
   try {
+    print("Attempting to publish found pet with the following details:");
+    print("userId: $userId");
+    print("species: $species");
+    print("breed: $breed");
+    print("gender: $gender");
+    print("date: $date");
+    print("location: $location");
+    print("description: $description");
+    print("phone: $phone");
+    print("imageUrls: $imageUrls");
+
     await FirebaseFirestore.instance.collection('foundPetsForms').add({
       'userId': userId,
       'species': species,
       'breed': breed,
-      'gender':gender,
+      'gender': gender,
       'date': date,
       'location': location,
       'description': description,
@@ -39,12 +56,14 @@ Future<void> publishFoundPet({
       'createdAt': FieldValue.serverTimestamp(),
     });
 
-    //
+    print("Document successfully written!");
 
-    Navigator.pop(context); 
-    showGoodMessage(context, "La mascota perdida ha sido publicada exitosamente.");
+    Navigator.pop(context);
+    showGoodMessage(
+        context, "La mascota perdida ha sido publicada exitosamente.");
   } catch (e) {
-    Navigator.pop(context); 
+    Navigator.pop(context);
+    print("Error publishing document: $e");
     showMessage(context, "Error al publicar la mascota perdida: $e");
   }
 }

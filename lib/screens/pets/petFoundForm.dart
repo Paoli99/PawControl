@@ -14,16 +14,12 @@ import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/publishFoundPet.dart';
 import 'package:pawcontrol/screens/home/search.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
-import 'package:pawcontrol/widgets/pictures/addPicture.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:path/path.dart' as Path;
-import 'package:uuid/uuid.dart'; 
-
+import 'package:uuid/uuid.dart';
 
 class PetFoundForm extends StatefulWidget {
   const PetFoundForm({Key? key}) : super(key: key);
-
-  
 
   @override
   State<PetFoundForm> createState() => _PetFoundFormState();
@@ -45,7 +41,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
   List<DropdownMenuItem<String>> breedDropdownItems = [];
 
   String? selectedSpecies;
-  
+
   List<String> dogBreeds = [
     'Mestizo',
     'Chihuahua',
@@ -78,7 +74,6 @@ class _PetFoundFormState extends State<PetFoundForm> {
     'Otro',
   ];
 
-
   @override
   void initState() {
     super.initState();
@@ -86,48 +81,23 @@ class _PetFoundFormState extends State<PetFoundForm> {
   }
 
   void _updateBreedsAndItems() {
-    breedList = selectedSpecies == null 
-                ? null 
-                : (selectedSpecies == 'Perro' ? dogBreeds : catBreeds);
-    
-    breedDropdownItems = breedList?.map((value) => DropdownMenuItem(
-      value: value,
-      child: Text(value),
-    )).toList() ?? [];
-  }
+    breedList = selectedSpecies == null
+        ? null
+        : (selectedSpecies == 'Perro' ? dogBreeds : catBreeds);
 
-/*   void pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      showLoaderDialog(context);
-      try {
-        String fileName = "foundPets/${DateTime.now().millisecondsSinceEpoch}_${Path.basename(pickedFile.path)}";
-        Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
-        await storageRef.putFile(File(pickedFile.path));
-        String downloadUrl = await storageRef.getDownloadURL();
-        setState(() {
-          imageUrl = downloadUrl;
-        });
-        Navigator.pop(context);
-      } catch (e) {
-        Navigator.pop(context);
-        print(e);
-      }
-    }
+    breedDropdownItems = breedList
+            ?.map((value) => DropdownMenuItem(
+                  value: value,
+                  child: Text(value),
+                ))
+            .toList() ??
+        [];
   }
-  
-  void setImageUrl(String path) {
-    setState(() {
-      imageUrl = path;
-    });
-  } */
 
   void pickImage(int index) async {
     if (isPickerActive) return;
     setState(() => isPickerActive = true);
-    
+
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(
       source: ImageSource.gallery,
@@ -138,7 +108,8 @@ class _PetFoundFormState extends State<PetFoundForm> {
 
     if (image != null) {
       String fileName = '$publicationId/${publicationId}_$index.jpg';
-      Reference ref = FirebaseStorage.instance.ref().child("foundPetFormPhotos/$fileName");
+      Reference ref =
+          FirebaseStorage.instance.ref().child("foundPetFormPhotos/$fileName");
       await ref.putFile(File(image.path));
       String downloadURL = await ref.getDownloadURL();
       setState(() {
@@ -150,41 +121,38 @@ class _PetFoundFormState extends State<PetFoundForm> {
     setState(() => isPickerActive = false);
   }
 
-    void navigateBack(BuildContext context) {
+  void navigateBack(BuildContext context) {
     Navigator.pop(context);
-    }
+  }
 
-Widget imagePlaceholder(int index, String title, String defaultImagePath) {
-  bool isBackImage = index == 2;
-  double imageSize = isBackImage ? 100 : 100;  
-  return Column(
-    children: [
-      Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-      SizedBox(height: 8),
-      InkWell(
-        onTap: () => pickImage(index),
-        child: Container(
-          width: 100,  
-          height: 100,  
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            border: Border.all(color: Colors.grey),
-          ),
-          child: Center(
-            child: imageUrls[index].isEmpty
-                ? Image.asset(
-                    defaultImagePath,
-                    fit: BoxFit.contain,  
-                    width: imageSize, 
-                    height: imageSize
-                  )
-                : Image.network(imageUrls[index], fit: BoxFit.cover),
+  Widget imagePlaceholder(int index, String title, String defaultImagePath) {
+    bool isBackImage = index == 2;
+    double imageSize = isBackImage ? 100 : 100;
+    return Column(
+      children: [
+        Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        SizedBox(height: 8),
+        InkWell(
+          onTap: () => pickImage(index),
+          child: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              border: Border.all(color: Colors.grey),
+            ),
+            child: Center(
+              child: imageUrls[index].isEmpty
+                  ? Image.asset(defaultImagePath,
+                      fit: BoxFit.contain, width: imageSize, height: imageSize)
+                  : Image.network(imageUrls[index], fit: BoxFit.cover),
+            ),
           ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -202,21 +170,14 @@ Widget imagePlaceholder(int index, String title, String defaultImagePath) {
                   navigateTo: navigateBack,
                 ),
                 SizedBox(height: 20.0),
-                /* AddPicture(
-                  imageUrl: imageUrl,
-                  setImageUrl: setImageUrl,
-                  onPressed: pickImage
-                ), */
-
                 Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        imagePlaceholder(0, 'Frente', 'assets/icons/FrontDog.png'),
-                        imagePlaceholder(1, 'Costado', 'assets/icons/SideDog.png'),
-                        imagePlaceholder(2, 'Espalda', 'assets/icons/BackDog.png'),
-                      ],
-                    ),
-
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    imagePlaceholder(0, 'Frente', 'assets/icons/FrontDog.png'),
+                    imagePlaceholder(1, 'Costado', 'assets/icons/SideDog.png'),
+                    imagePlaceholder(2, 'Espalda', 'assets/icons/BackDog.png'),
+                  ],
+                ),
                 SizedBox(height: 20.0),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -263,13 +224,12 @@ Widget imagePlaceholder(int index, String title, String defaultImagePath) {
                         });
                       },
                     ),
-                    
                     SizedBox(
                       height: 15.0,
                     ),
                     TextInputFields(
                       controller: dateController,
-                      hintText: 'Dia que se encotró',
+                      hintText: 'Día que se encontró',
                       prefixIcon: Icon(
                         Icons.calendar_month_outlined,
                         color: Colors.grey,
@@ -310,11 +270,13 @@ Widget imagePlaceholder(int index, String title, String defaultImagePath) {
                         maxLines: null,
                         minLines: 5,
                         decoration: InputDecoration(
-                          hintText: 'Descripcion detallada de la mascota',
-                          prefixIcon: Icon(Icons.description_outlined, color: Colors.grey, size: 24), 
+                          hintText: 'Descripción detallada de la mascota',
+                          prefixIcon: Icon(Icons.description_outlined,
+                              color: Colors.grey, size: 24),
                           fillColor: ColorsApp.white70,
                           filled: true,
-                          contentPadding: EdgeInsets.symmetric(vertical: 60.0, horizontal: 10.0), 
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 60.0, horizontal: 10.0),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.transparent),
                             borderRadius: BorderRadius.circular(30.0),
@@ -332,13 +294,14 @@ Widget imagePlaceholder(int index, String title, String defaultImagePath) {
                     ),
                     TextFields(
                       controller: phoneController,
-                      hintText: 'Ingrese su numero de teléfono',
+                      hintText: 'Ingrese su número de teléfono',
                       prefixIcon: Icon(
                         Icons.phone_iphone_outlined,
                         color: Colors.grey,
                       ),
                       backgroundColor: ColorsApp.white70,
-                      keyboardType: TextInputType.numberWithOptions(decimal: false),
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: false),
                     ),
                     SizedBox(
                       height: 20.0,
@@ -346,33 +309,45 @@ Widget imagePlaceholder(int index, String title, String defaultImagePath) {
                   ],
                 ),
                 PrimaryButton(
-                      title: 'Publicar',
-                      onPressed: () async {
-                        String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-                        bool success = await validateFoundPet(
-                          context: context,
-                          userId: userId,
-                          species: selectedSpecies ?? '',  
-                          breed: petBreedController.text,
-                          date: dateController.text,
-                          gender: petGenderController.text,
-                          location: locationController.text,
-                          description: descriptionController.text,
-                          phone: int.tryParse(phoneController.text) ?? 0,
-                          imageUrls: imageUrls,
-                        );
+                  title: 'Publicar',
+                  onPressed: () async {
+                    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+                    
+                    print("Selected Species: $selectedSpecies");
+                    print("Breed: ${petBreedController.text}");
+                    print("Date: ${dateController.text}");
+                    print("Gender: ${petGenderController.text}");
+                    print("Location: ${locationController.text}");
+                    print("Description: ${descriptionController.text}");
+                    print("Phone: ${phoneController.text}");
+                    print("Image URLs: $imageUrls");
 
-                        if (success) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => Search(index: 2,)),  
-                          );
-                        }
-                      },
-                    ),
+                    await publishFoundPet(
+                      context: context,
+                      userId: userId,
+                      species: selectedSpecies ?? '',
+                      breed: petBreedController.text,
+                      date: dateController.text,
+                      gender: petGenderController.text,
+                      location: locationController.text,
+                      description: descriptionController.text,
+                      phone: int.tryParse(phoneController.text) ?? 0,
+                      imageUrls: imageUrls,
+                    );
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Search(
+                          index: 2,
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 SizedBox(
-                      height: 25.0,
-                    ),
+                  height: 25.0,
+                ),
               ],
             ),
           ),
