@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pawcontrol/constants/colors.dart';
 import 'package:pawcontrol/constants/fonts.dart';
+import 'package:pawcontrol/screens/pets/petFormDetailPopUp.dart';
 import 'package:pawcontrol/screens/pets/petFoundForm.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
@@ -291,6 +292,11 @@ class _SearchState extends State<Search> {
                           itemBuilder: (context, index) => PetCard(
                             pet: snapshot.data![index],
                             onTap: () {
+                              showDialog(
+                                context: context, 
+                                builder: (BuildContext context){
+                                  return PetFormDetailPopup(pet: snapshot.data![index]);
+                                });
                             },
                           ),
                         );

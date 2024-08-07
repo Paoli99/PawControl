@@ -1,7 +1,8 @@
-// search.dart
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 
 class Notifications extends StatelessWidget {
@@ -23,14 +24,38 @@ class Notifications extends StatelessWidget {
                   showImage: true,
                   showBackButton: false,
                   showLogoutButton: false,
-                  
                 ),
-                // Agrega el contenido específico de la página de búsqueda a continuación
-                // Por ejemplo, barra de búsqueda, resultados, etc.
                 SizedBox(height: 20),
-                Text(
-                  "Sin notificaciones",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('notifications')
+                      .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return Text(
+                        "Sin notificaciones",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      );
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          var notification = snapshot.data!.docs[index];
+                          return ListTile(
+                            leading: Image.network(notification['imageUrl']),
+                            title: Text(notification['message']),
+                          );
+                        },
+                      );
+                    }
+                  },
                 ),
               ],
             ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pawcontrol/constants/constants.dart';
+import 'package:pawcontrol/firebase/firebase_firestore/compareImagesAndNotify.dart';
 
 Future<bool> publishLostPet({
   required BuildContext context,
@@ -18,10 +19,11 @@ Future<bool> publishLostPet({
   required int phone,
   required List<String> imageUrls, 
 
-  //
   //required String imageUrl,
 }) async {
-  if (species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 || imageUrls.isEmpty) {
+  if (species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 
+  //|| imageUrls.isEmpty
+  ) {
     showMessage(context, "Por favor, llene todos los campos.");
     return false;
   }
@@ -56,11 +58,8 @@ Future<bool> publishLostPet({
         'createdAt': FieldValue.serverTimestamp(),
       });
       
-
-      //espacio para la lógica de notificaciones
-
       createNotificationForLostPet(petId, userId);
-
+      //compareImagesAndNotify(userId, imageUrls[0]);
       //Navigator.of(context).pop();
       return true;
     }

@@ -16,7 +16,9 @@ Future<void> publishFoundPet({
   required int phone,
   required List<String> imageUrls, 
 }) async {
-  if ( species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 || imageUrls.any((url) => url.isEmpty)) {
+  if ( species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 
+  //|| imageUrls.any((url) => url.isEmpty)
+  ){
     showMessage(context, "Todos los campos deben estar completos, incluyendo la imagen de la mascota.");
     return;
   }
@@ -36,6 +38,8 @@ Future<void> publishFoundPet({
       'imageUrls': imageUrls,
       'createdAt': FieldValue.serverTimestamp(),
     });
+
+    //
 
     Navigator.pop(context); 
     showGoodMessage(context, "La mascota perdida ha sido publicada exitosamente.");
