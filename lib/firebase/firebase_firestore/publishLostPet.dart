@@ -21,9 +21,8 @@ Future<bool> publishLostPet({
 
   //required String imageUrl,
 }) async {
-  if (species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 
-  //|| imageUrls.isEmpty
-  ) {
+  if (species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 || imageUrls.isEmpty) 
+  {
     showMessage(context, "Por favor, llene todos los campos.");
     return false;
   }
@@ -60,7 +59,7 @@ Future<bool> publishLostPet({
       
       createNotificationForLostPet(petId, userId);
       //compareImagesAndNotify(userId, imageUrls[0]);
-      //Navigator.of(context).pop();
+      Navigator.of(context).pop();
       return true;
     }
   } catch (e) {

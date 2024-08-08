@@ -79,7 +79,7 @@ void loadVaccineImages() async {
 
 
   for (int i = 0; i <= 2; i++) {
-    String path = "petVaccinePhotos/${widget.petId}/_$i.jpg";
+    String path = "petVaccinePhotos/${widget.petId}/${widget.petId}_$i.jpg";
     print(path);
      try {
       String imageUrl = await FirebaseStorage.instance.ref(path).getDownloadURL();
@@ -160,6 +160,7 @@ void loadVaccineImages() async {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: vaccineImages.map((url) => Image.network(url, width: 100, height: 100)).toList(),
                     ),
+
                 SizedBox(height: 20.0),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,

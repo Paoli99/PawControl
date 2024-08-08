@@ -197,9 +197,9 @@ class _AddPetsState extends State<AddPets> {
                     SizedBox(height: 20),
                     TextInputFields(
                       controller: petBirthDate,
-                      hintText: 'Ingrese el nombre de su mascota',
+                      hintText: 'Ingrese el cumpleaños de su mascota',
                       prefixIcon: Icon(
-                        Icons.pets_outlined,
+                        Icons.cake_outlined,
                         color: Colors.grey,
                       ),
                       backgroundColor: ColorsApp.white70,

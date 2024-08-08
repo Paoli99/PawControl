@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'dart:math';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +17,6 @@ import 'package:pawcontrol/screens/home/search.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:path/path.dart' as Path;
-import 'package:uuid/uuid.dart';
 
 class PetFoundForm extends StatefulWidget {
   const PetFoundForm({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
   TextEditingController petColorController = TextEditingController();
   List<String> imageUrls = ['', '', ''];
   bool isPickerActive = false;
-  String publicationId = Uuid().v4();
+  String publicationId = '';  // Inicializamos como una cadena vacía
 
   List<String>? breedList;
   List<DropdownMenuItem<String>> breedDropdownItems = [];
@@ -94,10 +94,19 @@ class _PetFoundFormState extends State<PetFoundForm> {
         [];
   }
 
-  void pickImage(int index) async {
+  String generateRandomString(int length) {
+    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    final random = Random();
+    return String.fromCharCodes(Iterable.generate(
+      length,
+      (_) => characters.codeUnitAt(random.nextInt(characters.length)),
+    ));
+  }
+
+  Future<void> pickImage(int index, String publicationId) async {
     if (isPickerActive) return;
     setState(() => isPickerActive = true);
-
+    
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(
       source: ImageSource.gallery,
@@ -108,8 +117,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
 
     if (image != null) {
       String fileName = '$publicationId/${publicationId}_$index.jpg';
-      Reference ref =
-          FirebaseStorage.instance.ref().child("foundPetFormPhotos/$fileName");
+      Reference ref = FirebaseStorage.instance.ref().child("foundPetFormPhotos/$fileName");
       await ref.putFile(File(image.path));
       String downloadURL = await ref.getDownloadURL();
       setState(() {
@@ -133,7 +141,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
         Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         SizedBox(height: 8),
         InkWell(
-          onTap: () => pickImage(index),
+          onTap: () => pickImage(index, publicationId),  // Pasar publicationId aquí
           child: Container(
             width: 100,
             height: 100,
@@ -313,6 +321,12 @@ class _PetFoundFormState extends State<PetFoundForm> {
                   onPressed: () async {
                     String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
                     
+                    // Generar combinación aleatoria de 4 caracteres
+                    String randomString = generateRandomString(4);
+                    setState(() {
+                      publicationId = '${userId}_$randomString';  // Generar ID de publicación aquí
+                    });
+
                     print("Selected Species: $selectedSpecies");
                     print("Breed: ${petBreedController.text}");
                     print("Date: ${dateController.text}");
@@ -320,6 +334,11 @@ class _PetFoundFormState extends State<PetFoundForm> {
                     print("Location: ${locationController.text}");
                     print("Description: ${descriptionController.text}");
                     print("Phone: ${phoneController.text}");
+                    
+                    for (int i = 0; i < imageUrls.length; i++) {
+                      await pickImage(i, publicationId);
+                    }
+
                     print("Image URLs: $imageUrls");
 
                     await publishFoundPet(
@@ -333,6 +352,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
                       description: descriptionController.text,
                       phone: int.tryParse(phoneController.text) ?? 0,
                       imageUrls: imageUrls,
+                      publicationId: publicationId,  // Pasar el ID de publicación
                     );
 
                     Navigator.pushReplacement(

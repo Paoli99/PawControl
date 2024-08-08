@@ -15,6 +15,7 @@ Future<void> publishFoundPet({
   required String description,
   required int phone,
   required List<String> imageUrls,
+  required String publicationId,  
 }) async {
   if (species.isEmpty ||
       breed.isEmpty ||
@@ -42,8 +43,9 @@ Future<void> publishFoundPet({
     print("description: $description");
     print("phone: $phone");
     print("imageUrls: $imageUrls");
+    print("publicationId: $publicationId");
 
-    await FirebaseFirestore.instance.collection('foundPetsForms').add({
+    await FirebaseFirestore.instance.collection('foundPetsForms').doc(publicationId).set({
       'userId': userId,
       'species': species,
       'breed': breed,

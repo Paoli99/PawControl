@@ -57,16 +57,16 @@ class _ViewVaccinesState extends State<ViewVaccines> {
   void loadVaccines() async {
     String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
-      .collection('pets')
-      .doc(widget.petId)
-      .collection('vaccines')
-      .get();
+        .collection('users')
+        .doc(userId)
+        .collection('pets')
+        .doc(widget.petId)
+        .collection('vaccines')
+        .get();
 
     List<Vaccine> loadedVaccines = snapshot.docs
-      .map((doc) => Vaccine.fromFirestore(doc.data() as Map<String, dynamic>))
-      .toList();
+        .map((doc) => Vaccine.fromFirestore(doc.data() as Map<String, dynamic>))
+        .toList();
 
     setState(() {
       vaccines = loadedVaccines;
@@ -75,34 +75,30 @@ class _ViewVaccinesState extends State<ViewVaccines> {
 
   List<String> vaccineImages = [];
 
-void loadVaccineImages() async {
-  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-  List<String> loadedImages = [];
+  void loadVaccineImages() async {
+    List<String> loadedImages = [];
 
+    for (int i = 0; i <= 2; i++) {
+      String path = "petVaccinePhotos/${widget.petId}/${widget.petId}_$i.jpg";
+      print(path);
+      try {
+        String imageUrl = await FirebaseStorage.instance.ref(path).getDownloadURL();
+        loadedImages.add(imageUrl);
+      } catch (e) {
+        print("Error al cargar la imagen: $e");
+      }
+    }
 
-  for (int i = 0; i <= 2; i++) {
-    String path = "petVaccinePhotos/${widget.petId}/_$i.jpg";
-    print(path);
-     try {
-      String imageUrl = await FirebaseStorage.instance.ref(path).getDownloadURL();
-      loadedImages.add(imageUrl);
-    } catch (e) {
-      print("Error al cargar la imagen: $e");
-    } 
+    setState(() {
+      vaccineImages = loadedImages;
+    });
   }
 
-  setState(() {
-    vaccineImages = loadedImages;
-  });
-}
-
-
-  @override
   void navigateBack(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => Pets(petId: widget.petId,)),
-  );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Pets(petId: widget.petId)),
+    );
   }
 
   @override
@@ -136,35 +132,34 @@ void loadVaccineImages() async {
                         ),
                       ],
                     ),
-                    /*SizedBox(height: 20),
-                     if (vaccineImages.isNotEmpty)
-                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: vaccineImages.map((url) => Image.network(url, width: 100, height: 100)).toList(),
-                    ),  */
-                    
+                    SizedBox(height: 20),
+                    if (vaccineImages.isNotEmpty)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: vaccineImages.map((url) => Image.network(url, width: 100, height: 100)).toList(),
+                      ),
                     SizedBox(height: 20),
                     if (vaccines.isNotEmpty)
                       ...vaccines.map((vaccine) => Card(
-                        child: ListTile(
-                          title: Text(vaccine.vaccineName, style: TextStyle(color: ColorsApp.redAccent400, fontWeight: FontWeight.bold, fontSize: 20)),
-                          subtitle: RichText(
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(text: 'Nombre del producto: ', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.bold, fontSize: 16)),
-                                TextSpan(text: '${vaccine.productName}\n', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.normal, fontSize: 16) ),
-                                TextSpan(text: 'Fecha de vacunación: ', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.bold, fontSize: 16)),
-                                TextSpan(text: '${vaccine.vaccineDate}\n', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.normal, fontSize: 16) ),
-                                TextSpan(text: 'Fecha de próxima vacuna: ', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.bold, fontSize: 16)),
-                                TextSpan(text: '${vaccine.nextVaccineDate}', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.normal, fontSize: 16) ),
-                              ],
+                            child: ListTile(
+                              title: Text(vaccine.vaccineName, style: TextStyle(color: ColorsApp.redAccent400, fontWeight: FontWeight.bold, fontSize: 20)),
+                              subtitle: RichText(
+                                text: TextSpan(
+                                  children: <TextSpan>[
+                                    TextSpan(text: 'Nombre del producto: ', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.bold, fontSize: 16)),
+                                    TextSpan(text: '${vaccine.productName}\n', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.normal, fontSize: 16)),
+                                    TextSpan(text: 'Fecha de vacunación: ', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.bold, fontSize: 16)),
+                                    TextSpan(text: '${vaccine.vaccineDate}\n', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.normal, fontSize: 16)),
+                                    TextSpan(text: 'Fecha de próxima vacuna: ', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.bold, fontSize: 16)),
+                                    TextSpan(text: '${vaccine.nextVaccineDate}', style: TextStyle(color: ColorsApp.black, fontWeight: FontWeight.normal, fontSize: 16)),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      )).toList(),
+                          ))
+                          .toList(),
                     if (vaccines.isEmpty)
                       Text('No hay vacunas disponibles.'),
-
                   ],
                 ),
               ),
@@ -174,5 +169,4 @@ void loadVaccineImages() async {
       ),
     );
   }
-
 }

@@ -42,7 +42,7 @@ class AddVaccinesInfo {
   }
 
   static Future<String?> pickAndUploadImage(String petId, String position) async {
-    String imageName = '$petId/${petId}$position.jpg';
+    String imageName = '$petId/${petId}_$position.jpg';
 
     Reference ref = FirebaseStorage.instance.ref().child("petVaccinePhotos/$imageName");
 
