@@ -35,6 +35,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
   TextEditingController petColorController = TextEditingController();
   List<String> imageUrls = ['', '', ''];
   bool isPickerActive = false;
+  String userId = '';
   String publicationId = '';  // Inicializamos como una cadena vacía
 
   List<String>? breedList;
@@ -78,6 +79,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
   void initState() {
     super.initState();
     _updateBreedsAndItems();
+    userId = FirebaseAuth.instance.currentUser?.uid ?? '';
   }
 
   void _updateBreedsAndItems() {
@@ -106,7 +108,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
   Future<void> pickImage(int index, String publicationId) async {
     if (isPickerActive) return;
     setState(() => isPickerActive = true);
-    
+
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(
       source: ImageSource.gallery,
@@ -141,7 +143,15 @@ class _PetFoundFormState extends State<PetFoundForm> {
         Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         SizedBox(height: 8),
         InkWell(
-          onTap: () => pickImage(index, publicationId),  // Pasar publicationId aquí
+          onTap: () async {
+            if (publicationId.isEmpty) {
+              String randomString = generateRandomString(4);
+              setState(() {
+                publicationId = '${userId}_$randomString';  // Generar ID de publicación aquí
+              });
+            }
+            await pickImage(index, publicationId);
+          },
           child: Container(
             width: 100,
             height: 100,
@@ -319,13 +329,12 @@ class _PetFoundFormState extends State<PetFoundForm> {
                 PrimaryButton(
                   title: 'Publicar',
                   onPressed: () async {
-                    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-                    
-                    // Generar combinación aleatoria de 4 caracteres
-                    String randomString = generateRandomString(4);
-                    setState(() {
-                      publicationId = '${userId}_$randomString';  // Generar ID de publicación aquí
-                    });
+                    if (publicationId.isEmpty) {
+                      String randomString = generateRandomString(4);
+                      setState(() {
+                        publicationId = '${userId}_$randomString';  // Generar ID de publicación aquí
+                      });
+                    }
 
                     print("Selected Species: $selectedSpecies");
                     print("Breed: ${petBreedController.text}");
@@ -334,11 +343,6 @@ class _PetFoundFormState extends State<PetFoundForm> {
                     print("Location: ${locationController.text}");
                     print("Description: ${descriptionController.text}");
                     print("Phone: ${phoneController.text}");
-                    
-                    for (int i = 0; i < imageUrls.length; i++) {
-                      await pickImage(i, publicationId);
-                    }
-
                     print("Image URLs: $imageUrls");
 
                     await publishFoundPet(

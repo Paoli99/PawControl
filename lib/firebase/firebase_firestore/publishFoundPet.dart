@@ -15,7 +15,7 @@ Future<void> publishFoundPet({
   required String description,
   required int phone,
   required List<String> imageUrls,
-  required String publicationId,  
+  required String publicationId,  // Añadir el ID de publicación
 }) async {
   if (species.isEmpty ||
       breed.isEmpty ||
@@ -60,7 +60,7 @@ Future<void> publishFoundPet({
 
     print("Document successfully written!");
 
-    Navigator.pop(context);
+    //Navigator.pop(context);
     showGoodMessage(
         context, "La mascota perdida ha sido publicada exitosamente.");
   } catch (e) {
