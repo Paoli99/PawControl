@@ -284,27 +284,30 @@ void loadVaccineImages() async {
                   ],
                 ),
                 PrimaryButton(
-                      title: 'Publicar',
-                      onPressed: () async{
-                        bool success = await publishLostPet(
-                          context: context,
-                          name: nameController.text,
-                          species: speciesController.text,
-                          breed: breedController.text,
-                          gender: genderController.text,
-                          date: dateController.text,
-                          location: locationController.text,
-                          description: descriptionController.text,
-                          phone: int.tryParse(phoneController.text) ?? 0, 
-                          petId: widget.petId,
-                          imageUrls: vaccineImages,
-                        );
-                        if(success){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pets(petId: widget.petId)));
-                        }
-                        showGoodMessage(context, "Mascota publicada correctamente");
-                      },
-                    ),
+                  title: 'Publicar',
+                  onPressed: () async {
+                    bool success = await publishLostPet(
+                      context: context,
+                      name: nameController.text,
+                      species: speciesController.text,
+                      breed: breedController.text,
+                      gender: genderController.text,
+                      date: dateController.text,
+                      location: locationController.text,
+                      description: descriptionController.text,
+                      phone: int.tryParse(phoneController.text) ?? 0, 
+                      petId: widget.petId,
+                      imageUrls: vaccineImages,
+                    );
+                    
+                    if (success) {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pets(petId: widget.petId)));
+                      showGoodMessage(context, "Mascota publicada correctamente");
+                    } else {
+                    
+                    }
+                  },
+                ),
               ],
             ),
           ),
