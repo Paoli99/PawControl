@@ -142,7 +142,7 @@ class _SearchState extends State<Search> {
               .get();
     bool isFoundPet = collection.contains('foundPetsForms');  
     return querySnapshot.docs.map((doc) {
-      print("Pet ID from $collection: ${doc.id}");  
+      //print("Pet ID from $collection: ${doc.id}");  
       return Pet.fromMap(doc.data() as Map<String, dynamic>, isFoundPet);
     }).toList();
   }

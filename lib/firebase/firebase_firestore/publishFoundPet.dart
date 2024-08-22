@@ -1,8 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pawcontrol/constants/constants.dart';
+import 'package:http/http.dart' as http;
 
 Future<void> publishFoundPet({
   required BuildContext context,
@@ -16,6 +19,7 @@ Future<void> publishFoundPet({
   required int phone,
   required List<String> imageUrls,
   required String publicationId,  // Añadir el ID de publicación
+
 }) async {
   if (species.isEmpty ||
       breed.isEmpty ||
@@ -58,8 +62,11 @@ Future<void> publishFoundPet({
       'createdAt': FieldValue.serverTimestamp(),
     });
 
-    print("Document successfully written!");
+    print( "ID: " + "$publicationId" );
 
+    // enviar el found
+    callCloudFunction(publicationId, 'found');
+    
     //Navigator.pop(context);
     showGoodMessage(
         context, "La mascota perdida ha sido publicada exitosamente.");
@@ -68,6 +75,34 @@ Future<void> publishFoundPet({
     print("Error publishing document: $e");
     showMessage(context, "Error al publicar la mascota perdida: $e");
   }
+}
+
+void callCloudFunction(String postId, String postType) {
+  http.post(
+    Uri.parse('https://southamerica-east1-pawcontrol-432921.cloudfunctions.net/automatic-search-2'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'post_type': postType,
+      'post_id': postId,
+    }),
+  ).then((response) {
+    if (response.statusCode == 200) {
+      print("Cloud function called successfully.");
+      List<dynamic> results = jsonDecode(response.body);
+      if (results.isNotEmpty) {
+        print("Matched Post IDs:");
+        for (var result in results) {
+          print('Post ID: ${result['post_id']}, Similarity: ${result['similarity']}');
+        }
+      } else {
+        print("No matches found.");
+      }
+    } else {
+      print("Failed to call cloud function: ${response.body}");
+    }
+  }).catchError((error) {
+    print("Error calling cloud function: $error");
+  });
 }
 
 void showLoaderDialog(BuildContext context) {
@@ -87,3 +122,5 @@ void showLoaderDialog(BuildContext context) {
     },
   );
 }
+
+

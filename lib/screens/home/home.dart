@@ -63,7 +63,7 @@ class _HomeState extends State<Home> {
         body = Profile(index: 3);
         break;
       default:
-        body = Container(); // Puedes cambiar esto según tus necesidades
+        body = Container(); 
     }
 
     return SafeArea(

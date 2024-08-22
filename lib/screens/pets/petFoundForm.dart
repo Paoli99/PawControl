@@ -13,6 +13,7 @@ import 'package:pawcontrol/constants/dropListView.dart';
 import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/publishFoundPet.dart';
+import 'package:pawcontrol/screens/home/home.dart';
 import 'package:pawcontrol/screens/home/search.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
@@ -359,14 +360,14 @@ class _PetFoundFormState extends State<PetFoundForm> {
                       publicationId: publicationId,  // Pasar el ID de publicación
                     );
 
-                    Navigator.pushReplacement(
+                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Search(
-                          index: 2,
-                        ),
+                        builder: (context) => Home(),
                       ),
-                    );
+                    ); 
+                    
+                    
                   },
                 ),
                 SizedBox(

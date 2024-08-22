@@ -13,6 +13,7 @@ void main() async{
       options: DefaultFirebaseConfig.platformOptions, 
     );
   await FirebaseAppCheck.instance.activate();  
+  
   runApp(const MyApp());
 }
 
