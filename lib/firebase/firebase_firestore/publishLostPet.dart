@@ -82,17 +82,24 @@ Future<bool> publishLostPet({
       }
 
       //callCloudFunction(petId, 'lost');
-      
+
       callCloudFunction(petId, 'lost').then((results) {
         String notificationMessage = results.isNotEmpty ? "Se encontraron resultados" : "No se encontraron resultados";
-        saveNotification(context, notificationMessage); 
+        String notificationType = "lostPet";
+
+        if (results.isNotEmpty) {
+          List<String> postIds = results.map((result) => result['post_id'].toString()).toList();
+          saveNotification(context, notificationMessage, notificationType, postIds: postIds, originalPostId: petId);
+        } else {
+          saveNotification(context, notificationMessage, notificationType, originalPostId: petId);
+        }
       });
-    
-      
-      
+
       Navigator.of(context).pop();  
       return true;
+
     }
+
   } catch (e) {
     Navigator.of(context).pop();  
     showMessage(context, "Error al publicar la mascota: $e");

@@ -69,9 +69,16 @@ Future<void> publishFoundPet({
     //callCloudFunction(publicationId, 'found');
 
     callCloudFunction(publicationId, 'found').then((results) {
-        String notificationMessage = results.isNotEmpty ? "Se encontraron resultados" : "No se encontraron resultados";
-        saveNotification(context, notificationMessage); 
-      });
+      String notificationMessage = results.isNotEmpty ? "Se encontraron resultados" : "No se encontraron resultados";
+      String notificationType = "foundPet";
+
+      if (results.isNotEmpty) {
+        List<String> postIds = results.map((result) => result['post_id'].toString()).toList();
+        saveNotification(context, notificationMessage, notificationType, postIds: postIds, originalPostId: publicationId);
+      } else {
+        saveNotification(context, notificationMessage, notificationType, originalPostId: publicationId);
+      }
+    });
     
     //Navigator.pop(context);
     showGoodMessage(

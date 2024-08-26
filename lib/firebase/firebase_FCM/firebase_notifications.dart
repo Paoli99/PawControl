@@ -1,21 +1,20 @@
-// firebase_notifications.dart
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-void saveNotification(BuildContext context, String message) {
+void saveNotification(BuildContext context, String message, String notificationType, {List<String>? postIds, required String originalPostId}) {
   final userId = FirebaseAuth.instance.currentUser?.uid;
 
   if (userId != null) {
-    print("Notificación guardada: $message");
-
     FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
-        .collection('notifications')  
+        .collection('notifications')
         .add({
       'message': message,
+      'notificationType': notificationType,  
+      'postIds': postIds,
+      'originalPostId': originalPostId,  
       'createdAt': FieldValue.serverTimestamp(),
     });
   } else {

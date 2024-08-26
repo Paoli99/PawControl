@@ -1,9 +1,8 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pawcontrol/constants/colors.dart';
+import 'package:pawcontrol/screens/pets/viewResults.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 
 class Notifications extends StatefulWidget {
@@ -27,32 +26,32 @@ class _NotificationsState extends State<Notifications> {
         body: RefreshIndicator(
           onRefresh: _refreshNotifications,
           child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.all(0),
               child: Column(
                 children: [
-                  Header(
+                  const Header(
                     title: 'Notificaciones',
                     showImage: true,
                     showBackButton: false,
                     showLogoutButton: false,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('users')
                         .doc(FirebaseAuth.instance.currentUser!.uid)
-                        .collection('notifications') 
+                        .collection('notifications')
                         .orderBy('createdAt', descending: true)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                        return Center(
+                        return const Center(
                           child: Text(
                             "Sin notificaciones",
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -61,24 +60,64 @@ class _NotificationsState extends State<Notifications> {
                       } else {
                         return ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
                             var notification = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                            bool isClickable = notification['message'] == "Se encontraron resultados";
+
                             return GestureDetector(
-                              onTap: () {
-                                // Acciones al tocar la notificación
-                              },
+                              onTap: isClickable
+                                  ? () {
+                                      String notificationType = notification['notificationType'] ?? '';
+                                      if (notificationType == 'lostPet' || notificationType == 'foundPet') {
+                                        List<String> postIds = List<String>.from(notification['postIds']);
+                                        String originalPostId = notification['originalPostId'] ?? '';
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ViewResults(
+                                              postIds: postIds,
+                                              originalPostId: originalPostId,
+                                              notificationType: notificationType,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        print('Otro tipo de notificación');
+                                      }
+                                    }
+                                  : null,
                               child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                                color: Colors.transparent, // Color de fondo original
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                                color: Colors.transparent,
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
-                                    onTap: () {
-                                      // Acciones al tocar la notificación
-                                    },
-                                    highlightColor: ColorsApp.deepPurple100, // Color al hacer click
+                                    onTap: isClickable
+                                        ? () {
+                                            String notificationType = notification['notificationType'] ?? '';
+                                            if (notificationType == 'lostPet' || notificationType == 'foundPet') {
+                                              List<String> postIds = List<String>.from(notification['postIds']);
+                                              String originalPostId = notification['originalPostId'] ?? '';
+
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => ViewResults(
+                                                    postIds: postIds,
+                                                    originalPostId: originalPostId,
+                                                    notificationType: notificationType,
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              print('Otro tipo de notificación');
+                                            }
+                                          }
+                                        : null,
+                                    highlightColor: isClickable ? ColorsApp.deepPurple100 : Colors.transparent,
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -88,17 +127,17 @@ class _NotificationsState extends State<Notifications> {
                                               backgroundColor: ColorsApp.deepPurple100,
                                               child: Icon(Icons.notifications, color: ColorsApp.deepPurple400),
                                             ),
-                                            SizedBox(width: 10),
+                                            const SizedBox(width: 10),
                                             Expanded(
                                               child: Text(
                                                 notification['message'],
-                                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                                               ),
                                             ),
                                             Icon(Icons.arrow_forward_ios, size: 16, color: ColorsApp.grey400),
                                           ],
                                         ),
-                                        SizedBox(height: 5),
+                                        const SizedBox(height: 5),
                                         Text(
                                           notification['createdAt'] != null
                                               ? (notification['createdAt'] as Timestamp).toDate().toString()
