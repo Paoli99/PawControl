@@ -60,6 +60,9 @@ dependencies:
   #Google Cloud
   http: ^1.2.2
 
+  #notifications
+  firebase_messaging: ^15.0.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

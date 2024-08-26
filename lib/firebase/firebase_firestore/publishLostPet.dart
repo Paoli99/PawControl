@@ -9,6 +9,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'dart:convert';
 
+import 'package:pawcontrol/firebase/firebase_FCM/firebase_notifications.dart';
+
 Future<bool> publishLostPet({
   required BuildContext context,
   required String petId,
@@ -79,7 +81,14 @@ Future<bool> publishLostPet({
         }
       }
 
-      callCloudFunction(petId, 'lost');
+      //callCloudFunction(petId, 'lost');
+      
+      callCloudFunction(petId, 'lost').then((results) {
+        String notificationMessage = results.isNotEmpty ? "Se encontraron resultados" : "No se encontraron resultados";
+        saveNotification(context, notificationMessage); 
+      });
+    
+      
       
       Navigator.of(context).pop();  
       return true;
@@ -91,7 +100,7 @@ Future<bool> publishLostPet({
   }
 }
 
-void callCloudFunction(String postId, String postType) {
+/* void callCloudFunction(String postId, String postType) {
   http.post(
     Uri.parse('https://southamerica-east1-pawcontrol-432921.cloudfunctions.net/automatic-search-2'),
     headers: {'Content-Type': 'application/json'},
@@ -108,6 +117,7 @@ void callCloudFunction(String postId, String postType) {
         for (var result in results) {
           print('Post ID: ${result['post_id']}, Similarity: ${result['similarity']}');
         }
+        
       } else {
         print("No matches found.");
       }
@@ -117,6 +127,34 @@ void callCloudFunction(String postId, String postType) {
   }).catchError((error) {
     print("Error calling cloud function: $error");
   });
+} */
+
+Future<List<dynamic>> callCloudFunction(String postId, String postType) async {
+  var response = await http.post(
+    Uri.parse('https://southamerica-east1-pawcontrol-432921.cloudfunctions.net/automatic-search-2'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'post_type': postType,
+      'post_id': postId,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    print("Cloud function called successfully.");
+    List<dynamic> results = jsonDecode(response.body);
+    if (results.isNotEmpty) {
+      print("Matched Post IDs:");
+      for (var result in results) {
+        print('Post ID: ${result['post_id']}, Similarity: ${result['similarity']}');
+      }
+    } else {
+      print("No matches found.");
+    }
+    return results;  
+  } else {
+    print("Failed to call cloud function: ${response.body}");
+    return [];  
+  }
 }
 
 void showLoaderDialog(BuildContext context) {
