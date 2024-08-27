@@ -111,7 +111,7 @@ class HomeContent extends StatelessWidget {
           child: Column(
             children: [
               Header(
-                title: 'PAW CONTROL',
+                title: 'PAW LINK',
                 showImage: true,
                 showBackButton: false,
               ),

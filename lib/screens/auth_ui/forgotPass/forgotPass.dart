@@ -9,6 +9,8 @@ import 'package:pawcontrol/constants/constants.dart';
 import 'package:pawcontrol/constants/fonts.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
+import 'package:pawcontrol/screens/auth_ui/login/login.dart';
+import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -26,7 +28,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     email.dispose();
     super.dispose();
   }
-
+   @override
+  void navigateBack(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage())
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,7 +45,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             padding: const EdgeInsets.all(0),
             child: Column(
               children: [
-                Container(
+                /* Container(
                   width: double.infinity,
                   height: 100,
                   decoration: BoxDecoration(
@@ -64,7 +73,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                     ],
                   ),
-                ),
+                ), */
+                Header(
+                title: 'PAW LINK',
+                showImage: true,
+                showBackButton: true,
+                navigateTo: navigateBack
+              ),
+              SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(

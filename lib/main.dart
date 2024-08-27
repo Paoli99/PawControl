@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'PawControl', 
+      title: 'PawLink', 
       theme: themeData,
       home: StreamBuilder(
           stream: FirebaseAuthenticator.instance.getAuthChange,

@@ -29,6 +29,7 @@ class _AddVetVisitState extends State<AddVetVisit> {
   TextEditingController petNameController = TextEditingController();
   TextEditingController visitDateController = TextEditingController();
   TextEditingController visitMotiveController = TextEditingController();
+  TextEditingController vetNameController = TextEditingController();
 
 
   @override
@@ -66,6 +67,16 @@ class _AddVetVisitState extends State<AddVetVisit> {
                     ),
                     SizedBox(height: 20),
                     TextInputFields(
+                      controller: vetNameController,
+                      hintText: 'Nombre del veterinario',
+                      prefixIcon: Icon(
+                        Icons.pets_outlined,
+                        color: Colors.grey,
+                      ),
+                      backgroundColor: ColorsApp.white70,
+                    ),
+                    SizedBox(height: 20),
+                    TextInputFields(
                       controller: visitDateController,
                       hintText: 'Fecha',
                       prefixIcon: Icon(
@@ -92,6 +103,7 @@ class _AddVetVisitState extends State<AddVetVisit> {
                       child: PrimaryButton(
                         title: 'Registrar consulta',
                         onPressed: ()  {
+
                         },
                       ),
                     ),

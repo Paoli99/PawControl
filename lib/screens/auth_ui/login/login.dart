@@ -53,7 +53,7 @@ class LoginPage extends StatefulWidget {
               ),
 
               Text(
-                "PAW CONTROL",
+                "PAW LINK",
                 style: TextsFont.tituloLogo),
 
               Container(

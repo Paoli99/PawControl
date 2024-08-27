@@ -15,7 +15,9 @@ import 'package:pawcontrol/constants/routes.dart';
 import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/firebase/firebase_auth/firebase_auth.dart';
+import 'package:pawcontrol/screens/auth_ui/login/login.dart';
 import 'package:pawcontrol/screens/home/home.dart';
+import 'package:pawcontrol/widgets/header/header.dart';
 
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/secondarty_buttons.dart';
@@ -40,15 +42,23 @@ class SignUp extends StatefulWidget {
   TextEditingController confirmPassword = TextEditingController();
 
   @override
+  void navigateBack(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage())
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(0),
             child: Column(
               children: [
-                Container(
+                /* Container(
                   width: double.infinity,
                   height: 100,
                   decoration: BoxDecoration(
@@ -76,6 +86,12 @@ class SignUp extends StatefulWidget {
                       ),
                     ],
                   ),
+                ), */
+                Header(
+                title: 'PAW LINK',
+                showImage: true,
+                showBackButton: true,
+                navigateTo: navigateBack
                 ),
                 Container(
                   width: 480,
