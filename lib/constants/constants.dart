@@ -337,3 +337,30 @@ Future<bool> validateLostPet({
   return true;
 
 }
+
+Future<bool> validateVetVisit({
+  required BuildContext context,
+  required String vetName,
+  required String visitDate,
+  required String visitMotive,
+}) async {
+  if (vetName.isEmpty ||
+      visitDate.isEmpty ||
+      visitMotive.isEmpty) {
+    String errorMessage = "Por favor, complete todos los campos antes de registrar la visita al veterinario:\n";
+
+    if (vetName.isEmpty) {
+      errorMessage += "- Ingrese el nombre del veterinario.\n";
+    }
+    if (visitDate.isEmpty) {
+      errorMessage += "- Ingrese la fecha de la consulta.\n";
+    }
+    if (visitMotive.isEmpty) {
+      errorMessage += "- Ingrese el motivo de la consulta.\n";
+    }
+    showMessage(context, errorMessage);
+    return false;
+  }
+  showGoodMessage(context, "Consulta médica registrada exitosamente.");
+  return true;
+}
