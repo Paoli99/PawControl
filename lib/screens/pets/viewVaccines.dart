@@ -108,7 +108,7 @@ class _ViewVaccinesState extends State<ViewVaccines> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Header(title: 'PAW CONTROL', showImage: true, showBackButton: true, navigateTo: navigateBack),
+              Header(title: 'Vacunas', showImage: true, showBackButton: true, navigateTo: navigateBack),
               Container(
                 padding: EdgeInsets.all(20),
                 child: Column(

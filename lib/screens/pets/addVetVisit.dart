@@ -49,7 +49,7 @@ void getUserId() {
           child: Column(
             children: [
               Header(
-                title: 'PAW CONTROL',
+                title: 'Consulta Médica',
                 showImage: true,
                 showBackButton: true,
                 navigateTo: navigateBack,
@@ -59,11 +59,7 @@ void getUserId() {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Registrar Consulta Médica',
-                      style: TextsFont.tituloNames,
-                    ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     TextInputFields(
                       controller: vetNameController,
                       hintText: 'Nombre del veterinario',
