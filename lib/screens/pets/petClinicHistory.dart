@@ -88,32 +88,53 @@ class _PetClinicHistoryState extends State<PetClinicHistory> {
                   children: [
                     SizedBox(height: 20),
                     ...clinicVisits.map((visit) => InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(visit.vetName, style: TextStyle(color: Colors.red)),
-                              content: Text("Fecha: ${visit.visitDate}\nMotivo: ${visit.visitMotive}"),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: Text('Cerrar'),
-                                ),
-                              ],
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(visit.vetName, style: TextStyle(color: Colors.red)),
+                            content: RichText(
+                              text: TextSpan(
+                                style: TextStyle(color: Colors.black, fontSize: 16), 
+                                children: <TextSpan>[
+                                  TextSpan(text: 'Fecha: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  TextSpan(text: '${visit.visitDate}\n', style: TextStyle(fontWeight: FontWeight.normal)),
+                                  TextSpan(text: 'Motivo: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  TextSpan(text: '${visit.visitMotive}\n', style: TextStyle(fontWeight: FontWeight.normal)),
+                                  TextSpan(text: 'Detalle: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  TextSpan(text: '${visit.detail}', style: TextStyle(fontWeight: FontWeight.normal)),
+                                ],
+                              ),
                             ),
-                          );
-                        },
-
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text('Cerrar'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                       child: Card(
-                        child: ListTile(
-                          title: Text(visit.vetName, style: TextStyle(color: Colors.red)),
-                          subtitle: Text("Fecha: ${visit.visitDate}\nMotivo: ${visit.visitMotive}"),
+                      child: ListTile(
+                        title: Text(visit.vetName, style: TextStyle(color: Colors.red, fontSize: 18)),
+                        subtitle: RichText(
+                          text: TextSpan(
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                            children: [
+                              TextSpan(text: 'Fecha: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                              TextSpan(text: '${visit.visitDate}\n', style: TextStyle(fontWeight: FontWeight.normal)),
+                              TextSpan(text: 'Motivo: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                              TextSpan(text: '${visit.visitMotive}', style: TextStyle(fontWeight: FontWeight.normal)),
+                            ],
+                          ),
                         ),
                       ),
-                    )).toList(),
-                    if (clinicVisits.isEmpty)
-                      Center(child: Text('No hay registros clínicos disponibles.', style: TextStyle(fontSize: 16))),
-                  ],
+                    ),
+                  )).toList(),
+                  if (clinicVisits.isEmpty)
+                    Center(child: Text('No hay registros clínicos disponibles.', style: TextStyle(fontSize: 16))),
+                ],
                 ),
               ),
             ],
