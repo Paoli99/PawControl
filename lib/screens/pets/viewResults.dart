@@ -1,5 +1,3 @@
-// viewResults.dart
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pawcontrol/constants/colors.dart';
@@ -7,13 +5,15 @@ import 'package:pawcontrol/widgets/header/header.dart';
 
 class ViewResults extends StatelessWidget {
   final String originalPostId;
-  final List<String> postIds;
+  final List<String> imagePostIds;
+  final List<String> textPostIds;
   final String notificationType;
 
   const ViewResults({
     Key? key,
     required this.originalPostId,
-    required this.postIds,
+    required this.imagePostIds,
+    required this.textPostIds,
     required this.notificationType,
   }) : super(key: key);
 
@@ -23,8 +23,8 @@ class ViewResults extends StatelessWidget {
   }
 
   Future<List<DocumentSnapshot>> fetchResults(List<String> postIds) async {
-    List<DocumentSnapshot> results = [];
     String collection = notificationType == 'lostPet' ? 'foundPetsForms' : 'lostPetsForms';
+    List<DocumentSnapshot> results = [];
     for (String id in postIds) {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection(collection).doc(id).get();
       if (snapshot.exists) {
@@ -39,7 +39,7 @@ class ViewResults extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
               Header(
@@ -47,9 +47,9 @@ class ViewResults extends StatelessWidget {
                 showImage: true,
                 showBackButton: true,
                 showLogoutButton: false,
-                navigateTo: (context) => Navigator.of(context).pop(), // Volver atrás
+                navigateTo: (context) => Navigator.of(context).pop(),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Align(
@@ -68,24 +68,24 @@ class ViewResults extends StatelessWidget {
                 future: fetchOriginalPost(originalPostId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || !snapshot.data!.exists) {
-                    return Center(child: Text('No se encontró el post original.'));
+                    return const Center(child: Text('No se encontró el post original.'));
                   } else {
                     var post = snapshot.data!.data() as Map<String, dynamic>;
                     return buildPostCard(post);
                   }
                 },
               ),
-              Divider(),
+              const Divider(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Publicaciones similares",
+                    "Resultados por imagen",
                     style: TextStyle(
                       color: ColorsApp.rojoGoogle,
                       fontWeight: FontWeight.bold,
@@ -95,18 +95,55 @@ class ViewResults extends StatelessWidget {
                 ),
               ),
               FutureBuilder<List<DocumentSnapshot>>(
-                future: fetchResults(postIds),
+                future: fetchResults(imagePostIds),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No se encontraron resultados.'));
+                    return const Center(child: Text('No se encontraron resultados por imagen.'));
                   } else {
                     return ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        var post = snapshot.data![index].data() as Map<String, dynamic>;
+                        return buildPostCard(post);
+                      },
+                    );
+                  }
+                },
+              ),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Resultados por texto",
+                    style: TextStyle(
+                      color: ColorsApp.rojoGoogle,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              FutureBuilder<List<DocumentSnapshot>>(
+                future: fetchResults(textPostIds),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No se encontraron resultados por texto.'));
+                  } else {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         var post = snapshot.data![index].data() as Map<String, dynamic>;
@@ -125,7 +162,7 @@ class ViewResults extends StatelessWidget {
 
   Widget buildPostCard(Map<String, dynamic> post) {
     return Card(
-      margin: EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -137,7 +174,7 @@ class ViewResults extends StatelessWidget {
               height: 180,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
-                return Container(width: 100, height: 100, color: ColorsApp.grey300, child: Icon(Icons.broken_image));
+                return Container(width: 100, height: 100, color: ColorsApp.grey300, child: const Icon(Icons.broken_image));
               },
             ),
           ),
@@ -167,8 +204,8 @@ class ViewResults extends StatelessWidget {
       text: TextSpan(
         style: TextStyle(color: ColorsApp.black),
         children: [
-          TextSpan(text: "$label ", style: TextStyle(fontWeight: FontWeight.bold)),
-          TextSpan(text: value, style: TextStyle(fontWeight: FontWeight.normal)),
+          TextSpan(text: "$label ", style: const TextStyle(fontWeight: FontWeight.bold)),
+          TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.normal)),
         ],
       ),
     );

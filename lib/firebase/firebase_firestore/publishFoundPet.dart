@@ -19,7 +19,7 @@ Future<void> publishFoundPet({
   required String description,
   required int phone,
   required List<String> imageUrls,
-  required String publicationId,  // Añadir el ID de publicación
+  required String publicationId,  
 
 }) async {
   if (species.isEmpty ||
@@ -63,29 +63,65 @@ Future<void> publishFoundPet({
       'createdAt': FieldValue.serverTimestamp(),
     });
 
-    print( "ID: " + "$publicationId" );
+    
 
     // enviar el found
     //callCloudFunction(publicationId, 'found');
+    print("=====================================================");
+    print("Llamando a funciones de búsqueda en la nube...");
+    print("=====================================================");
 
-    callCloudFunction(publicationId, 'found').then((results) {
-      String notificationMessage = results.isNotEmpty ? "Se encontraron resultados" : "No se encontraron resultados";
+    print( "ID: " + "$publicationId" );
+
+    Future.wait([
+        callCloudFunction(publicationId, 'found', 'automatic-search-2'),
+        callCloudFunction(publicationId, 'found', 'description-search')
+      ]).then((responses) {
+        List<dynamic> imageResults = responses[0];
+        List<dynamic> textResults = responses[1];
+
+        // Imprimir los resultados en la consola
+        print("Resultados por imagen:");
+        if (imageResults.isNotEmpty) {
+          for (var result in imageResults) {
+            print("ID: ${result['post_id']}, Similarity: ${result['similarity']}");
+          }
+        } else {
+          print("No se encontraron resultados por imagen.");
+        }
+
+        print("Resultados por texto:");
+        if (textResults.isNotEmpty) {
+          for (var result in textResults) {
+            print("ID: ${result['post_id']}, Similarity: ${result['similarity']}");
+          }
+        } else {
+          print("No se encontraron resultados por texto.");
+        }
+
+      String notificationMessage = (imageResults.isNotEmpty || textResults.isNotEmpty)
+          ? "Se encontraron resultados"
+          : "No se encontraron resultados";
       String notificationType = "foundPet";
 
-      if (results.isNotEmpty) {
-        List<String> postIds = results.map((result) => result['post_id'].toString()).toList();
-        saveNotification(context, notificationMessage, notificationType, postIds: postIds, originalPostId: publicationId);
+      List<String> imagePostIds = imageResults.map((result) => result['post_id'].toString()).toList();
+      List<String> textPostIds = textResults.map((result) => result['post_id'].toString()).toList();
+
+      if (imageResults.isNotEmpty || textResults.isNotEmpty) {
+        saveNotification(
+          context,
+          notificationMessage,
+          notificationType,
+          imagePostIds: imagePostIds,
+          textPostIds: textPostIds,
+          originalPostId: publicationId,
+        );
       } else {
         saveNotification(context, notificationMessage, notificationType, originalPostId: publicationId);
       }
     });
-    
-    //Navigator.pop(context);
-    showGoodMessage(
-        context, "La mascota perdida ha sido publicada exitosamente.");
   } catch (e) {
     Navigator.pop(context);
-    print("Error publishing document: $e");
     showMessage(context, "Error al publicar la mascota perdida: $e");
   }
 }
@@ -118,9 +154,9 @@ Future<void> publishFoundPet({
   });
 } */
 
-Future<List<dynamic>> callCloudFunction(String postId, String postType) async {
+Future<List<dynamic>> callCloudFunction(String postId, String postType, String functionUrl) async {
   var response = await http.post(
-    Uri.parse('https://southamerica-east1-pawcontrol-432921.cloudfunctions.net/automatic-search-2'),
+    Uri.parse('https://southamerica-east1-pawcontrol-432921.cloudfunctions.net/$functionUrl'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode({
       'post_type': postType,
@@ -128,23 +164,37 @@ Future<List<dynamic>> callCloudFunction(String postId, String postType) async {
     }),
   );
 
+  // Agregamos más información de depuración
+  print("=====================================================");
+  print("Llamada a la función en la nube: $functionUrl");
+  print("Post ID: $postId");
+  print("Post Type: $postType");
+  print("Estado de respuesta: ${response.statusCode}");
+  print("Cuerpo de la respuesta: ${response.body}");
+  print("=====================================================");
+
   if (response.statusCode == 200) {
-    print("Cloud function called successfully.");
-    List<dynamic> results = jsonDecode(response.body);
-    if (results.isNotEmpty) {
-      print("Matched Post IDs:");
-      for (var result in results) {
-        print('Post ID: ${result['post_id']}, Similarity: ${result['similarity']}');
+    try {
+      var results = jsonDecode(response.body);
+      
+      if (results is Map<String, dynamic> && results.containsKey('results')) {
+        return results['results'];
+      } else if (results is List) {
+        return results;
+      } else {
+        print("Formato inesperado de resultados.");
+        return [];
       }
-    } else {
-      print("No matches found.");
+    } catch (e) {
+      print("Error al decodificar la respuesta JSON: $e");
+      return [];
     }
-    return results;  
   } else {
-    print("Failed to call cloud function: ${response.body}");
-    return [];  
+    print("Error en la llamada a la función en la nube: ${response.statusCode}");
+    return [];
   }
 }
+
 
 
 void showLoaderDialog(BuildContext context) {

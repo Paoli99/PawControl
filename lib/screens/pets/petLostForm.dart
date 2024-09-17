@@ -283,10 +283,10 @@ void loadVaccineImages() async {
                     ),
                   ],
                 ),
-                PrimaryButton(
+                  PrimaryButton(
                   title: 'Publicar',
                   onPressed: () async {
-                    bool success = await publishLostPet(
+                    await publishLostPet(
                       context: context,
                       name: nameController.text,
                       species: speciesController.text,
@@ -295,17 +295,10 @@ void loadVaccineImages() async {
                       date: dateController.text,
                       location: locationController.text,
                       description: descriptionController.text,
-                      phone: int.tryParse(phoneController.text) ?? 0, 
+                      phone: int.tryParse(phoneController.text) ?? 0,
                       petId: widget.petId,
                       imageUrls: vaccineImages,
                     );
-                    
-                    if (success) {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Pets(petId: widget.petId)));
-                      showGoodMessage(context, "Mascota publicada correctamente");
-                    } else {
-                    
-                    }
                   },
                 ),
               ],

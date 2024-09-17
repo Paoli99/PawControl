@@ -71,14 +71,16 @@ class _NotificationsState extends State<Notifications> {
                                   ? () {
                                       String notificationType = notification['notificationType'] ?? '';
                                       if (notificationType == 'lostPet' || notificationType == 'foundPet') {
-                                        List<String> postIds = List<String>.from(notification['postIds']);
+                                        List<String> imagePostIds = List<String>.from(notification['imagePostIds'] ?? []);
+                                        List<String> textPostIds = List<String>.from(notification['textPostIds'] ?? []);
                                         String originalPostId = notification['originalPostId'] ?? '';
 
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => ViewResults(
-                                              postIds: postIds,
+                                              imagePostIds: imagePostIds,
+                                              textPostIds: textPostIds,
                                               originalPostId: originalPostId,
                                               notificationType: notificationType,
                                             ),
@@ -99,14 +101,16 @@ class _NotificationsState extends State<Notifications> {
                                         ? () {
                                             String notificationType = notification['notificationType'] ?? '';
                                             if (notificationType == 'lostPet' || notificationType == 'foundPet') {
-                                              List<String> postIds = List<String>.from(notification['postIds']);
+                                              List<String> imagePostIds = List<String>.from(notification['imagePostIds'] ?? []);
+                                              List<String> textPostIds = List<String>.from(notification['textPostIds'] ?? []);
                                               String originalPostId = notification['originalPostId'] ?? '';
 
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) => ViewResults(
-                                                    postIds: postIds,
+                                                    imagePostIds: imagePostIds,
+                                                    textPostIds: textPostIds,
                                                     originalPostId: originalPostId,
                                                     notificationType: notificationType,
                                                   ),

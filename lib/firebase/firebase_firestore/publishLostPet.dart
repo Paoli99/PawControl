@@ -11,7 +11,7 @@ import 'dart:convert';
 
 import 'package:pawcontrol/firebase/firebase_FCM/firebase_notifications.dart';
 
-Future<bool> publishLostPet({
+Future<void> publishLostPet({
   required BuildContext context,
   required String petId,
   required String name,
@@ -26,7 +26,7 @@ Future<bool> publishLostPet({
 }) async {
   if (name.isEmpty || species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 || imageUrls.isEmpty) {
     showMessage(context, "Por favor, llene todos los campos.");
-    return false;
+
   }
 
   showLoaderDialog(context);
@@ -43,7 +43,6 @@ Future<bool> publishLostPet({
     if (petSnapshot.exists) {
       Navigator.of(context).pop();  
       showMessage(context, "Mascota ya publicada");
-      return false;
     } else {
       await FirebaseFirestore.instance.collection('lostPetsForms').doc(petId).set({
         'userId': userId,
@@ -83,27 +82,38 @@ Future<bool> publishLostPet({
 
       //callCloudFunction(petId, 'lost');
 
-      callCloudFunction(petId, 'lost').then((results) {
-        String notificationMessage = results.isNotEmpty ? "Se encontraron resultados" : "No se encontraron resultados";
+      Future.wait([
+        callCloudFunction(petId, 'lost', 'automatic-search-2'),
+        callCloudFunction(petId, 'lost', 'description-search')
+      ]).then((responses) {
+        List<dynamic> imageResults = responses[0];
+        List<dynamic> textResults = responses[1];
+
+        String notificationMessage = (imageResults.isNotEmpty || textResults.isNotEmpty)
+            ? "Se encontraron resultados"
+            : "No se encontraron resultados";
         String notificationType = "lostPet";
 
-        if (results.isNotEmpty) {
-          List<String> postIds = results.map((result) => result['post_id'].toString()).toList();
-          saveNotification(context, notificationMessage, notificationType, postIds: postIds, originalPostId: petId);
+        List<String> imagePostIds = imageResults.map((result) => result['post_id'].toString()).toList();
+        List<String> textPostIds = textResults.map((result) => result['post_id'].toString()).toList();
+
+        if (imageResults.isNotEmpty || textResults.isNotEmpty) {
+          saveNotification(
+            context,
+            notificationMessage,
+            notificationType,
+            imagePostIds: imagePostIds,
+            textPostIds: textPostIds,
+            originalPostId: petId,
+          );
         } else {
           saveNotification(context, notificationMessage, notificationType, originalPostId: petId);
         }
       });
-
-      Navigator.of(context).pop();  
-      return true;
-
     }
-
   } catch (e) {
-    Navigator.of(context).pop();  
-    showMessage(context, "Error al publicar la mascota: $e");
-    return false;
+    Navigator.pop(context);
+    showMessage(context, "Error al publicar la mascota perdida: $e");
   }
 }
 
@@ -136,9 +146,9 @@ Future<bool> publishLostPet({
   });
 } */
 
-Future<List<dynamic>> callCloudFunction(String postId, String postType) async {
+Future<List<dynamic>> callCloudFunction(String postId, String postType, String functionUrl) async {
   var response = await http.post(
-    Uri.parse('https://southamerica-east1-pawcontrol-432921.cloudfunctions.net/automatic-search-2'),
+    Uri.parse('https://southamerica-east1-pawcontrol-432921.cloudfunctions.net/$functionUrl'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode({
       'post_type': postType,
@@ -147,20 +157,24 @@ Future<List<dynamic>> callCloudFunction(String postId, String postType) async {
   );
 
   if (response.statusCode == 200) {
-    print("Cloud function called successfully.");
-    List<dynamic> results = jsonDecode(response.body);
-    if (results.isNotEmpty) {
-      print("Matched Post IDs:");
-      for (var result in results) {
-        print('Post ID: ${result['post_id']}, Similarity: ${result['similarity']}');
+    try {
+      var results = jsonDecode(response.body);
+      
+      if (results is Map<String, dynamic> && results.containsKey('results')) {
+        return results['results'];
+      } else if (results is List) {
+        return results;
+      } else {
+        print("Formato inesperado de resultados.");
+        return [];
       }
-    } else {
-      print("No matches found.");
+    } catch (e) {
+      print("Error al decodificar la respuesta JSON: $e");
+      return [];
     }
-    return results;  
   } else {
-    print("Failed to call cloud function: ${response.body}");
-    return [];  
+    print("Error en la llamada a la función en la nube: ${response.statusCode}");
+    return [];
   }
 }
 
