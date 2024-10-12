@@ -58,11 +58,11 @@ class LoginPage extends StatefulWidget {
 
               Container(
                 margin: EdgeInsets.only(top: 20),
-                width: 340, // set the width of the container
-                height: 250, // set the height of the container
+                width: 340, 
+                height: 250,
                 decoration: BoxDecoration(
                 color: ColorsApp.white70,
-                borderRadius: BorderRadius.circular(10), // set border radius to make it circular
+                borderRadius: BorderRadius.circular(10), 
                 ),
                 
 
@@ -152,7 +152,7 @@ class LoginPage extends StatefulWidget {
                   
                 ),
               ),
-              //Inicio de sesion alternativo 
+              //Login types
               SizedBox(height: 5.0),
               Center(
                 child: Text('Inicia sesión con Facebook o Google',
@@ -167,15 +167,15 @@ class LoginPage extends StatefulWidget {
                     textoRedes: 'Facebook',
                     tipoRedes: TipoRedes.Facebook,
                     onPressed: () {
-                      // Acción cuando se presiona el botón de Facebook
+                     
                     },
                   ),
-                  SizedBox(width: 10), // Espacio entre los botones
+                  SizedBox(width: 10), 
                   SocialMediaBtn(
                     textoRedes: 'Google',
                     tipoRedes: TipoRedes.Google,
                     onPressed: () {
-                      // Acción cuando se presiona el botón de Google
+                      
                     },
                   ),
                 ],

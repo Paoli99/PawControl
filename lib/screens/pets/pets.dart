@@ -30,10 +30,10 @@ class _PetsState extends State<Pets> {
   @override
   void initState() {
     super.initState();
-    _loadUserPets(); // Cargar las mascotas al inicializar el widget
+    _loadUserPets(); 
   }
 
-  // Método para cargar las mascotas del usuario
+  // Load users' pets
   void _loadUserPets() async {
     try {
       Map<String, dynamic> pet = await GetPetsInfo.getPetInfo(widget.petId);
@@ -41,7 +41,7 @@ class _PetsState extends State<Pets> {
         petInfo = pet;
       });
     } catch (e) {
-      print('Error al cargar la información de la mascota: $e');
+
     }
   }
 

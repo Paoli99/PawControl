@@ -8,6 +8,7 @@ import 'package:pawcontrol/constants/constants.dart';
 import 'package:pawcontrol/constants/textFields.dart';
 import 'package:pawcontrol/constants/textInputFields.dart';
 import 'package:pawcontrol/firebase/firebase_firestore/publishLostPet.dart';
+import 'package:pawcontrol/screens/home/home.dart';
 import 'package:pawcontrol/screens/pets/pets.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/primary_buttons/primary_button.dart';
@@ -44,7 +45,6 @@ class _PetLostForumState extends State<PetLostForum> {
   void fetchPetData() async {
   try {
     if (widget.petId.isEmpty) {
-      print("Pet ID is empty");
       return;
     }
     
@@ -64,10 +64,10 @@ class _PetLostForumState extends State<PetLostForum> {
         genderController.text = petData['sex'] ?? '';
       });
     } else {
-      print("No se encontró la mascota con ID: ${widget.petId}");
+
     }
   } catch (e) {
-    print("Error al cargar los datos de la mascota: $e");
+
   }
 }
 
@@ -80,12 +80,12 @@ void loadVaccineImages() async {
 
   for (int i = 0; i <= 2; i++) {
     String path = "petVaccinePhotos/${widget.petId}/${widget.petId}_$i.jpg";
-    print(path);
+
      try {
       String imageUrl = await FirebaseStorage.instance.ref(path).getDownloadURL();
       loadedImages.add(imageUrl);
     } catch (e) {
-      print("Error al cargar la imagen: $e");
+
     } 
   }
 
@@ -93,34 +93,6 @@ void loadVaccineImages() async {
     vaccineImages = loadedImages;
   });
 }
-
-/*   void pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      showLoaderDialog(context);
-      try {
-        String fileName = "lostPets/${DateTime.now().millisecondsSinceEpoch}_${Path.basename(pickedFile.path)}";
-        Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
-        await storageRef.putFile(File(pickedFile.path));
-        String downloadUrl = await storageRef.getDownloadURL();
-        setState(() {
-          imageUrl = downloadUrl;
-        });
-        Navigator.pop(context);
-      } catch (e) {
-        Navigator.pop(context);
-        print(e);
-      }
-    }
-  } */
-  
-  /* void setImageUrl(String path) {
-    setState(() {
-      imageUrl = path;
-    });
-  } */
 
     void navigateBack(BuildContext context) {
     Navigator.push(
@@ -149,11 +121,6 @@ void loadVaccineImages() async {
                 ),
                 SizedBox(height: 20.0),
                 
-                /* AddPicture(
-                  imageUrl: imageUrl,
-                  setImageUrl: setImageUrl,
-                  onPressed: pickImage
-                ), */
 
                 if (vaccineImages.isNotEmpty)
                      Row(
@@ -298,6 +265,13 @@ void loadVaccineImages() async {
                       phone: int.tryParse(phoneController.text) ?? 0,
                       petId: widget.petId,
                       imageUrls: vaccineImages,
+                    );
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Home(),
+                      ),
                     );
                   },
                 ),

@@ -20,9 +20,7 @@ class UpdateUserInfo {
         'phone': phone,
         'address': address,
       });
-      print('Información del usuario actualizada correctamente');
     } catch (e) {
-      print("Error updating user data: $e");
     }
   }
 
@@ -31,9 +29,7 @@ class UpdateUserInfo {
       await FirebaseFirestore.instance.collection('users').doc(userId).update({
         'imageUrl': imageUrl,
       });
-      print('Imagen del usuario actualizada correctamente');
     } catch (e) {
-      print("Error al actualizar la imagen del usuario: $e");
     }
   }
   

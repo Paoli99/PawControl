@@ -9,7 +9,7 @@ class Header extends StatelessWidget {
   final bool showLogoutButton; 
   final bool showImage; 
   final bool showBackButton; 
-  final Function(BuildContext)? navigateTo; // Cambio: Ahora es opcional
+  final Function(BuildContext)? navigateTo; 
 
   const Header({
     Key? key,
@@ -18,7 +18,7 @@ class Header extends StatelessWidget {
     this.showLogoutButton = false,
     this.showImage = true,
     this.showBackButton = true,
-    this.navigateTo, // Cambio: Ahora es opcional
+    this.navigateTo, 
   }) : super(key: key);
 
   @override
@@ -32,11 +32,11 @@ class Header extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween, 
         children: [
-          if (showBackButton && navigateTo != null) // Cambio: Verifica si navigateTo es no nulo
+          if (showBackButton && navigateTo != null)
             IconButton(
               icon: Icon(Icons.arrow_back), 
               onPressed: () {
-                navigateTo!(context); // Cambio: Usa navigateTo solo si no es nulo
+                navigateTo!(context); 
               },
             ),
           if (showImage) 

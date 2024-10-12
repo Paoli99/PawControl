@@ -87,7 +87,7 @@ class _NotificationsState extends State<Notifications> {
                                           ),
                                         );
                                       } else {
-                                        print('Otro tipo de notificación');
+                                        
                                       }
                                     }
                                   : null,
@@ -117,7 +117,7 @@ class _NotificationsState extends State<Notifications> {
                                                 ),
                                               );
                                             } else {
-                                              print('Otro tipo de notificación');
+                                              
                                             }
                                           }
                                         : null,

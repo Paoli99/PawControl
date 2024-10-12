@@ -72,7 +72,7 @@ class FirebaseAuthenticator {
       print(downloadURL);
       setImageUrl(downloadURL);
 
-      // Actualizar la URL de la imagen en Firestore
+      // Update image URL in Firestore
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         UpdateUserInfo updateUserInfoInstance = UpdateUserInfo(userId: user.uid);

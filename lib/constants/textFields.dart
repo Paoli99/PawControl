@@ -32,9 +32,9 @@ class TextFields extends StatelessWidget {
 
     List<TextInputFormatter>? inputFormatters = [];
 
-    // Verificar si el campo no está oculto y el tipo de teclado es número sin opción decimal
+    // Keyboard only accepts digits 
     if (!obscureText && keyboardType == TextInputType.number) {
-      inputFormatters.add(FilteringTextInputFormatter.digitsOnly); // Permitir solo dígitos
+      inputFormatters.add(FilteringTextInputFormatter.digitsOnly); 
     }
 
     return Padding(

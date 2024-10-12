@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pawcontrol/constants/buttons.dart';
 import 'package:pawcontrol/constants/colors.dart';
-//import 'package:flutter_font_awesome/flutter_font_awesome.dart';
 
 class SocialMediaBtn extends StatelessWidget {
   final String textoRedes;
@@ -58,7 +57,7 @@ class SocialMediaBtn extends StatelessWidget {
         child: Icon(
           icon,
           color: iconoColor,
-          size: 30.0, // Ajusta el tamaño del icono según tus necesidades
+          size: 30.0, 
         ),
       ),
     );

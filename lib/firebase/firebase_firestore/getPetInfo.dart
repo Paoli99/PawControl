@@ -6,7 +6,7 @@ class GetPetInfo {
     List<Map<String, dynamic>> userPets = [];
 
     try {
-      // Obtener el usuario actual
+      // get current user
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
@@ -37,11 +37,10 @@ class GetPetInfo {
 class GetPetsInfo {
   static Future<Map<String, dynamic>> getPetInfo(String petId) async {
     try {
-      // Obtener el usuario actual
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Obtener la referencia del documento de la mascota específica
+        // Get document reference for a specific pet
         DocumentSnapshot<Map<String, dynamic>> petDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -49,10 +48,9 @@ class GetPetsInfo {
             .doc(petId)
             .get();
 
-        // Verificar si el documento existe
         if (petDoc.exists) {
           print('ID de la mascota: ${petDoc.id}');
-          // Obtener la información de la mascota
+          // Get pet's information
           Map<String, dynamic> petInfo = petDoc.data()!;
           return petInfo;
         } else {

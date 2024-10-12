@@ -29,7 +29,7 @@ class _ProfileState extends State<Profile> {
   TextEditingController phone = TextEditingController();
   TextEditingController address = TextEditingController();
 
-  late User currentUser; // Variable para almacenar el usuario actual
+  late User currentUser; 
 
   String imageUrl = "";
    @override
@@ -61,13 +61,13 @@ class _ProfileState extends State<Profile> {
               lastName.text = userInfo['lastName'] ?? '';
               phone.text = userInfo['phone'] ?? '';
               address.text = userInfo['address'] ?? '';
-              imageUrl = userInfo['imageUrl'] ?? ''; // Agrega la URL de la imagen si está disponible
+              imageUrl = userInfo['imageUrl'] ?? ''; 
             });
           } else {
-            print('Usuario no autenticado');
+            
           }
         } catch (e) {
-          print('Error al obtener información del usuario: $e');
+          
         }
       }
   @override
@@ -107,8 +107,6 @@ class _ProfileState extends State<Profile> {
                 SizedBox(
                   height: 20.0,
                 ),
-
-                //Datos usuario
 
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,

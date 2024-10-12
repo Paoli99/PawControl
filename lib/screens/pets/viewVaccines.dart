@@ -80,12 +80,12 @@ class _ViewVaccinesState extends State<ViewVaccines> {
 
     for (int i = 0; i <= 2; i++) {
       String path = "petVaccinePhotos/${widget.petId}/${widget.petId}_$i.jpg";
-      print(path);
+
       try {
         String imageUrl = await FirebaseStorage.instance.ref(path).getDownloadURL();
         loadedImages.add(imageUrl);
       } catch (e) {
-        print("Error al cargar la imagen: $e");
+
       }
     }
 

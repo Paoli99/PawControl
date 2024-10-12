@@ -26,7 +26,7 @@ Future<void> publishLostPet({
 }) async {
   if (name.isEmpty || species.isEmpty || breed.isEmpty || gender.isEmpty || date.isEmpty || location.isEmpty || description.isEmpty || phone == 0 || imageUrls.isEmpty) {
     showMessage(context, "Por favor, llene todos los campos.");
-
+    return;
   }
 
   showLoaderDialog(context);
@@ -34,7 +34,7 @@ Future<void> publishLostPet({
   try {
     String userId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Verifica si ya existe una publicación para esta mascota
+    // Verify if post already exists
     DocumentSnapshot petSnapshot = await FirebaseFirestore.instance
         .collection('lostPetsForms')
         .doc(petId)
@@ -59,29 +59,8 @@ Future<void> publishLostPet({
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      // Sube las imágenes a Firebase Storage
-      for (String imageUrl in imageUrls) {
-        try {
-          String fileName = path.basename(Uri.decodeComponent(imageUrl.split('?').first));
-          var response = await http.get(Uri.parse(imageUrl));
-          if (response.statusCode == 200) {
-            var tempDir = await getTemporaryDirectory();
-            File tempFile = File('${tempDir.path}/$fileName');
-            await tempFile.writeAsBytes(response.bodyBytes);
-            String storagePath = "lostPetFormPhotos/$petId/$fileName";
-            Reference storageRef = FirebaseStorage.instance.ref().child(storagePath);
-            await storageRef.putFile(tempFile);
-            print("Imagen subida a: $storagePath");
-          } else {
-            print("Error al descargar la imagen: ${response.statusCode}");
-          }
-        } catch (e) {
-          print("Error al procesar la imagen: $e");
-        }
-      }
 
-      //callCloudFunction(petId, 'lost');
-
+      // Send post_type and post_id 
       Future.wait([
         callCloudFunction(petId, 'lost', 'automatic-search-2'),
         callCloudFunction(petId, 'lost', 'description-search')
@@ -89,10 +68,15 @@ Future<void> publishLostPet({
         List<dynamic> imageResults = responses[0];
         List<dynamic> textResults = responses[1];
 
+        Navigator.of(context).pop();
+
+
+        // Send notification
         String notificationMessage = (imageResults.isNotEmpty || textResults.isNotEmpty)
             ? "Se encontraron resultados"
             : "No se encontraron resultados";
         String notificationType = "lostPet";
+
 
         List<String> imagePostIds = imageResults.map((result) => result['post_id'].toString()).toList();
         List<String> textPostIds = textResults.map((result) => result['post_id'].toString()).toList();
@@ -107,8 +91,16 @@ Future<void> publishLostPet({
             originalPostId: petId,
           );
         } else {
-          saveNotification(context, notificationMessage, notificationType, originalPostId: petId);
+          saveNotification(
+            context, 
+            notificationMessage, 
+            notificationType, 
+            originalPostId: petId
+          );
         }
+      }).catchError((e) {
+        Navigator.of(context).pop();
+        showMessage(context, "Error en la búsqueda de coincidencias: $e");
       });
     }
   } catch (e) {
@@ -116,35 +108,6 @@ Future<void> publishLostPet({
     showMessage(context, "Error al publicar la mascota perdida: $e");
   }
 }
-
-/* void callCloudFunction(String postId, String postType) {
-  http.post(
-    Uri.parse('https://southamerica-east1-pawcontrol-432921.cloudfunctions.net/automatic-search-2'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode({
-      'post_type': postType,
-      'post_id': postId,
-    }),
-  ).then((response) {
-    if (response.statusCode == 200) {
-      print("Cloud function called successfully.");
-      List<dynamic> results = jsonDecode(response.body);
-      if (results.isNotEmpty) {
-        print("Matched Post IDs:");
-        for (var result in results) {
-          print('Post ID: ${result['post_id']}, Similarity: ${result['similarity']}');
-        }
-        
-      } else {
-        print("No matches found.");
-      }
-    } else {
-      print("Failed to call cloud function: ${response.body}");
-    }
-  }).catchError((error) {
-    print("Error calling cloud function: $error");
-  });
-} */
 
 Future<List<dynamic>> callCloudFunction(String postId, String postType, String functionUrl) async {
   var response = await http.post(

@@ -65,39 +65,13 @@ Future<void> publishFoundPet({
 
     
 
-    // enviar el found
-    //callCloudFunction(publicationId, 'found');
-    print("=====================================================");
-    print("Llamando a funciones de búsqueda en la nube...");
-    print("=====================================================");
-
-    print( "ID: " + "$publicationId" );
-
+    // Send post_type and post_id
     Future.wait([
         callCloudFunction(publicationId, 'found', 'automatic-search-2'),
         callCloudFunction(publicationId, 'found', 'description-search')
       ]).then((responses) {
         List<dynamic> imageResults = responses[0];
         List<dynamic> textResults = responses[1];
-
-        // Imprimir los resultados en la consola
-        print("Resultados por imagen:");
-        if (imageResults.isNotEmpty) {
-          for (var result in imageResults) {
-            print("ID: ${result['post_id']}, Similarity: ${result['similarity']}");
-          }
-        } else {
-          print("No se encontraron resultados por imagen.");
-        }
-
-        print("Resultados por texto:");
-        if (textResults.isNotEmpty) {
-          for (var result in textResults) {
-            print("ID: ${result['post_id']}, Similarity: ${result['similarity']}");
-          }
-        } else {
-          print("No se encontraron resultados por texto.");
-        }
 
       String notificationMessage = (imageResults.isNotEmpty || textResults.isNotEmpty)
           ? "Se encontraron resultados"
@@ -126,34 +100,6 @@ Future<void> publishFoundPet({
   }
 }
 
-/* void callCloudFunction(String postId, String postType) {
-  http.post(
-    Uri.parse('https://southamerica-east1-pawcontrol-432921.cloudfunctions.net/automatic-search-2'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode({
-      'post_type': postType,
-      'post_id': postId,
-    }),
-  ).then((response) {
-    if (response.statusCode == 200) {
-      print("Cloud function called successfully.");
-      List<dynamic> results = jsonDecode(response.body);
-      if (results.isNotEmpty) {
-        print("Matched Post IDs:");
-        for (var result in results) {
-          print('Post ID: ${result['post_id']}, Similarity: ${result['similarity']}');
-        }
-      } else {
-        print("No matches found.");
-      }
-    } else {
-      print("Failed to call cloud function: ${response.body}");
-    }
-  }).catchError((error) {
-    print("Error calling cloud function: $error");
-  });
-} */
-
 Future<List<dynamic>> callCloudFunction(String postId, String postType, String functionUrl) async {
   var response = await http.post(
     Uri.parse('https://southamerica-east1-pawcontrol-432921.cloudfunctions.net/$functionUrl'),
@@ -163,15 +109,6 @@ Future<List<dynamic>> callCloudFunction(String postId, String postType, String f
       'post_id': postId,
     }),
   );
-
-  // Agregamos más información de depuración
-  print("=====================================================");
-  print("Llamada a la función en la nube: $functionUrl");
-  print("Post ID: $postId");
-  print("Post Type: $postType");
-  print("Estado de respuesta: ${response.statusCode}");
-  print("Cuerpo de la respuesta: ${response.body}");
-  print("=====================================================");
 
   if (response.statusCode == 200) {
     try {
@@ -194,8 +131,6 @@ Future<List<dynamic>> callCloudFunction(String postId, String postType, String f
     return [];
   }
 }
-
-
 
 void showLoaderDialog(BuildContext context) {
   AlertDialog alert = AlertDialog(

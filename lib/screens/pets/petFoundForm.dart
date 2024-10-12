@@ -37,7 +37,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
   List<String> imageUrls = ['', '', ''];
   bool isPickerActive = false;
   String userId = '';
-  String publicationId = '';  // Inicializamos como una cadena vacía
+  String publicationId = '';  
 
   List<String>? breedList;
   List<DropdownMenuItem<String>> breedDropdownItems = [];
@@ -125,7 +125,6 @@ class _PetFoundFormState extends State<PetFoundForm> {
       String downloadURL = await ref.getDownloadURL();
       setState(() {
         imageUrls[index] = downloadURL;
-        print(downloadURL);
       });
     }
 
@@ -148,7 +147,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
             if (publicationId.isEmpty) {
               String randomString = generateRandomString(4);
               setState(() {
-                publicationId = '${userId}_$randomString';  // Generar ID de publicación aquí
+                publicationId = '${userId}_$randomString';  
               });
             }
             await pickImage(index, publicationId);
@@ -333,18 +332,9 @@ class _PetFoundFormState extends State<PetFoundForm> {
                     if (publicationId.isEmpty) {
                       String randomString = generateRandomString(4);
                       setState(() {
-                        publicationId = '${userId}_$randomString';  // Generar ID de publicación aquí
+                        publicationId = '${userId}_$randomString';  
                       });
                     }
-
-                    print("Selected Species: $selectedSpecies");
-                    print("Breed: ${petBreedController.text}");
-                    print("Date: ${dateController.text}");
-                    print("Gender: ${petGenderController.text}");
-                    print("Location: ${locationController.text}");
-                    print("Description: ${descriptionController.text}");
-                    print("Phone: ${phoneController.text}");
-                    print("Image URLs: $imageUrls");
 
                     await publishFoundPet(
                       context: context,
@@ -357,7 +347,7 @@ class _PetFoundFormState extends State<PetFoundForm> {
                       description: descriptionController.text,
                       phone: int.tryParse(phoneController.text) ?? 0,
                       imageUrls: imageUrls,
-                      publicationId: publicationId,  // Pasar el ID de publicación
+                      publicationId: publicationId,  
                     );
 
                      Navigator.pushReplacement(

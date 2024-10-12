@@ -68,7 +68,7 @@ class _EditPetProfileState extends State<EditPetProfile> {
       userPets.add(petInfo); 
     });
   } catch (e) {
-    print('Error al cargar la información de la mascota: $e');
+    
   }
   }
 
@@ -109,11 +109,9 @@ class _EditPetProfileState extends State<EditPetProfile> {
   User? user = FirebaseAuth.instance.currentUser;
 
   if (user != null) {
-    // El usuario está autenticado
-    print('El usuario ${user.uid} está autenticado.');
+
   } else {
-    // El usuario no está autenticado
-    print('El usuario no está autenticado.');
+
   }
 }
 
@@ -128,7 +126,7 @@ class _EditPetProfileState extends State<EditPetProfile> {
                 title: 'PAW CONTROL',
                 showImage: true,
                 showBackButton: true,
-                navigateTo: navigateBack, // Define la ruta específica aquí
+                navigateTo: navigateBack, 
               ),
               SizedBox(height: 20),
               Column(

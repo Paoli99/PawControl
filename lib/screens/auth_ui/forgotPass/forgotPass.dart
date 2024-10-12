@@ -153,7 +153,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 showMessage(context, "No se pudo enviar el correo de restablecimiento.");
                               }
                             } else {
-                              // No es necesario mostrar un mensaje aquí, ya que isValidEmail maneja los mensajes de error.
+                              
                             }
                           } catch (e) {
                             print('Error al cambiar la contraseña: $e');

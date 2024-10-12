@@ -9,7 +9,7 @@ import 'package:pawcontrol/screens/pets/addPets.dart';
 import 'package:pawcontrol/screens/pets/pets.dart';
 import 'package:pawcontrol/widgets/header/header.dart';
 import 'package:pawcontrol/widgets/secondary_buttons/roundButtons.dart';
-import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart'; // Importar el archivo getPetInfo.dart
+import 'package:pawcontrol/firebase/firebase_firestore/getPetInfo.dart'; 
 
 class Home extends StatefulWidget {
   final int initialIndex;
@@ -31,7 +31,6 @@ class _HomeState extends State<Home> {
     _loadUserPets(); 
   }
 
-  // Método para cargar las mascotas del usuario
   void _loadUserPets() async {
   List<Map<String, dynamic>> pets = await GetPetInfo.getUserPetsInfo();
   setState(() {
@@ -51,7 +50,7 @@ class _HomeState extends State<Home> {
 
     switch (_currentIndex) {
       case 0:
-        body = HomeContent(userPets: userPets); // Pasar la lista de mascotas al HomeContent
+        body = HomeContent(userPets: userPets);  
         break;
       case 1:
         body = Search(index: 1);
@@ -99,7 +98,7 @@ class _HomeState extends State<Home> {
 }
 
 class HomeContent extends StatelessWidget {
-  final List<Map<String, dynamic>> userPets; // Lista de mascotas
+  final List<Map<String, dynamic>> userPets; 
 
   const HomeContent({Key? key, required this.userPets}) : super(key: key);
 
@@ -124,14 +123,13 @@ class HomeContent extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      // Verificar si la clave 'id' existe antes de acceder a ella
+                      // Verify if id exists
                       if (pet.containsKey('id')) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Pets(petId: pet['id'])),
                         );
                       } else {
-                        print('El mapa no tiene la clave \'id\'');
                       }
                       },
                       child: Row(

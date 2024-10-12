@@ -7,7 +7,7 @@ import 'package:pawcontrol/constants/constants.dart';
 
 class UpdatePetInfo {
   final String userId;
-  final String petId;  // Asegúrate de pasar petId también cuando inicializas esta clase
+  final String petId;  
   final BuildContext context;
 
   UpdatePetInfo({required this.userId, required this.petId, required this.context});

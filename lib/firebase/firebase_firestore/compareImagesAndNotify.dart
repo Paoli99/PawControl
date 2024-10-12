@@ -5,7 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> compareImagesAndNotify(String userId, String targetImageUrl) async {
-  // Descargar la imagen de la mascota perdida
   File targetImageFile = await downloadImage(targetImageUrl);
 
   List<String> foundImageUrls = await getFoundPetImageUrls();

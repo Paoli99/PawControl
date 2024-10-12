@@ -58,35 +58,6 @@ class SignUp extends StatefulWidget {
             padding: const EdgeInsets.all(0),
             child: Column(
               children: [
-                /* Container(
-                  width: double.infinity,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.white70,
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      SizedBox(width: 10),
-                      Image.asset(
-                        AssetsImages.instance.logo,
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.fill,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        "PAW CONTROL",
-                        style: TextsFont.tituloHeader,
-                      ),
-                    ],
-                  ),
-                ), */
                 Header(
                 title: 'PAW LINK',
                 showImage: true,

@@ -43,7 +43,6 @@ class Pet {
     } else {
       imageUrls = ['https://via.placeholder.com/150'];
     }
-    //print("Loaded image URL: $imageUrl"); 
     return Pet(
       name: data['name'] ?? '',
       species: data['species'] ?? '',
@@ -134,15 +133,13 @@ class _SearchState extends State<Search> {
   bool isSearching = false;
   bool isLoading = true;
 
-  Future<List<Pet>> fetchPets(String collection) async {
-    print("Fetching pets from: $collection");  
+  Future<List<Pet>> fetchPets(String collection) async { 
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
               .collection(collection)
               .orderBy('createdAt', descending: true)
               .get();
     bool isFoundPet = collection.contains('foundPetsForms');  
     return querySnapshot.docs.map((doc) {
-      //print("Pet ID from $collection: ${doc.id}");  
       return Pet.fromMap(doc.data() as Map<String, dynamic>, isFoundPet);
     }).toList();
   }
