@@ -123,7 +123,7 @@ class _EditPetProfileState extends State<EditPetProfile> {
           child: Column(
             children: [
               Header(
-                title: 'PAW CONTROL',
+                title: 'Editar perfil de la mascota',
                 showImage: true,
                 showBackButton: true,
                 navigateTo: navigateBack, 

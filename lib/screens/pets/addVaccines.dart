@@ -110,13 +110,12 @@ Widget imagePlaceholder(int index, String title, String defaultImagePath) {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Header(title: 'PAW CONTROL', showImage: true, showBackButton: true, navigateTo: navigateBack),
+              Header(title: 'Registrar Vacunas', showImage: true, showBackButton: true, navigateTo: navigateBack),
               Container(
                 padding: EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Agregar Vacunas', style: TextsFont.tituloNames),
                     SizedBox(height: 20),
                     TextInputFields(controller: vaccineController, hintText: 'Tipo de vacuna', prefixIcon: Icon(Icons.pets_outlined, color: Colors.grey), backgroundColor: ColorsApp.white70),
                     SizedBox(height: 20),
